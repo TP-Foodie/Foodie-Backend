@@ -1,3 +1,6 @@
+# Foodie-Backend
+Application Server
+
 ### Instalar los requerimientos con pip
 
 ```pip install -r requirements.txt```
@@ -15,3 +18,4 @@
 ```docker-compose up```
 
 Para forzar que se regeneren las imágenes se tiene que poner `--build`
+
