@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  server:
+    build:
+      context: .
+    ports:
+     - "5000:5000"
+    volumes:
+     - "./:/usr/app"
+    environment:
+     - FLASK_APP=/usr/app/src/app.py
+     - FLASK_ENV=development
+
+  database:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
