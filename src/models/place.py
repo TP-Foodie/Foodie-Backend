@@ -2,12 +2,12 @@ from models import FoodieModel
 
 
 class Place(FoodieModel):
-    id = None
+    id_ = None
     name = None
     coordinates = None
 
-    def __init__(self, id, name, coordinates):
-        self.id = id
+    def __init__(self, id_, name, coordinates):
+        self.id_ = id_
         self.name = name
         self.coordinates = coordinates
 

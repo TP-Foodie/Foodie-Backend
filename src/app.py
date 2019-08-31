@@ -1,13 +1,13 @@
 from flask import Flask
 from flask import jsonify
-from models.User import User
-from models.Place import Place, Coordinates
+from models.user import User
+from models.place import Place, Coordinates
 from encoders import CustomJSONEncoder
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
 
-@app.route('/places')
+@APP.route('/places')
 def places():
     places_list = [
         Place("1", "Mac", Coordinates(1.0, 2.0)),
@@ -17,7 +17,7 @@ def places():
     return jsonify(places_list)
 
 
-@app.route('/users')
+@APP.route('/users')
 def users():
     users_list = [
         User("1", "Pepe Argento"),
@@ -28,5 +28,5 @@ def users():
 
 
 if __name__ == '__main__':
-    app.json_encoder = CustomJSONEncoder
-    app.run()
+    APP.json_encoder = CustomJSONEncoder
+    APP.run()
