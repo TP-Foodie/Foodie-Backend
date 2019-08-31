@@ -1,0 +1,2 @@
+class FoodieModel(object):
+    pass
