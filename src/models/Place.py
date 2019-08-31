@@ -1,5 +1,6 @@
 from models import FoodieModel
 
+
 class Place(FoodieModel):
     id = None
     name = None
