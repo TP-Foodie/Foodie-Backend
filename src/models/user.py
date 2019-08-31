@@ -2,9 +2,9 @@ from models import FoodieModel
 
 
 class User(FoodieModel):
-    id = None
+    id_ = None
     name = None
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, id_, name):
+        self.id_ = id_
         self.name = name

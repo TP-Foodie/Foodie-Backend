@@ -1,2 +1,2 @@
-class FoodieModel(object):
+class FoodieModel:
     pass

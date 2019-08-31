@@ -3,7 +3,8 @@ from models import FoodieModel
 
 
 class CustomJSONEncoder(JSONEncoder):
-    def default(self, obj):
+    def default(self, obj):  # pylint: disable=E0202, W0221
+
         if isinstance(obj, FoodieModel):
             dictionary = obj.__dict__
             if "id_" in dictionary:
@@ -15,4 +16,5 @@ class CustomJSONEncoder(JSONEncoder):
                     dictionary[key] = self.default(dictionary[key])
 
             return dictionary
+
         return super(CustomJSONEncoder, self).default(obj)
