@@ -20,19 +20,19 @@ class DatabaseApi:
     #   Metodo que agrega a un delivery (la persona) a la coleccion 
     #   de deliveries disponibles/online para hacer envios.
     #
-    def agregarDeliveryComoDisponible(self, deliveryData):
+    def agregarDeliveryComoDisponible(self, deliveryDisponible):
         # deliveryData deberia tener por lo menos la data de auth, su nombre, 
         # su ubicacion y su foto de perfil.
         try:
             # me fijo si ya existe en la db, en la coleccion de deliveries disponibles
-            if self.collection_deliveries_disponibles.find_one({'_id': deliveryData.id}):
-                return {'status': 403, 'body': 'Already Exists'}
+            if self.collection_deliveries_disponibles.find_one({'_id': deliveryDisponible.id_}):
+                return 403
 
             # agrego al delivery a la coleccion de 
-            self.collection_deliveries_disponibles.insert_one(deliveryData)
-            return {'status': 201, 'body': 'Created Succesfully'}
+            self.collection_deliveries_disponibles.insert_one(deliveryDisponible)
+            return 201
         except KeyError:
-            return {'status': 400, 'body': 'Wrong Parameters'}
+            return 400
 
 
     #
@@ -50,9 +50,9 @@ class DatabaseApi:
             # TODO: averiguar la unidad de medida del within
             # TODO: averiguar (si se puede) como ordenar la query para que devuelva los mas cercanos 
             query = {'loc': {'$within': {'$center': [[queryDeliveriesCercanos.coordinates.longitude, queryDeliveriesCercanos.coordinates.latitude], queryDeliveriesCercanos.radius]}}}
-            return {'status': 200, 'body': [doc for doc in self.collection_deliveries_disponibles.find(query)]}
+            return [doc for doc in self.collection_deliveries_disponibles.find(query)]
         except KeyError:
-            return {'status': 400, 'body': 'Wrong Parameters'}
+            return 400
 
 
     #
@@ -62,6 +62,6 @@ class DatabaseApi:
         # deliveryData deberia tener por lo menos la data de auth y su id
         try:
             self.collection_deliveries_disponibles.delete_one({'_id': deliveryData.id})
-            return {'status': 200, 'body': 'Deleted Succesfully'}
+            return 200
         except KeyError:
-            return {'status': 400, 'body': 'Wrong Parameters'}
+            return 400
