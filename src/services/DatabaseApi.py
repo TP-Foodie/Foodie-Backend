@@ -30,9 +30,9 @@ class DatabaseApi:
 
             # agrego al delivery a la coleccion de 
             self.collection_deliveries_disponibles.insert_one(deliveryData)
-            return {"status": 201, "body": "Created Succesfully"}
+            return {'status': 201, 'body': 'Created Succesfully'}
         except KeyError:
-            return {"status": 400, "body": "Wrong Parameters"}
+            return {'status': 400, 'body': 'Wrong Parameters'}
 
 
     #
@@ -49,9 +49,20 @@ class DatabaseApi:
         # ubicacion y la distancia maxima al delivery (si es que la elige el usuario).
         try:
             # TODO: averiguar la unidad de medida del within
-            # TODO: averiguar (si se puede) como ordenar la query para que devuelva los  
-            query = {"loc": {"$within": {"$center": [[queryData.long, queryData.lat], queryData.radius]}}}
-            return {"status": 200, "body": [doc for doc in self.collection_deliveries_disponibles.find(query).limit(10)]}
+            # TODO: averiguar (si se puede) como ordenar la query para que devuelva los mas cercanos 
+            query = {'loc': {'$within': {'$center': [[queryData.long, queryData.lat], queryData.radius]}}}
+            return {'status': 200, 'body': [doc for doc in self.collection_deliveries_disponibles.find(query).limit(10)]}
         except KeyError:
-            return {"status": 400, "body": "Wrong Parameters"}
-    
+            return {'status': 400, 'body': 'Wrong Parameters'}
+
+
+    #
+    #   Metodo que elimina a un delivery de la coleccion de deliveries disponibles.
+    #
+    def eliminarDeliveryComoDisponible(self, deliveryData):
+        # deliveryData deberia tener por lo menos la data de auth y su id
+        try:
+            self.collection_deliveries_disponibles.delete_one({'_id': deliveryData.id})
+            return {'status': 200, 'body': 'Deleted Succesfully'}
+        except KeyError:
+            return {'status': 400, 'body': 'Wrong Parameters'}
