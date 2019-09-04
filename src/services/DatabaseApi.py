@@ -37,21 +37,20 @@ class DatabaseApi:
 
     #
     #   Metodo que hace una geospatial query alrededor del usuario (circulo
-    #   con centro en el usuario y de radio 5 km) sobre la coleccion de
-    #   deliveries disponibles/online.
+    #   con centro en el usuario) sobre la coleccion de deliveries disponibles/online.
     #
-    #   En caso positivo, devuelve una lista de hasta 10 deliveries disponibles dentro
+    #   En caso positivo, devuelve una lista de hasta @limit deliveries disponibles dentro
     #   del circulo descripto anteriormente (y faltaria saber si ordenados de menor
     #   a mayor distancia al centro del circulo)
     #
-    def getDeliveriesDisponiblesCercanos(self, queryData):
+    def getDeliveriesDisponiblesCercanos(self, queryDeliveriesCercanos):
         # userData deberia tener por lo menos la data de auth del user, su 
         # ubicacion y la distancia maxima al delivery (si es que la elige el usuario).
         try:
             # TODO: averiguar la unidad de medida del within
             # TODO: averiguar (si se puede) como ordenar la query para que devuelva los mas cercanos 
-            query = {'loc': {'$within': {'$center': [[queryData.long, queryData.lat], queryData.radius]}}}
-            return {'status': 200, 'body': [doc for doc in self.collection_deliveries_disponibles.find(query).limit(10)]}
+            query = {'loc': {'$within': {'$center': [[queryDeliveriesCercanos.coordinates.longitude, queryDeliveriesCercanos.coordinates.latitude], queryDeliveriesCercanos.radius]}}}
+            return {'status': 200, 'body': [doc for doc in self.collection_deliveries_disponibles.find(query).limit(queryDeliveriesCercanos.limit)]}
         except KeyError:
             return {'status': 400, 'body': 'Wrong Parameters'}
 
