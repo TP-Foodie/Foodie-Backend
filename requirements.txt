@@ -5,3 +5,4 @@ pylint==2.3.1
 pytest-cov==2.7.1
 pymongo==3.9.0
 gunicorn==19.9.0
+python-dotenv==0.10.3
