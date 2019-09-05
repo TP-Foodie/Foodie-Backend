@@ -12,8 +12,7 @@ class DatabaseApi:
               password='password',
               authSource='foodie',
               authMechanism='SCRAM-SHA-1')
-
-        self.db = self.client['test-database']
+        self.db = self.client['foodie']
 
     def agregar_documento(self, collection, data):
         self.db[collection].insert_one(data)
