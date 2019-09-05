@@ -25,3 +25,6 @@ class DatabaseApi:
 
     def eliminar_documento(self, collection, id_doc):
         self.db[collection].delete_one({'_id': id_doc})
+
+    def eliminar_todos_los_documentos(self, collection):
+        self.db[collection].delete_many({})

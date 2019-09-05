@@ -1,20 +1,13 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 
 from services.DatabaseApi import DatabaseApi
 from models.DeliveryDisponible import DeliveryDisponible
-from models.Coordinates import Coordinates
+
+COLLECTION_DELIVERIES_DISPONIBLES = 'deliveries_disponibles'
 
 APP = Flask(__name__)
 
 db = DatabaseApi('localhost:27017')
-
-#   Endpoint de testing de santiago-alvarezjulia
-@APP.route('/test')
-def test():
-    doc = {'_id': '1', 'name': 'santo'}
-    db.agregar_documento('deliveries_disponibles', doc)
-
-    return db.encontrar_documento('deliveries_disponibles', doc)
 
 #
 #   Endpoint Rest API: Deliveries Disponibles
@@ -27,13 +20,17 @@ def test():
 def deliveries_disponibles():
     if request.method == 'POST':
         # agregar delivery como disponible
-        return db.agregar_documento('deliveries_disponibles', request.json)
+        print(request.get_json())
+        db.agregar_documento(COLLECTION_DELIVERIES_DISPONIBLES, request.get_json())
+        return {'status': '201', 'body': 'Created Succesfully'}
     elif request.method == 'GET':
         # get deliveries disponibles cercanos
         query = {'coordinates': {'$within': {'$center': [[0, 0], 5]}}}
-        return db.encontrar_lista_documentos('deliveries_disponibles', query)
+        lista_docs = db.encontrar_lista_documentos(COLLECTION_DELIVERIES_DISPONIBLES, query)
+        return {'status': 200, 'body': lista_docs}
     elif request.method == 'DELETE':
         # eliminar delivery como disponible
+        db.eliminar_documento(COLLECTION_DELIVERIES_DISPONIBLES, request.get_json())
         return {'status': 200, 'body': 'Deleted Succesfully'}
     else:
         # Bad Request
