@@ -1,6 +1,6 @@
 from flask.json import JSONEncoder
 from models import FoodieModel
-
+from bson import ObjectId
 
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):  # pylint: disable=E0202, W0221
@@ -16,5 +16,8 @@ class CustomJSONEncoder(JSONEncoder):
                     dictionary[key] = self.default(dictionary[key])
 
             return dictionary
+
+        if isinstance(obj, ObjectId):
+            return str(obj)
 
         return super(CustomJSONEncoder, self).default(obj)
