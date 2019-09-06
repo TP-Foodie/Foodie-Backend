@@ -3,4 +3,3 @@
 venv
 .pytest_cache
 .coverage
-db
