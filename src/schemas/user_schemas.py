@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, pprint
+from marshmallow import Schema, fields
 
 
 class UserSchema(Schema):
