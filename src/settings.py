@@ -9,6 +9,7 @@ load_dotenv(dotenv_path=env_path)
 
 
 class Config:
+    DATABASE_SSL = os.getenv("DATABASE_SSL", "false").lower() == "true"
     DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
     DATABASE_PORT = os.getenv("DATABASE_PORT", "27017")
     DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "password")
