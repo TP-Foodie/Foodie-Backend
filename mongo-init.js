@@ -10,5 +10,8 @@ db.createUser({
 });
 
 db.users.insert({
-  name: "Pepe Argento"
+  name: "Pepe",
+  last_name: " Argento",
+  password: "password",
+  email: "pepeargento@gmail.com"
 })
