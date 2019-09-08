@@ -33,7 +33,6 @@ class DB(object):
     def eliminar_documento(collection, query):
         DB.DATABASE[collection].delete_one(query)
 
-    #   elimina todos los docs de una collection
     @staticmethod
     def eliminar_todos_los_documentos(collection):
         DB.DATABASE[collection].delete_many({})
