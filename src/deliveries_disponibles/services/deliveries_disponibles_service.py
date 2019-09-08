@@ -1,4 +1,5 @@
 from repositories.database_api import DB
+from deliveries_disponibles.exceptions import DeliveryYaDisponibleException, DeliveryNoDisponibleException
 
 # database collections
 COLLECTION_DELIVERIES_DISPONIBLES = 'deliveries_disponibles'
@@ -6,6 +7,9 @@ COLLECTION_DELIVERIES_DISPONIBLES = 'deliveries_disponibles'
 class DeliveriesDisponiblesService:
 
     def agregar_delivery_disponible(self, delivery_data):
+        if (DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) != None):
+            raise DeliveryYaDisponibleException('Delivery ya disponible')
+
         DB.agregar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data)
         return
 
@@ -22,5 +26,8 @@ class DeliveriesDisponiblesService:
 
 
     def borrar_delivery_disponible(self, delivery_data):
+        if (DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) == None):
+            raise DeliveryNoDisponibleException('Delivery no disponible')
+
         DB.eliminar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data)
         return

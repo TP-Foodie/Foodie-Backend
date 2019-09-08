@@ -3,6 +3,7 @@ from flask import Flask, json, request, Response
 
 from repositories.database_api import DB
 from deliveries_disponibles.controllers.deliveries_disponibles_controller import deliveries_disponibles_blueprint
+from deliveries_disponibles.exception_handlers import deliveries_disponibles_exception_handlers_blueprint
 from deliveries_disponibles.services.deliveries_disponibles_service import COLLECTION_DELIVERIES_DISPONIBLES
 
 # initialize Flask app
@@ -14,6 +15,7 @@ prefix = f"/api/{version}"
 
 # register Flask blueprints
 APP.register_blueprint(deliveries_disponibles_blueprint, url_prefix=f'{prefix}/' + COLLECTION_DELIVERIES_DISPONIBLES)
+APP.register_blueprint(deliveries_disponibles_exception_handlers_blueprint)
 
 # initialize database api
 db = DB.init()
