@@ -2,7 +2,8 @@ import os
 from flask import Flask, json, request, Response
 
 from repositories.database_api import DB
-from deliveries_disponibles.controllers.deliveries_disponibles_controller import deliveries_disponibles_blueprint, COLLECTION_DELIVERIES_DISPONIBLES
+from deliveries_disponibles.controllers.deliveries_disponibles_controller import deliveries_disponibles_blueprint
+from deliveries_disponibles.services.deliveries_disponibles_service import COLLECTION_DELIVERIES_DISPONIBLES
 
 # initialize Flask app
 APP = Flask(__name__)
