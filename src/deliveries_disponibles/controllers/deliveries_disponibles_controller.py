@@ -34,7 +34,8 @@ def post():
     deliveries_disponibles_service = DeliveriesDisponiblesService()
     deliveries_disponibles_service.agregar_delivery_disponible(delivery_disponible_data)
 
-    return myResponse(201, 'Created Succesfully')
+    return Response(response=json.dumps({'status': 201, 'body': 'Created Succesfully'}), status=201, 
+        mimetype='application/json')
 
 @deliveries_disponibles_blueprint.route(COLLECTION_DELIVERIES_DISPONIBLES, methods=['GET'])
 def get():
@@ -52,7 +53,8 @@ def get():
     deliveries_disponibles_service = DeliveriesDisponiblesService()
     lista_docs = deliveries_disponibles_service.query_deliveries_cercanos(query_deliveries_cercanos_data)
 
-    return myResponse(200, lista_docs)
+    return Response(response=json.dumps({'status': 200, 'body': lista_docs}), status=200, 
+        mimetype='application/json')
 
 @deliveries_disponibles_blueprint.route(COLLECTION_DELIVERIES_DISPONIBLES, methods=['DELETE'])
 def delete():
@@ -70,8 +72,5 @@ def delete():
     deliveries_disponibles_service = DeliveriesDisponiblesService()
     deliveries_disponibles_service.eliminar_delivery_disponible(eliminar_delivery_disponible_data)
 
-    return myResponse(200, 'Deleted Succesfully')
-
-def myResponse(status, body):
-    return Response(response=json.dumps({'status': status, 'body': body}), status=status, 
+    return Response(response=json.dumps({'status': 200, 'body': 'Deleted Succesfully'}), status=200, 
         mimetype='application/json')

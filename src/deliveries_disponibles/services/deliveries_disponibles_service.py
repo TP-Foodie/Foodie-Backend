@@ -16,14 +16,13 @@ class DeliveriesDisponiblesService:
     def query_deliveries_cercanos(self, query_data):
         # create geospatial query
         # TODO: averiguar sobre geospatial indexes (son necesarios?)
-        longitude = query_data['coordinates'][0]
-        latitude = query_data['coordinates'][1]
-        radius = query_data['radius']
+        longitude = query_data.coordinates[0]
+        latitude = query_data.coordinates[1]
+        radius = query_data.radius
         query = {'coordinates': {'$geoWithin': {'$center': [[longitude, latitude], radius]}}}
 
         # run the geospatial query
         return DB.encontrar_lista_documentos(COLLECTION_DELIVERIES_DISPONIBLES, query)
-
 
     def eliminar_delivery_disponible(self, delivery_data):
         if (DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) == None):
