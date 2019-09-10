@@ -5,19 +5,11 @@ from deliveries_disponibles.services.deliveries_disponibles_service import COLLE
 from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
 from deliveries_disponibles.schemas.delivery_disponible_schema import DeliveryDisponibleSchema
 from deliveries_disponibles.schemas.query_deliveries_cercanos_schema import QueryDeliveriesCercanosSchema
-from deliveries_disponibles.schemas.borrar_delivery_disponible_schema import BorrarDeliveryDisponibleSchema
+from deliveries_disponibles.schemas.eliminar_delivery_disponible_schema import EliminarDeliveryDisponibleSchema
 from deliveries_disponibles.exceptions import ValidationException
 
 # blueprints Flask
 deliveries_disponibles_blueprint = Blueprint(COLLECTION_DELIVERIES_DISPONIBLES, __name__)
-
-# data schemas
-delivery_disponible_schema = DeliveryDisponibleSchema()
-query_deliveries_cercanos_schema = QueryDeliveriesCercanosSchema()
-borrar_delivery_disponible_schema = BorrarDeliveryDisponibleSchema()
-
-# services
-deliveries_disponibles_service = DeliveriesDisponiblesService()
 
 #
 #   Endpoints Rest API: Deliveries Disponibles
@@ -31,7 +23,10 @@ def post():
     # get json data, validates and deserializes it
     content = request.get_json()
     
+    deliveries_disponibles_service = DeliveriesDisponiblesService()
+
     try:
+        delivery_disponible_schema = DeliveryDisponibleSchema()
         delivery_disponible_data = delivery_disponible_schema.load(content)
     except ValidationError as err:
         raise ValidationException(err.messages)
@@ -46,7 +41,10 @@ def get():
     # get json data, validates and deserializes it
     content = request.get_json()
 
+    deliveries_disponibles_service = DeliveriesDisponiblesService()
+
     try:
+        query_deliveries_cercanos_schema = QueryDeliveriesCercanosSchema()
         query_deliveries_cercanos_data = query_deliveries_cercanos_schema.load(content)
     except ValidationError as err:
         raise ValidationException(err.messages)
@@ -61,13 +59,16 @@ def delete():
     # get json data, validates and deserializes it
     content = request.get_json()
     
+    deliveries_disponibles_service = DeliveriesDisponiblesService()
+
     try:
-        borrar_delivery_disponible_data = borrar_delivery_disponible_schema.load(content)
+        eliminar_delivery_disponible_schema = EliminarDeliveryDisponibleSchema()
+        eliminar_delivery_disponible_data = eliminar_delivery_disponible_schema.load(content)
     except ValidationError as err:
         raise ValidationException(err.messages)
     
     # elimino el delivery disponible
-    deliveries_disponibles_service.borrar_delivery_disponible(borrar_delivery_disponible_data)
+    deliveries_disponibles_service.eliminar_delivery_disponible(eliminar_delivery_disponible_data)
 
     return myResponse(200, 'Deleted Succesfully')
 

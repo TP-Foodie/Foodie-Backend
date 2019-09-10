@@ -1,6 +1,6 @@
 from deliveries_disponibles.models import FoodieModel
 
-class BorrarDeliveryDisponible(FoodieModel):
+class EliminarDeliveryDisponible(FoodieModel):
     _id = None
 
     def __init__(self, _id):

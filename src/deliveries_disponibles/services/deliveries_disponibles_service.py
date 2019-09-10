@@ -11,7 +11,7 @@ class DeliveriesDisponiblesService:
             raise DeliveryYaDisponibleException('Delivery ya disponible')
 
         DB.agregar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data)
-        return
+        return True
 
     def query_deliveries_cercanos(self, query_data):
         # create geospatial query
@@ -25,9 +25,9 @@ class DeliveriesDisponiblesService:
         return DB.encontrar_lista_documentos(COLLECTION_DELIVERIES_DISPONIBLES, query)
 
 
-    def borrar_delivery_disponible(self, delivery_data):
+    def eliminar_delivery_disponible(self, delivery_data):
         if (DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) == None):
             raise DeliveryNoDisponibleException('Delivery no disponible')
 
         DB.eliminar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data)
-        return
+        return True

@@ -1,0 +1,4 @@
+[run]
+omit = src/app.py
+    src/conftest.py
+    src/deliveries_disponibles/models/__init__.py 
