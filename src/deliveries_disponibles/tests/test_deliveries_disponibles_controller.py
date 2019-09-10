@@ -1,25 +1,12 @@
 import unittest
-from unittest.mock import patch
+from unittest import TestCase, mock
+from unittest.mock import patch, MagicMock
 import json
 
 from app import APP, prefix
 from deliveries_disponibles.models.delivery_disponible import DeliveryDisponible
+from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
 from deliveries_disponibles.models.eliminar_delivery_disponible import EliminarDeliveryDisponible
-
-mock_valid_delivery_disponible = {
-    "_id": "1",
-    "name": "Santiago",
-    "profile_image": "https://urlimagen.com",
-	"coordinates": [-58.3772300, -34.6131500]
-}
-
-mock_extra_field_delivery_disponible = {
-    "_id": "1",
-    "name": "Santiago",
-	"profile_image": "https://urlimagen.com",
-	"coordinates": [-58.3772300, -34.6131500],
-    "extra_field": "extra"
-}
 
 
 class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
@@ -31,24 +18,63 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #   Success Tests
     #
 
-    @patch('deliveries_disponibles.services.deliveries_disponibles_service.DeliveriesDisponiblesService.agregar_delivery_disponible')
-    def test_success_agregar_delivery(self, agregar_delivery_disponible_mock):
-        agregar_delivery_disponible_mock.return_value = True
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveriesDisponiblesService', autospec=True)
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_success_agregar_delivery(self, mock_schema, mock_service):
+        # mocks
+        mock_service.return_value = MagicMock()
+        mock_service.agregar_delivery_disponible.return_value = True
+
+        mock_schema.return_value = MagicMock()
+        mock_schema.load.return_value = DeliveryDisponible("1", "Santiago", "https://urlimagen.com", [-58.3772300, -34.6131500])
+
+        # call controller
         response = self.app.post(
             f'{prefix}/deliveries_disponibles',
-            data=json.dumps(mock_valid_delivery_disponible),
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+                "profile_image": "https://urlimagen.com",
+	            "coordinates": [-58.3772300, -34.6131500]
+            }),
             content_type='application/json'
         )            
 
         assert response._status_code == 201
 
-    @patch('deliveries_disponibles.services.deliveries_disponibles_service.DeliveriesDisponiblesService.eliminar_delivery_disponible')
-    @patch('deliveries_disponibles.schemas.eliminar_delivery_disponible_schema.EliminarDeliveryDisponibleSchema')
-    def test_success_eliminar_delivery(self, eliminar_delivery_disponible_mock, schema_mock):
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveriesDisponiblesService', autospec=True)
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.QueryDeliveriesCercanosSchema', autospec=True)
+    def test_success_query_deliveries_cercanos(self, mock_schema, mock_service):
         # mocks
-        eliminar_delivery_disponible_mock.return_value = True
-        schema_mock.load.return_value = EliminarDeliveryDisponible("1")
+        mock_service.return_value = MagicMock()
+        mock_service.query_deliveries_cercanos.return_value = []
+            
+        mock_schema.return_value = MagicMock()
+        mock_schema.load.return_value = QueryDeliveriesCercanos("5", [-58.3772300, -34.6131500])
 
+        # call controller
+        response = self.app.get(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "radius": "5",
+                "coordinates": [-58.3772300, -34.6131500]
+            }),
+            content_type='application/json'
+        )            
+
+        assert response._status_code == 200
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveriesDisponiblesService', autospec=True)
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.EliminarDeliveryDisponibleSchema', autospec=True)
+    def test_success_eliminar_delivery(self, mock_schema, mock_service):
+        # mocks
+        mock_service.return_value = MagicMock()
+        mock_service.eliminar_delivery_disponible.return_value = True
+            
+        mock_schema.return_value = MagicMock()
+        mock_schema.load.return_value = EliminarDeliveryDisponible("1")
+
+        # call controller
         response = self.app.delete(
             f'{prefix}/deliveries_disponibles',
             data=json.dumps({"_id": "1"}),
@@ -61,12 +87,19 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #
     #   Wrong Tests
     #
-
+"""
     def test_wrong_extra_fields_agregar_delivery(self):
         response = self.app.post(
             f'{prefix}/deliveries_disponibles',
-            data=json.dumps(mock_extra_field_delivery_disponible),
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": [-58.3772300, -34.6131500],
+                "extra_field": "extra"
+            }),
             content_type='application/json'
         )
 
         assert response._status_code == 400
+"""
