@@ -1,5 +1,6 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, post_load
 
+from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
 from deliveries_disponibles.schemas.extra_validations import validate_coordinates
 
 class QueryDeliveriesCercanosSchema(Schema):
@@ -8,3 +9,7 @@ class QueryDeliveriesCercanosSchema(Schema):
 
     class Meta:
         strict = True
+
+    @post_load
+    def make_query_deliveries_cercanos(self, data, **kwargs):
+        return QueryDeliveriesCercanos(**data)

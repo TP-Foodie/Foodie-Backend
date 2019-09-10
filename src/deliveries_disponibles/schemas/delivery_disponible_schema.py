@@ -1,5 +1,6 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, post_load
 
+from deliveries_disponibles.models.delivery_disponible import DeliveryDisponible
 from deliveries_disponibles.schemas.extra_validations import validate_coordinates
 
 class DeliveryDisponibleSchema(Schema):
@@ -10,3 +11,7 @@ class DeliveryDisponibleSchema(Schema):
 
     class Meta:
         strict = True
+
+    @post_load
+    def make_delivery_disponible(self, data, **kwargs):
+        return DeliveryDisponible(**data)
