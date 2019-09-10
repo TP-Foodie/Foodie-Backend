@@ -3,23 +3,21 @@ from flask import jsonify
 from flask import Blueprint
 from flask import request
 
-from repositories.mongo_client import CLIENT
 from schemas import user_schemas
+from models.users import Users
 
 USERS_BLUEPRINT = Blueprint('users', __name__)
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['GET'])
 def get_user(_id):
-    user = CLIENT.foodie.users.find_one({'_id': ObjectId(_id)})
+    user = Users.objects.get(id=_id)
     return jsonify(user)
 
 
 @USERS_BLUEPRINT.route('/', methods=['GET'])
 def get():
-    users = CLIENT.foodie.users.find()
-
-    return jsonify({"users": [user for user in users]})
+    return jsonify([user for user in Users.objects])
 
 
 @USERS_BLUEPRINT.route('/', methods=['POST'])
@@ -28,8 +26,8 @@ def post():
     schema = user_schemas.UserSchema()
     user_data = schema.load(content)
 
-    return jsonify(
-        {
-            "_id": CLIENT.foodie.users.insert_one(user_data).inserted_id
-        }
-    )
+    user = Users()
+    for key in schema.declared_fields.keys():
+        user[key] = user_data[key]
+
+    return jsonify(user.save())

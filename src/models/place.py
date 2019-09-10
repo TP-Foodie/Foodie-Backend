@@ -1,7 +1,7 @@
-from models import FoodieModel
+from mongoengine import Document
 
 
-class Place(FoodieModel):
+class Place(Document):
     name = None
     coordinates = None
 
@@ -11,7 +11,7 @@ class Place(FoodieModel):
         self.coordinates = coordinates
 
 
-class Coordinates(FoodieModel):
+class Coordinates(Document):
     latitude = None
     longitude = None
 
