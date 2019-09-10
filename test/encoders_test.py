@@ -5,8 +5,6 @@ from mongoengine import Document
 from encoders import CustomJSONEncoder
 import datetime
 
-from models.user import User
-
 encoder = CustomJSONEncoder()
 
 

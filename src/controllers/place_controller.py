@@ -1,7 +1,7 @@
 from flask import jsonify
 from flask import Blueprint
 
-from models.place import Place
+from models import Place
 
 PLACES_BLUEPRINT = Blueprint('places', __name__)
 
