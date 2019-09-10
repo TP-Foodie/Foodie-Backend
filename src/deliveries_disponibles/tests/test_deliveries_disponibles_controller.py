@@ -110,6 +110,25 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         assert response._status_code == 400
 
     @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_empty_id_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "",
+                "name": "Santiago",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": [-58.3772300, -34.6131500]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
     def test_wrong_empty_name_agregar_delivery(self, mock_schema):
         # mocks
         mock_schema.return_value = MagicMock()
@@ -129,6 +148,44 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         assert response._status_code == 400
 
     @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_empty_profile_image_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "",
+	            "coordinates": [-58.3772300, -34.6131500]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_empty_coordinates_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": []
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
     def test_wrong_longitude_value_agregar_delivery(self, mock_schema):
         # mocks
         mock_schema.return_value = MagicMock()
@@ -141,6 +198,63 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "name": "Santiago",
 	            "profile_image": "https://urlimagen.com",
 	            "coordinates": [-190, -34.6131500]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_latitude_value_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": [-58.3772300, -34.6131500]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_coordinates_length_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": [-58.3772300, -34.6131500, 0]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_malfomed_image_url_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "urlimagen",
+	            "coordinates": [-58.3772300, -34.6131500]
             }),
             content_type='application/json'
         )
