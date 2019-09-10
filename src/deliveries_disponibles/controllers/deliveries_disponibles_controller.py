@@ -26,7 +26,7 @@ deliveries_disponibles_service = DeliveriesDisponiblesService()
 #   GET: get deliveries disponibles cercanos
 #   DELETE: eliminar delivery como disponible
 #
-@deliveries_disponibles_blueprint.route('/', methods=['POST'])
+@deliveries_disponibles_blueprint.route(COLLECTION_DELIVERIES_DISPONIBLES, methods=['POST'])
 def post():
     # get json data, validates and deserializes it
     content = request.get_json()
@@ -41,7 +41,7 @@ def post():
 
     return myResponse(201, 'Created Succesfully')
 
-@deliveries_disponibles_blueprint.route('/', methods=['GET'])
+@deliveries_disponibles_blueprint.route(COLLECTION_DELIVERIES_DISPONIBLES, methods=['GET'])
 def get():
     # get json data, validates and deserializes it
     content = request.get_json()
@@ -56,7 +56,7 @@ def get():
 
     return myResponse(200, lista_docs)
 
-@deliveries_disponibles_blueprint.route('/', methods=['DELETE'])
+@deliveries_disponibles_blueprint.route(COLLECTION_DELIVERIES_DISPONIBLES, methods=['DELETE'])
 def delete():
     # get json data, validates and deserializes it
     content = request.get_json()

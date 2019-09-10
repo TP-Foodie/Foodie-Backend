@@ -23,7 +23,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
     def test_wrong_extra_fields_agregar_delivery(self):
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles/',
+            f'{prefix}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
