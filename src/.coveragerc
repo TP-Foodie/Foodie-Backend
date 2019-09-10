@@ -1,4 +1,5 @@
 [run]
 omit = src/app.py
     src/conftest.py
-    src/deliveries_disponibles/models/__init__.py 
+    src/deliveries_disponibles/models/__init__.py
+    src/deliveries_disponibles/tests/test_deliveries_disponibles_controller.py  

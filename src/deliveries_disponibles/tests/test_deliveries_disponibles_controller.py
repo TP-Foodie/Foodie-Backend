@@ -2,6 +2,7 @@ import unittest
 from unittest import TestCase, mock
 from unittest.mock import patch, MagicMock
 import json
+from marshmallow import ValidationError
 
 from app import APP, prefix
 from deliveries_disponibles.models.delivery_disponible import DeliveryDisponible
@@ -87,8 +88,13 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #
     #   Wrong Tests
     #
-"""
-    def test_wrong_extra_fields_agregar_delivery(self):
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_extra_fields_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
         response = self.app.post(
             f'{prefix}/deliveries_disponibles',
             data=json.dumps({
@@ -102,4 +108,41 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         )
 
         assert response._status_code == 400
-"""
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_empty_name_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": [-58.3772300, -34.6131500]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400
+
+    @patch('deliveries_disponibles.controllers.deliveries_disponibles_controller.DeliveryDisponibleSchema', autospec=True)
+    def test_wrong_longitude_value_agregar_delivery(self, mock_schema):
+        # mocks
+        mock_schema.return_value = MagicMock()
+        mock_schema.side_effect = ValidationError("error message")
+
+        response = self.app.post(
+            f'{prefix}/deliveries_disponibles',
+            data=json.dumps({
+                "_id": "1",
+                "name": "Santiago",
+	            "profile_image": "https://urlimagen.com",
+	            "coordinates": [-190, -34.6131500]
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 400

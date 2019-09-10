@@ -22,9 +22,8 @@ deliveries_disponibles_blueprint = Blueprint(COLLECTION_DELIVERIES_DISPONIBLES, 
 def post():
     # get json data, validates and deserializes it
     content = request.get_json()
-    
-    deliveries_disponibles_service = DeliveriesDisponiblesService()
 
+    # convert JSON to model object
     try:
         delivery_disponible_schema = DeliveryDisponibleSchema()
         delivery_disponible_data = delivery_disponible_schema.load(content)
@@ -32,6 +31,7 @@ def post():
         raise ValidationException(err.messages)
 
     # agregar delivery disponible
+    deliveries_disponibles_service = DeliveriesDisponiblesService()
     deliveries_disponibles_service.agregar_delivery_disponible(delivery_disponible_data)
 
     return myResponse(201, 'Created Succesfully')
@@ -41,8 +41,7 @@ def get():
     # get json data, validates and deserializes it
     content = request.get_json()
 
-    deliveries_disponibles_service = DeliveriesDisponiblesService()
-
+    # convert JSON to model object
     try:
         query_deliveries_cercanos_schema = QueryDeliveriesCercanosSchema()
         query_deliveries_cercanos_data = query_deliveries_cercanos_schema.load(content)
@@ -50,6 +49,7 @@ def get():
         raise ValidationException(err.messages)
 
     # query de deliveries cercanos
+    deliveries_disponibles_service = DeliveriesDisponiblesService()
     lista_docs = deliveries_disponibles_service.query_deliveries_cercanos(query_deliveries_cercanos_data)
 
     return myResponse(200, lista_docs)
@@ -58,9 +58,8 @@ def get():
 def delete():
     # get json data, validates and deserializes it
     content = request.get_json()
-    
-    deliveries_disponibles_service = DeliveriesDisponiblesService()
 
+    # convert JSON to model object
     try:
         eliminar_delivery_disponible_schema = EliminarDeliveryDisponibleSchema()
         eliminar_delivery_disponible_data = eliminar_delivery_disponible_schema.load(content)
@@ -68,6 +67,7 @@ def delete():
         raise ValidationException(err.messages)
     
     # elimino el delivery disponible
+    deliveries_disponibles_service = DeliveriesDisponiblesService()
     deliveries_disponibles_service.eliminar_delivery_disponible(eliminar_delivery_disponible_data)
 
     return myResponse(200, 'Deleted Succesfully')
