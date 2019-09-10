@@ -1,2 +1,6 @@
 [run]
-omit = src/app.py
+omit =
+    src/app.py
+    schemas
+    settings.py
+    models
