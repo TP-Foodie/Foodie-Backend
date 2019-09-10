@@ -1,6 +1,7 @@
 from deliveries_disponibles.models import FoodieModel
 
 class QueryDeliveriesCercanos(FoodieModel):
+    """ Model Query Deliveries Cercanos."""
     radius = None
     coordinates = None
 

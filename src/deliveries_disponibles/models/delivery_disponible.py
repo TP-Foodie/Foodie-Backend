@@ -1,6 +1,7 @@
 from deliveries_disponibles.models import FoodieModel
 
 class DeliveryDisponible(FoodieModel):
+    """ Model Delivery Disponible."""
     _id = None
     name = None
     profile_image = None
