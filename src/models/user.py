@@ -1,7 +1,7 @@
 from mongoengine import StringField, Document, EmailField, BinaryField
 
 
-class Users(Document):
+class User(Document):
     name = StringField(required=True)
     last_name = StringField(required=True)
     password = StringField(required=True)

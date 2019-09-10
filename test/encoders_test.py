@@ -1,5 +1,5 @@
 from encoders import CustomJSONEncoder
-from models import users, place
+from models import user, place
 import datetime
 
 encoder = CustomJSONEncoder()

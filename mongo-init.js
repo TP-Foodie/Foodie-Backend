@@ -9,7 +9,7 @@ db.createUser({
   ],
 });
 
-db.users.insert({
+db.user.insert({
   name: "Pepe",
   last_name: " Argento",
   password: "password",

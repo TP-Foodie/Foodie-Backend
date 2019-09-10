@@ -1,20 +1,11 @@
-from mongoengine import Document
+from mongoengine import Document, StringField, EmbeddedDocumentField, FloatField, EmbeddedDocument
+
+
+class Coordinates(EmbeddedDocument):
+    latitude = FloatField(required=True)
+    longitude = FloatField(required=True)
 
 
 class Place(Document):
-    name = None
-    coordinates = None
-
-    def __init__(self, _id, name, coordinates):
-        self._id = _id
-        self.name = name
-        self.coordinates = coordinates
-
-
-class Coordinates(Document):
-    latitude = None
-    longitude = None
-
-    def __init__(self, latitude, longitude):
-        self.latitude = latitude
-        self.longitude = longitude
+    name = StringField(required=True)
+    coordinates = EmbeddedDocumentField(Coordinates)
