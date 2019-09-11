@@ -13,5 +13,6 @@ db.user.insert({
   name: "Pepe",
   last_name: " Argento",
   password: "password",
-  email: "pepeargento@gmail.com"
+  email: "pepeargento@gmail.com",
+  type: "CUSTOMER"
 })

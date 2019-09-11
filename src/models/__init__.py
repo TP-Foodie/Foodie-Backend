@@ -1,4 +1,5 @@
-from mongoengine import Document, StringField, EmbeddedDocumentField, FloatField, EmbeddedDocument, EmailField
+from mongoengine import Document, StringField, EmbeddedDocumentField, FloatField, EmbeddedDocument, EmailField, \
+    BooleanField
 
 
 class Coordinates(EmbeddedDocument):
@@ -12,8 +13,17 @@ class Place(Document):
 
 
 class User(Document):
-    name = StringField(required=True)
-    last_name = StringField(required=True)
+    name = StringField(required=False)
+    last_name = StringField(required=False)
     password = StringField(required=True)
     email = EmailField(required=True)
     profile_image = StringField(required=False)
+    phone = StringField(required=False)
+    type = StringField(required=True, regex="CUSTOMER|DELIVERY")  # CUSTOMER, DELIVERY
+
+
+class Transaction(Document):
+    customer_id = StringField(required=True)
+    delivery_id = StringField(required=False)
+    amount = FloatField(required=True)
+    delivery_collected = BooleanField(required=False)

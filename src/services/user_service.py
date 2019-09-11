@@ -18,9 +18,10 @@ def save_user(user_data):
     return user.save()
 
 
-def update_user(user_data):
-    user = get_user(user_data["id"])
+def update_user(_id, user_data):
+    user = get_user(_id)
+
     for key in user_data.keys():
         user[key] = user_data[key]
-    user.save()
-    return user
+
+    return user.save()

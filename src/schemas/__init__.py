@@ -1,18 +1,22 @@
 from marshmallow import Schema, fields
+from marshmallow.validate import OneOf
 
 
 class UserSchema(Schema):
-    name = fields.Str(required=True)
-    last_name = fields.Str(required=True)
+    name = fields.Str(required=False)
+    last_name = fields.Str(required=False)
     password = fields.Str(required=True)
     email = fields.Email(required=True)
+    type = fields.Str(required=True, validate=OneOf(choices=("CUSTOMER", "DELIVERY")))
+    phone = fields.Str(required=False)
     profile_image = fields.String(required=False)
 
 
 class UpdateUserSchema(Schema):
-    id = fields.Str(required=True)
     name = fields.Str(required=False)
     last_name = fields.Str(required=False)
     password = fields.Str(required=False)
     email = fields.Email(required=False)
+    type = fields.Str(required=False, validate=OneOf(choices=("CUSTOMER", "DELIVERY")))
+    phone = fields.Str(required=False)
     profile_image = fields.String(required=False)

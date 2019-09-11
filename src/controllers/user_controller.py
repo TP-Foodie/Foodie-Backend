@@ -18,13 +18,13 @@ def get_all():
     return jsonify(user_service.get_all_users()), 200
 
 
-@USERS_BLUEPRINT.route('/', methods=['PUT'])
-def patch():
+@USERS_BLUEPRINT.route('/<_id>', methods=['PUT'])
+def patch(_id):
     content = request.get_json()
     schema = UpdateUserSchema()
     user_data = schema.load(content)
 
-    return jsonify(user_service.update_user(user_data))
+    return jsonify(user_service.update_user(_id, user_data))
 
 
 @USERS_BLUEPRINT.route('/', methods=['POST'])
