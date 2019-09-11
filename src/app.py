@@ -5,9 +5,9 @@ from flask import Flask
 
 from repositories.database_api import DB
 from deliveries_disponibles.controllers.deliveries_disponibles_controller import (
-    deliveries_disponibles_blueprint)
+    DELIVERIES_DISPONIBLES_BLUEPRINT)
 from deliveries_disponibles.exception_handlers import (
-    deliveries_disponibles_exception_handlers_blueprint)
+    DELIVERIES_DISPONIBLES_EXCEPTIONS_HANDLER)
 
 # initialize Flask app
 APP = Flask(__name__)
@@ -17,8 +17,8 @@ VERSION = os.environ.get('API_VERSION', 'v1')
 PREFIX = f"/api/{VERSION}"
 
 # register Flask blueprints
-APP.register_blueprint(deliveries_disponibles_blueprint, url_prefix=f'{PREFIX}/')
-APP.register_blueprint(deliveries_disponibles_exception_handlers_blueprint)
+APP.register_blueprint(DELIVERIES_DISPONIBLES_BLUEPRINT, url_prefix=f'{PREFIX}/')
+APP.register_blueprint(DELIVERIES_DISPONIBLES_EXCEPTIONS_HANDLER)
 
 # initialize database api
 DATABASE = DB.init()

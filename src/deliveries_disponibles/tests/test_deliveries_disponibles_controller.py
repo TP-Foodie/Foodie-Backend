@@ -1,10 +1,9 @@
 import unittest
-from unittest import TestCase, mock
 from unittest.mock import patch, MagicMock
 import json
 from marshmallow import ValidationError
 
-from app import APP, prefix
+from app import APP, PREFIX
 from deliveries_disponibles.models.delivery_disponible import DeliveryDisponible
 from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
 from deliveries_disponibles.models.eliminar_delivery_disponible import EliminarDeliveryDisponible
@@ -31,15 +30,14 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         # call controller
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
                 "profile_image": "https://urlimagen.com",
-	            "coordinates": [-58.3772300, -34.6131500]
+	        "coordinates": [-58.3772300, -34.6131500]
             }),
-            content_type='application/json'
-        )            
+            content_type='application/json')
 
         assert response._status_code == 201
 
@@ -49,19 +47,18 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         # mocks
         mock_service.return_value = MagicMock()
         mock_service.query_deliveries_cercanos.return_value = []
-            
+
         mock_schema.return_value = MagicMock()
         mock_schema.load.return_value = QueryDeliveriesCercanos("5", [-58.3772300, -34.6131500])
 
         # call controller
         response = self.app.get(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "radius": "5",
                 "coordinates": [-58.3772300, -34.6131500]
             }),
-            content_type='application/json'
-        )            
+            content_type='application/json')
 
         assert response._status_code == 200
 
@@ -77,10 +74,9 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         # call controller
         response = self.app.delete(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({"_id": "1"}),
-            content_type='application/json'
-        )            
+            content_type='application/json')
 
         assert response._status_code == 200
 
@@ -96,7 +92,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
@@ -116,7 +112,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "",
                 "name": "Santiago",
@@ -135,7 +131,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "",
@@ -154,7 +150,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
@@ -173,7 +169,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
@@ -192,7 +188,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
@@ -211,7 +207,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
@@ -230,7 +226,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",
@@ -249,7 +245,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{prefix}/deliveries_disponibles',
+            f'{PREFIX}/deliveries_disponibles',
             data=json.dumps({
                 "_id": "1",
                 "name": "Santiago",

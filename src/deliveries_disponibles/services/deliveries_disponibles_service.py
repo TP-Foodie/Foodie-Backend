@@ -7,7 +7,7 @@ COLLECTION_DELIVERIES_DISPONIBLES = 'deliveries_disponibles'
 class DeliveriesDisponiblesService:
 
     def agregar_delivery_disponible(self, delivery_data):
-        if (DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) != None):
+        if DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) is not None:
             raise DeliveryYaDisponibleException('Delivery ya disponible')
 
         DB.agregar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data)
@@ -25,8 +25,9 @@ class DeliveriesDisponiblesService:
         return DB.encontrar_lista_documentos(COLLECTION_DELIVERIES_DISPONIBLES, query)
 
     def eliminar_delivery_disponible(self, delivery_data):
-        if (DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) == None):
+        if DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data) is None:
             raise DeliveryNoDisponibleException('Delivery no disponible')
 
         DB.eliminar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data)
         return True
+        
