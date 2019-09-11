@@ -18,7 +18,7 @@ APP.register_blueprint(USERS_BLUEPRINT, url_prefix='/users')
 for key, value in exception_handler.items():
     APP.register_error_handler(key, value)
 
-connect(db="foodie",
+connect(db=Config.DATABASE_NAME,
         host=Config.DATABASE_HOST,
         port=Config.DATABASE_PORT,
         username=Config.DATABASE_USERNAME,
