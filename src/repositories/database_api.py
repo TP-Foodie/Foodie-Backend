@@ -25,9 +25,9 @@ class DB:
         DB.DATABASE[collection].insert_one(data)
 
     @staticmethod
-    def encontrar_documento(collection, query):
-        """ This method finds one document """
-        return DB.DATABASE[collection].find_one(query)
+    def encontrar_documento(collection, id_doc):
+        """ This method finds one document by id """
+        return DB.DATABASE[collection].find_one({"_id": id_doc})
 
     @staticmethod
     def encontrar_lista_documentos(collection, query):
@@ -35,9 +35,9 @@ class DB:
         return [doc for doc in DB.DATABASE[collection].find(query)]
 
     @staticmethod
-    def eliminar_documento(collection, query):
-        """ This method deletes one document """
-        DB.DATABASE[collection].delete_one(query)
+    def eliminar_documento(collection, id_doc):
+        """ This method deletes one document by id """
+        DB.DATABASE[collection].delete_one({"_id": id_doc})
 
     @staticmethod
     def eliminar_todos_los_documentos(collection):

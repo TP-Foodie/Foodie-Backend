@@ -12,3 +12,7 @@ class DeliveryDisponible(FoodieModel):
         self.name = name
         self.profile_image = profile_image
         self.coordinates = coordinates
+
+    def get_id(self):
+        """ Getter id """
+        return self._id

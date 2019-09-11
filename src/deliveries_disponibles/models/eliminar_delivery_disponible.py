@@ -6,3 +6,7 @@ class EliminarDeliveryDisponible(FoodieModel):
 
     def __init__(self, _id):
         self._id = _id
+
+    def get_id(self):
+        """ Getter id """
+        return self._id
