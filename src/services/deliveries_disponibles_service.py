@@ -1,9 +1,9 @@
 """ This module handles business logic of deliveries_disponibles endpoint """
 
 from repositories.database_api import DB
-from deliveries_disponibles.exceptions import (
+from my_exceptions.deliveries_disponibles_exceptions import (
     DeliveryYaDisponibleException, DeliveryNoDisponibleException)
-from deliveries_disponibles.schemas.delivery_disponible_schema import DeliveryDisponibleSchema
+from schemas.delivery_disponible_schema import DeliveryDisponibleSchema
 
 # database collections
 COLLECTION_DELIVERIES_DISPONIBLES = 'deliveries_disponibles'

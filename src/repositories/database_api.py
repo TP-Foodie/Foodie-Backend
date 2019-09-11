@@ -2,10 +2,10 @@
 
 from pymongo import MongoClient
 
+from settings import Config
+
 class DB:
     """ This class is the Database API """
-
-    URI = 'localhost:27017'
 
     #
     #   Initializer de la API de la base de datos.
@@ -15,8 +15,14 @@ class DB:
     def init():
         """ Initializer de la API de la base de datos.
         Inicializa el MongoClient, la base de datos y sus colecciones."""
-        client = MongoClient(DB.URI, username='app', password='password', authSource='foodie',
-                             authMechanism='SCRAM-SHA-1')
+        client = MongoClient(
+            Config.DATABASE_HOST + ':' + Config.DATABASE_PORT,
+            username=Config.DATABASE_USERNAME,
+            password=Config.DATABASE_PASSWORD,
+            authSource=Config.DATABASE_AUTH_SOURCE,
+            authMechanism=Config.DATABASE_AUTH_MECHANISM,
+            ssl=Config.DATABASE_SSL)
+
         DB.DATABASE = client['foodie']
 
     @staticmethod

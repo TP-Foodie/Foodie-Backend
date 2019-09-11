@@ -3,14 +3,12 @@
 from flask import json, request, Response, Blueprint
 from marshmallow import ValidationError
 
-from deliveries_disponibles.services.deliveries_disponibles_service import (
+from services.deliveries_disponibles_service import (
     COLLECTION_DELIVERIES_DISPONIBLES, DeliveriesDisponiblesService)
-from deliveries_disponibles.schemas.delivery_disponible_schema import DeliveryDisponibleSchema
-from deliveries_disponibles.schemas.query_deliveries_cercanos_schema import (
-    QueryDeliveriesCercanosSchema)
-from deliveries_disponibles.schemas.eliminar_delivery_disponible_schema import (
-    EliminarDeliveryDisponibleSchema)
-from deliveries_disponibles.exceptions import ValidationException
+from schemas.delivery_disponible_schema import DeliveryDisponibleSchema
+from schemas.query_deliveries_cercanos_schema import QueryDeliveriesCercanosSchema
+from schemas.eliminar_delivery_disponible_schema import EliminarDeliveryDisponibleSchema
+from my_exceptions.deliveries_disponibles_exceptions import ValidationException
 
 # blueprints Flask
 DELIVERIES_DISPONIBLES_BLUEPRINT = Blueprint(COLLECTION_DELIVERIES_DISPONIBLES, __name__)

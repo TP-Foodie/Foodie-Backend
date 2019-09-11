@@ -2,8 +2,8 @@
 
 from marshmallow import Schema, fields, validate, post_load
 
-from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
-from deliveries_disponibles.schemas.extra_validations import validate_coordinates
+from models.query_deliveries_cercanos import QueryDeliveriesCercanos
+from schemas.extra_validations import validate_coordinates
 
 class QueryDeliveriesCercanosSchema(Schema):
     """ This class is the Marshmallow Schema for QueryDeliveriesCercanos """

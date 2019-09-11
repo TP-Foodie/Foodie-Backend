@@ -2,7 +2,7 @@
 
 from marshmallow import Schema, fields, validate, post_load
 
-from deliveries_disponibles.models.eliminar_delivery_disponible import EliminarDeliveryDisponible
+from models.eliminar_delivery_disponible import EliminarDeliveryDisponible
 
 class EliminarDeliveryDisponibleSchema(Schema):
     """ This class is the Marshmallow Schema for EliminarDeliveryDisponible """

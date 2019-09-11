@@ -3,11 +3,10 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from deliveries_disponibles.services.deliveries_disponibles_service import (
-    DeliveriesDisponiblesService)
-from deliveries_disponibles.models.delivery_disponible import DeliveryDisponible
-from deliveries_disponibles.models.eliminar_delivery_disponible import EliminarDeliveryDisponible
-from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
+from services.deliveries_disponibles_service import DeliveriesDisponiblesService
+from models.delivery_disponible import DeliveryDisponible
+from models.eliminar_delivery_disponible import EliminarDeliveryDisponible
+from models.query_deliveries_cercanos import QueryDeliveriesCercanos
 
 class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
     """ This class is the test case for deliveries_disponibles_service """
@@ -16,7 +15,7 @@ class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
     #   Success Tests
     #
 
-    @patch('deliveries_disponibles.services.deliveries_disponibles_service.DB', autospec=True)
+    @patch('services.deliveries_disponibles_service.DB', autospec=True)
     def test_success_agregar_delivery(self, db_mock):
         """ Test success agregar delivery """
         # mocks
@@ -30,7 +29,7 @@ class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
 
         assert ret_value
 
-    @patch('deliveries_disponibles.services.deliveries_disponibles_service.DB', autospec=True)
+    @patch('services.deliveries_disponibles_service.DB', autospec=True)
     def test_success_query_deliveries_cercanos(self, db_mock):
         """ Test success query deliveries cercanos """
         # mocks
@@ -43,7 +42,7 @@ class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
 
         assert ret_value == []
 
-    @patch('deliveries_disponibles.services.deliveries_disponibles_service.DB', autospec=True)
+    @patch('services.deliveries_disponibles_service.DB', autospec=True)
     def test_success_eliminar_delivery(self, db_mock):
         """ Test success eliminar delivery """
         # mocks

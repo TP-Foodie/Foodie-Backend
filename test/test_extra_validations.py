@@ -4,7 +4,7 @@ deliveries_disponible/schemas/extra_validations """
 import unittest
 from marshmallow import ValidationError
 
-from deliveries_disponibles.schemas.extra_validations import validate_coordinates
+from schemas.extra_validations import validate_coordinates
 
 class ExtraValidationsTestCase(unittest.TestCase):
     """ This class is the test case for extra_validations """

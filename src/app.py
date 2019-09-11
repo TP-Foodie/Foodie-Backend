@@ -4,9 +4,8 @@ import os
 from flask import Flask
 
 from repositories.database_api import DB
-from deliveries_disponibles.controllers.deliveries_disponibles_controller import (
-    DELIVERIES_DISPONIBLES_BLUEPRINT)
-from deliveries_disponibles.exception_handlers import (
+from controllers.deliveries_disponibles_controller import DELIVERIES_DISPONIBLES_BLUEPRINT
+from exceptions_handlers.deliveries_disponibles_exceptions_handler import (
     DELIVERIES_DISPONIBLES_EXCEPTIONS_HANDLER)
 
 # initialize Flask app

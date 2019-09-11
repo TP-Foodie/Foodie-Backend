@@ -2,8 +2,8 @@
 
 from marshmallow import Schema, fields, validate, post_load
 
-from deliveries_disponibles.models.delivery_disponible import DeliveryDisponible
-from deliveries_disponibles.schemas.extra_validations import validate_coordinates
+from models.delivery_disponible import DeliveryDisponible
+from schemas.extra_validations import validate_coordinates
 
 class DeliveryDisponibleSchema(Schema):
     """ This class is the Marshmallow Schema for DeliveryDisponible """

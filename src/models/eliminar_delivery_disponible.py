@@ -1,6 +1,6 @@
 """ This module is the model that represents Eliminar Delivery Disponible """
 
-from deliveries_disponibles.models import FoodieModel
+from models import FoodieModel
 
 class EliminarDeliveryDisponible(FoodieModel):
     """ Model Eliminar Delivery Disponible."""

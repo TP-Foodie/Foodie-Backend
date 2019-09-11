@@ -1,6 +1,6 @@
 """ This module is the model that represents Query de Deliveries Cercanos """
 
-from deliveries_disponibles.models import FoodieModel
+from models import FoodieModel
 
 class QueryDeliveriesCercanos(FoodieModel):
     """ Model Query Deliveries Cercanos."""
