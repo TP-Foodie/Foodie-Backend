@@ -8,7 +8,7 @@ load_dotenv(dotenv_path=ENV_PATH)
 
 
 class Config:
-    DATABASE_NAME = os.getenv("DATABASE_HOST", "foodie")
+    DATABASE_NAME = os.getenv("DATABASE_NAME", "foodie")
     DATABASE_SSL = os.getenv("DATABASE_SSL", "false").lower() == "true"
     DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
     DATABASE_PORT = int(os.getenv("DATABASE_PORT", "27017"))
