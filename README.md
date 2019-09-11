@@ -1,4 +1,4 @@
-# Foodie-Backend
+# Foodie-Backend  [![Build Status](https://travis-ci.org/TP-Foodie/Foodie-Backend.svg?branch=master)](https://travis-ci.org/TP-Foodie/Foodie-Backend)
 Application Server
 
 ## Docs
