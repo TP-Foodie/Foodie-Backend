@@ -1,7 +1,8 @@
 """ This module handles business logic of deliveries_disponibles endpoint """
 
 from repositories.database_api import DB
-from deliveries_disponibles.exceptions import DeliveryYaDisponibleException, DeliveryNoDisponibleException
+from deliveries_disponibles.exceptions import (
+    DeliveryYaDisponibleException, DeliveryNoDisponibleException)
 from deliveries_disponibles.schemas.delivery_disponible_schema import DeliveryDisponibleSchema
 
 # database collections
@@ -24,7 +25,6 @@ class DeliveriesDisponiblesService:
     def query_deliveries_cercanos(self, query_data):
         """ This method handles business logic of GET in deliveries_disponibles endpoint """
         # create geospatial query
-        # TODO: averiguar sobre geospatial indexes (son necesarios?)
         longitude = query_data.coordinates[0]
         latitude = query_data.coordinates[1]
         radius = query_data.radius

@@ -1,3 +1,5 @@
+""" This module is the model that represents Delivery Disponible """
+
 from deliveries_disponibles.models import FoodieModel
 
 class DeliveryDisponible(FoodieModel):

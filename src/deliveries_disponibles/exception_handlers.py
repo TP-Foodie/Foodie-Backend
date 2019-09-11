@@ -2,8 +2,8 @@
 
 from flask import jsonify, Blueprint
 
-from deliveries_disponibles.services.deliveries_disponibles_service import COLLECTION_DELIVERIES_DISPONIBLES
-from deliveries_disponibles.exceptions import DeliveryYaDisponibleException, DeliveryNoDisponibleException, ValidationException
+from deliveries_disponibles.exceptions import (
+    DeliveryYaDisponibleException, DeliveryNoDisponibleException, ValidationException)
 
 # blueprints Flask
 DELIVERIES_DISPONIBLES_EXCEPTIONS_HANDLER = \

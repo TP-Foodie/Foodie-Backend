@@ -1,3 +1,5 @@
+""" This module is the model that represents Eliminar Delivery Disponible """
+
 from deliveries_disponibles.models import FoodieModel
 
 class EliminarDeliveryDisponible(FoodieModel):

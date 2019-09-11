@@ -3,11 +3,13 @@
 from flask import json, request, Response, Blueprint
 from marshmallow import ValidationError
 
-from deliveries_disponibles.services.deliveries_disponibles_service import COLLECTION_DELIVERIES_DISPONIBLES, DeliveriesDisponiblesService
-from deliveries_disponibles.models.query_deliveries_cercanos import QueryDeliveriesCercanos
+from deliveries_disponibles.services.deliveries_disponibles_service import (
+    COLLECTION_DELIVERIES_DISPONIBLES, DeliveriesDisponiblesService)
 from deliveries_disponibles.schemas.delivery_disponible_schema import DeliveryDisponibleSchema
-from deliveries_disponibles.schemas.query_deliveries_cercanos_schema import QueryDeliveriesCercanosSchema
-from deliveries_disponibles.schemas.eliminar_delivery_disponible_schema import EliminarDeliveryDisponibleSchema
+from deliveries_disponibles.schemas.query_deliveries_cercanos_schema import (
+    QueryDeliveriesCercanosSchema)
+from deliveries_disponibles.schemas.eliminar_delivery_disponible_schema import (
+    EliminarDeliveryDisponibleSchema)
 from deliveries_disponibles.exceptions import ValidationException
 
 # blueprints Flask
