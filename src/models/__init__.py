@@ -1,2 +1,2 @@
 class FoodieModel:
-    pass
+    _id = None

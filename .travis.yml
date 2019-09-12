@@ -1,0 +1,5 @@
+language: python
+python:
+  - "3.6"
+script:
+  - pytest --cov=src --cov-fail-under=75 --cov-config=.coveragerc
