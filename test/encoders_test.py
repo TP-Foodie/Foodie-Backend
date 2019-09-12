@@ -27,7 +27,7 @@ def test_user_json_encode():
 
 def test_place_json_encode():
     expected = {
-        "id": "1",
+        "_id": "1",
         "name": "Mac",
         "coordinates": {
             "latitude": 1.0,
