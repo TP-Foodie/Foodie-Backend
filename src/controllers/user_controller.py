@@ -14,8 +14,17 @@ def get_user(_id):
 
 
 @USERS_BLUEPRINT.route('/', methods=['GET'])
-def get_all():
-    return jsonify(user_service.get_all_users()), 200
+def get_users():
+    page = int(request.args.get("page", 0))
+    limit = int(request.args.get("limit", 50))
+
+    return jsonify(
+        {
+            "page": page,
+            "limit": limit,
+            "users" :user_service.get_users(page, limit)
+         }
+    ), 200
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['PUT'])

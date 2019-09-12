@@ -1,8 +1,8 @@
 from models import User
 
 
-def get_all_users():
-    return [user for user in User.objects]
+def get_users(page, limit):
+    return [user for user in User.objects.skip(page*limit).limit(limit)]
 
 
 def get_user(_id):
