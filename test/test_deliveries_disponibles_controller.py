@@ -56,11 +56,11 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     def test_success_query_deliveries_cercanos(self, mock_schema, mock_service):
         """ Test success query deliveries cercanos """
         # mocks
-        mock_service.return_value = Mock()
+        mock_service.return_value = MagicMock()
         mock_service.query_deliveries_cercanos.return_value = [DeliveryDisponible(
             "1", "Santiago", "https://urlimagen.com", [-58.3772300, -34.6131500])]
 
-        mock_schema.return_value = Mock()
+        mock_schema.return_value = MagicMock()
         mock_schema.load.return_value = QueryDeliveriesCercanos("5", [-58.3772300, -34.6131500])
 
         # call controller

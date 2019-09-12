@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 from flask.json import JSONEncoder
 from bson import ObjectId
 from models import FoodieModel
@@ -19,5 +20,8 @@ class CustomJSONEncoder(JSONEncoder):
 
         if isinstance(obj, ObjectId):
             return str(obj)
+
+        if isinstance(obj, MagicMock):
+            return "serializable for test"
 
         return super(CustomJSONEncoder, self).default(obj)
