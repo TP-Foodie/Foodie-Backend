@@ -5,18 +5,26 @@ from mongoengine import DoesNotExist
 
 
 def marshmallow_validation_error_handler(e):
+    from app import APP
+    APP.logger.warn(e)
     return jsonify(e.messages), 400
 
 
 def mongo_validation_error_handler(e):
+    from app import APP
+    APP.logger.warn(e)
     return jsonify(e.args), 400
 
 
 def error_handler(e):
+    from app import APP
+    APP.logger.error(e)
     return "Internal error", 500
 
 
 def not_found(e):
+    from app import APP
+    APP.logger.info(e)
     return "Not found", 404
 
 

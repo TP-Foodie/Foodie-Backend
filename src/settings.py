@@ -14,3 +14,4 @@ class Config:
     DATABASE_PORT = int(os.getenv("DATABASE_PORT", "27017"))
     DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "password")
     DATABASE_USERNAME = os.getenv("DATABASE_USERNAME", "app")
+    DATABASE_AUTH_SOURCE = os.getenv("DATABASE_AUTH_SOURCE", "admin")

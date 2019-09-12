@@ -19,6 +19,7 @@ for key, value in exception_handler.items():
     APP.register_error_handler(key, value)
 
 connect(db=Config.DATABASE_NAME,
+        authentication_source=Config.DATABASE_AUTH_SOURCE,
         host=Config.DATABASE_HOST,
         port=Config.DATABASE_PORT,
         username=Config.DATABASE_USERNAME,
