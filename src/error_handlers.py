@@ -3,32 +3,29 @@ from marshmallow import ValidationError as MarshmallowValidationError
 from mongoengine import ValidationError as MongoValidationError
 from mongoengine import DoesNotExist
 
-
-def marshmallow_validation_error_handler(e):
-    from app import APP
-    APP.logger.warn(e)
-    return jsonify(e.messages), 400
+import logger
 
 
-def mongo_validation_error_handler(e):
-    from app import APP
-    APP.logger.warn(e)
-    return jsonify(e.args), 400
+def marshmallow_validation_error_handler(error):
+    return jsonify(error.messages), 400
 
 
-def error_handler(e):
-    from app import APP
-    APP.logger.error(e)
+def mongo_validation_error_handler(error):
+    logger.warn(error)
+    return jsonify(error.args), 400
+
+
+def error_handler(error):
+    logger.error(error)
     return "Internal error", 500
 
 
-def not_found(e):
-    from app import APP
-    APP.logger.info(e)
+def not_found(error):
+    logger.info(error)
     return "Not found", 404
 
 
-exception_handler = {
+EXCEPTION_HANDLER = {
     MarshmallowValidationError: marshmallow_validation_error_handler,
     MongoValidationError: mongo_validation_error_handler,
     DoesNotExist: not_found,

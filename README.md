@@ -13,6 +13,13 @@ Application Server
 
 ```pylint src/```
 
+### Arreglar automaticamente los errores de estilos
+
+```
+find src/ -name "*.py" | xargs -t -I{} autopep8 -v --in-place --aggressive --aggressive {}
+find test/ -name "*.py" | xargs -t -I{} autopep8 -v --in-place --aggressive --aggressive {}
+```
+
 ### Correr pytest
 
 ```pytest --cov=src --cov-fail-under=75 --cov-config=.coveragerc```

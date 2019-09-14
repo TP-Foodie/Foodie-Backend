@@ -1,11 +1,10 @@
-from unittest.mock import Mock, create_autospec
-
+import datetime
+from unittest.mock import create_autospec
 from mongoengine import Document
 
-from encoders import CustomJSONEncoder
-import datetime
+from src.encoders import CustomJSONEncoder
 
-encoder = CustomJSONEncoder()
+ENCODER = CustomJSONEncoder()
 
 
 def test_datetime_json_encode():
@@ -14,9 +13,9 @@ def test_datetime_json_encode():
     """
 
     expected = '"Sat, 31 Aug 2019 20:58:53 GMT"'
-    d = datetime.datetime(2019, 8, 31, 20, 58, 53, 391516)
+    date = datetime.datetime(2019, 8, 31, 20, 58, 53, 391516)
 
-    assert expected == encoder.encode(d)
+    assert expected == ENCODER.encode(date)
 
 
 def test_mongo_document():
@@ -26,6 +25,6 @@ def test_mongo_document():
     expected = {"name": "jose"}
     document = create_autospec(Document)
 
-    document._data = {"name": "jose"}
+    document._data = {"name": "jose"}  # pylint: disable=W0212
 
-    assert encoder.encode(expected) == encoder.encode(document)
+    assert ENCODER.encode(expected) == ENCODER.encode(document)

@@ -1,12 +1,12 @@
 from flask import Flask
-from encoders import CustomJSONEncoder
 from flask_cors import CORS
 from mongoengine import connect
+from encoders import CustomJSONEncoder
 from settings import Config
 
 from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
-from error_handlers import exception_handler
+from error_handlers import EXCEPTION_HANDLER
 
 APP = Flask(__name__)
 CORS(APP)
@@ -15,7 +15,7 @@ APP.json_encoder = CustomJSONEncoder
 APP.register_blueprint(PLACES_BLUEPRINT, url_prefix='/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix='/users')
 
-for key, value in exception_handler.items():
+for key, value in EXCEPTION_HANDLER.items():
     APP.register_error_handler(key, value)
 
 connect(db=Config.DATABASE_NAME,

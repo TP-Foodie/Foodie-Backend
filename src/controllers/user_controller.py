@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import Blueprint
 from flask import request
 
-from schemas import UserSchema, UpdateUserSchema
+from schemas import CreateUserSchema, UpdateUserSchema
 from services import user_service
 
 USERS_BLUEPRINT = Blueprint('users', __name__)
@@ -22,8 +22,8 @@ def get_users():
         {
             "page": page,
             "limit": limit,
-            "users" :user_service.get_users(page, limit)
-         }
+            "users": user_service.get_users(page, limit)
+        }
     ), 200
 
 
@@ -39,7 +39,7 @@ def patch(_id):
 @USERS_BLUEPRINT.route('/', methods=['POST'])
 def post():
     content = request.get_json()
-    schema = UserSchema()
+    schema = CreateUserSchema()
     user_data = schema.load(content)
 
-    return jsonify(user_service.save_user(user_data)), 201
+    return jsonify(user_service.create_user(user_data)), 201

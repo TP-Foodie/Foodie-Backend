@@ -1,4 +1,9 @@
-from mongoengine import Document, StringField, EmbeddedDocumentField, FloatField, EmbeddedDocument, EmailField, \
+from mongoengine import Document,\
+    StringField,\
+    EmbeddedDocumentField,\
+    FloatField,\
+    EmbeddedDocument,\
+    EmailField, \
     BooleanField
 
 
@@ -19,7 +24,9 @@ class User(Document):
     email = EmailField(required=True)
     profile_image = StringField(required=False)
     phone = StringField(required=False)
-    type = StringField(required=True, regex="CUSTOMER|DELIVERY")  # CUSTOMER, DELIVERY
+    type = StringField(
+        required=True,
+        regex="CUSTOMER|DELIVERY")  # CUSTOMER, DELIVERY
 
 
 class Transaction(Document):

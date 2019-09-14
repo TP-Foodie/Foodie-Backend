@@ -8,3 +8,4 @@ python-dotenv==0.10.3
 marshmallow==3.0.3
 flask-cors==3.0.8
 mongoengine==0.18.2
+autopep8==1.4.4
