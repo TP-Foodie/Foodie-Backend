@@ -6,7 +6,7 @@ from settings import Config
 
 from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
-from error_handlers import EXCEPTION_HANDLER
+from error_handlers import ERRORS_BLUEPRINT
 
 APP = Flask(__name__)
 CORS(APP)
@@ -14,9 +14,7 @@ CORS(APP)
 APP.json_encoder = CustomJSONEncoder
 APP.register_blueprint(PLACES_BLUEPRINT, url_prefix='/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix='/users')
-
-for key, value in EXCEPTION_HANDLER.items():
-    APP.register_error_handler(key, value)
+APP.register_blueprint(ERRORS_BLUEPRINT)
 
 connect(db=Config.DATABASE_NAME,
         authentication_source=Config.DATABASE_AUTH_SOURCE,

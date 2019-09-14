@@ -1,6 +1,8 @@
 [run]
 omit =
     src/app.py
-    schemas
+    src/schemas
     src/settings.py
+    src/logger.py
+    src/error_handlers.py
     models
