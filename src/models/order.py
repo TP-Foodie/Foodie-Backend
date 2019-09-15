@@ -1,4 +1,4 @@
-from mongoengine import Document, IntField, ReferenceField
+from mongoengine import Document, IntField, ReferenceField, CASCADE
 
 from src.models import User
 
@@ -12,9 +12,9 @@ class OrderStatus(Document):
 
 
 class Order(Document):
-    number = IntField
-    status = ReferenceField(OrderStatus)
-    type = ReferenceField(OrderType)
-    owner = ReferenceField(User)
+    number = IntField(required=True)
+    status = ReferenceField(OrderStatus, required=True)
+    type = ReferenceField(OrderType, required=True)
+    owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
 
     meta = {'allow_inheritance': True}
