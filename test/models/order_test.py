@@ -4,6 +4,7 @@ from src.models.order import Order
 from test.support.utils import assert_attr_exists
 
 
+@pytest.mark.usefixtures('a_client')
 class TestOrder:
     @pytest.mark.parametrize('attr_name', ['number', 'status', 'type', 'owner'])
     def test_should_answer_to_attr(self, attr_name, an_order):
