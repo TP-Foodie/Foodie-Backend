@@ -8,6 +8,8 @@ from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
 from error_handlers import ERRORS_BLUEPRINT
 
+from src.controllers.order_controller import ORDERS_BLUEPRINT
+
 APP = Flask(__name__)
 CORS(APP)
 
@@ -15,6 +17,7 @@ APP.json_encoder = CustomJSONEncoder
 APP.register_blueprint(PLACES_BLUEPRINT, url_prefix='/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix='/users')
 APP.register_blueprint(ERRORS_BLUEPRINT)
+APP.register_blueprint(ORDERS_BLUEPRINT)
 
 connect(db=Config.DATABASE_NAME,
         authentication_source=Config.DATABASE_AUTH_SOURCE,

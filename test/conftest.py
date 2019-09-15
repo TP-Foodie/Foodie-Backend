@@ -1,7 +1,9 @@
 import pytest
 from faker import Faker
 from faker.providers import person, internet, phone_number
+from mongoengine import connect, disconnect
 
+from src.app import APP
 from src.models import User
 from src.models.order import Order
 
@@ -32,3 +34,14 @@ def an_order(fake, a_client_user):
         number=fake.pydecimal(),
         owner=a_client_user
     )
+
+
+@pytest.fixture
+def a_client():
+    APP.config['TESTING'] = True
+    connect('mongoenginetest', host='mongomock://localhost', alias='testing')
+    client = APP.test_client()
+
+    yield client
+
+    disconnect()
