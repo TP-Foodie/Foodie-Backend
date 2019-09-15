@@ -7,7 +7,7 @@ class OrderSchema(Schema):
     owner = fields.Nested(UserSchema)
 
     class Meta:
-        fields = ('number', 'status', 'type', 'owner')
+        fields = ('id', 'number', 'status', 'type')
 
 
 orders_schema = OrderSchema(many=True)

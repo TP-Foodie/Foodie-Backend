@@ -12,15 +12,8 @@ class TestOrderController:
         response = a_client.get('/orders/')
         order = json.loads(response.data)[0]
         assert order == {
+            'id': str(an_order.id),
             'number': an_order.number,
             'status': an_order.status,
             'type': an_order.type,
-            'owner': {
-                'name': an_order.owner.name,
-                'last_name': an_order.owner.last_name,
-                'email': an_order.owner.email,
-                'profile_image': an_order.owner.profile_image,
-                'phone': an_order.owner.phone
-            }
         }
-
