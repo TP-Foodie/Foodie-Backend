@@ -1,6 +1,6 @@
 import pytest
 
-from src.models.order import OrderWaitingStatus, OrderNormalType
+from src.models.order import Order
 from test.support.utils import assert_attr_exists
 
 
@@ -10,7 +10,7 @@ class TestOrder:
         assert_attr_exists(an_order, attr_name)
 
     def test_order_should_be_on_waiting_status_by_default(self, an_order):
-        assert isinstance(an_order.status, OrderWaitingStatus)
+        assert an_order.status == Order.WAITING_STATUS
 
     def test_order_should_be_of_normal_type_by_default(self, an_order):
-        assert isinstance(an_order.type, OrderNormalType)
+        assert an_order.type == Order.NORMAL_TYPE
