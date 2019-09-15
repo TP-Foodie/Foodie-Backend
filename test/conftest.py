@@ -37,10 +37,9 @@ def a_client_user(fake):
 
 
 @pytest.fixture
-def an_order(fake, an_order_status, an_order_type, a_client_user):
+def an_order(fake, an_order_type, a_client_user):
     return Order(
         number=fake.pydecimal(),
-        status=an_order_status,
         type=an_order_type,
         owner=a_client_user
     )
