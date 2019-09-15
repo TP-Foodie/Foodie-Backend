@@ -3,7 +3,7 @@ from faker import Faker
 from faker.providers import person, internet, phone_number
 
 from src.models import User
-from src.models.order import Order, OrderStatus, OrderType
+from src.models.order import Order
 
 
 @pytest.fixture
@@ -12,16 +12,6 @@ def fake():
     for provider in [person, internet, phone_number]:
         fake.add_provider(provider)
     return fake
-
-
-@pytest.fixture
-def an_order_status():
-    return OrderStatus()
-
-
-@pytest.fixture
-def an_order_type():
-    return OrderType()
 
 
 @pytest.fixture
@@ -37,9 +27,8 @@ def a_client_user(fake):
 
 
 @pytest.fixture
-def an_order(fake, an_order_type, a_client_user):
+def an_order(fake, a_client_user):
     return Order(
         number=fake.pydecimal(),
-        type=an_order_type,
         owner=a_client_user
     )
