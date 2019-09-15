@@ -25,7 +25,8 @@ def a_client_user(fake):
         email=fake.email(),
         profile_image=fake.image_url(),
         phone=fake.phone_number(),
-    )
+        type="CUSTOMER"
+    ).save()
 
 
 @pytest.fixture
@@ -33,13 +34,14 @@ def an_order(fake, a_client_user):
     return Order(
         number=fake.pydecimal(),
         owner=a_client_user
-    )
+    ).save()
 
 
 @pytest.fixture
 def a_client():
     APP.config['TESTING'] = True
-    connect('mongoenginetest', host='mongomock://localhost', alias='testing')
+    disconnect()
+    connect('mongoenginetest', host='mongomock://localhost')
     client = APP.test_client()
 
     yield client
