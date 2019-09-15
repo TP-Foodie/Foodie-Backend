@@ -1,8 +1,10 @@
-from encoders import CustomJSONEncoder
-from models import user, place
 import datetime
+from unittest.mock import create_autospec
+from mongoengine import Document
 
-encoder = CustomJSONEncoder()
+from src.encoders import CustomJSONEncoder
+
+ENCODER = CustomJSONEncoder()
 
 
 def test_datetime_json_encode():
@@ -11,28 +13,18 @@ def test_datetime_json_encode():
     """
 
     expected = '"Sat, 31 Aug 2019 20:58:53 GMT"'
-    d = datetime.datetime(2019, 8, 31, 20, 58, 53, 391516)
+    date = datetime.datetime(2019, 8, 31, 20, 58, 53, 391516)
 
-    assert expected == encoder.encode(d)
-
-
-def test_user_json_encode():
-    expected = {
-        "id": "1",
-        "name": "Pepe Argento"
-    }
-
-    assert expected == encoder.default(user.User("1", "Pepe Argento"))
+    assert expected == ENCODER.encode(date)
 
 
-def test_place_json_encode():
-    expected = {
-        "id": "1",
-        "name": "Mac",
-        "coordinates": {
-            "latitude": 1.0,
-            "longitude": 1.0
-        }
-    }
+def test_mongo_document():
+    """
+    Test to ensure mongo document model works
+    """
+    expected = {"name": "jose"}
+    document = create_autospec(Document)
 
-    assert expected == encoder.default(place.Place("1", "Mac", place.Coordinates(1.0, 1.0)))
+    document._data = {"name": "jose"}  # pylint: disable=W0212
+
+    assert ENCODER.encode(expected) == ENCODER.encode(document)
