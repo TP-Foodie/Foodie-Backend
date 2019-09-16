@@ -8,7 +8,7 @@ from services.deliveries_disponibles_service import (
 from schemas.delivery_disponible_schema import DeliveryDisponibleSchema
 from schemas.query_deliveries_cercanos_schema import QueryDeliveriesCercanosSchema
 from schemas.eliminar_delivery_disponible_schema import EliminarDeliveryDisponibleSchema
-from my_exceptions.deliveries_disponibles_exceptions import ValidationException
+from my_exceptions.available_deliveries_exceptions import ValidationException
 
 # Flask blueprint
 AVAILABLE_DELIVERIES_BLUEPRINT = Blueprint(COLLECTION_DELIVERIES_DISPONIBLES, __name__)

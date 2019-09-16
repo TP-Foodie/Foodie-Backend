@@ -1,8 +1,8 @@
 """ This module handles business logic of deliveries_disponibles endpoint """
 
 from repositories.database_api import DB
-from my_exceptions.deliveries_disponibles_exceptions import (
-    DeliveryYaDisponibleException, DeliveryNoDisponibleException)
+from my_exceptions.available_deliveries_exceptions import (
+    DeliveryAlreadyAvailableException, DeliveryNotAvailableException)
 from schemas.delivery_disponible_schema import DeliveryDisponibleSchema
 
 # database collections
@@ -15,7 +15,7 @@ class DeliveriesDisponiblesService:
         """ This method handles business logic of POST in deliveries_disponibles endpoint """
         if DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES,
                                   delivery_disponible_data.get_id()) is not None:
-            raise DeliveryYaDisponibleException('Delivery ya disponible')
+            raise DeliveryAlreadyAvailableException('Delivery ya disponible')
 
         delivery_disponible_schema = DeliveryDisponibleSchema()
         DB.agregar_documento(COLLECTION_DELIVERIES_DISPONIBLES,
@@ -37,7 +37,7 @@ class DeliveriesDisponiblesService:
         """ This method handles business logic of DELETE in deliveries_disponibles endpoint """
         if DB.encontrar_documento(COLLECTION_DELIVERIES_DISPONIBLES,
                                   delivery_data.get_id()) is None:
-            raise DeliveryNoDisponibleException('Delivery no disponible')
+            raise DeliveryNotAvailableException('Delivery no disponible')
 
         DB.eliminar_documento(COLLECTION_DELIVERIES_DISPONIBLES, delivery_data.get_id())
         return True
