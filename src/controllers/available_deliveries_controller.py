@@ -5,9 +5,9 @@ from marshmallow import ValidationError
 
 from services.deliveries_disponibles_service import (
     COLLECTION_DELIVERIES_DISPONIBLES, DeliveriesDisponiblesService)
-from schemas.delivery_disponible_schema import DeliveryDisponibleSchema
-from schemas.query_deliveries_cercanos_schema import QueryDeliveriesCercanosSchema
-from schemas.eliminar_delivery_disponible_schema import EliminarDeliveryDisponibleSchema
+from schemas.available_delivery_schema import AvailableDeliverySchema
+from schemas.query_nearby_deliveries_schema import QueryNearbyDeliveriesSchema
+from schemas.delete_available_delivery_schema import DeleteAvailableDeliverySchema
 from my_exceptions.available_deliveries_exceptions import ValidationException
 
 # Flask blueprint
@@ -29,7 +29,7 @@ def post():
 
     # convert JSON to model object.
     try:
-        available_delivery_schema = DeliveryDisponibleSchema()
+        available_delivery_schema = AvailableDeliverySchema()
         available_delivery_data = available_delivery_schema.load(request_data)
     except ValidationError as err:
         raise ValidationException(err.messages)
@@ -49,7 +49,7 @@ def get():
 
     # convert JSON to model object.
     try:
-        query_nearby_deliveries_schema = QueryDeliveriesCercanosSchema()
+        query_nearby_deliveries_schema = QueryNearbyDeliveriesSchema()
         query_nearby_deliveries_data = query_nearby_deliveries_schema.load(request_data)
     except ValidationError as err:
         raise ValidationException(err.messages)
@@ -70,7 +70,7 @@ def delete():
 
     # convert JSON to model object.
     try:
-        delete_delivery_as_available_schema = EliminarDeliveryDisponibleSchema()
+        delete_delivery_as_available_schema = DeleteAvailableDeliverySchema()
         delete_delivery_as_available_data = delete_delivery_as_available_schema.load(request_data)
     except ValidationError as err:
         raise ValidationException(err.messages)

@@ -25,7 +25,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         'controllers.available_deliveries_controller.DeliveriesDisponiblesService',
         autospec=True)
     @patch(
-        'controllers.available_deliveries_controller.DeliveryDisponibleSchema',
+        'controllers.available_deliveries_controller.AvailableDeliverySchema',
         autospec=True)
     def test_success_agregar_delivery(self, mock_schema, mock_service):
         """ Test success agregar delivery """
@@ -51,7 +51,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         'controllers.available_deliveries_controller.DeliveriesDisponiblesService',
         autospec=True)
     @patch(
-        'controllers.available_deliveries_controller.QueryDeliveriesCercanosSchema',
+        'controllers.available_deliveries_controller.QueryNearbyDeliveriesSchema',
         autospec=True)
     def test_success_query_deliveries_cercanos(self, mock_schema, mock_service):
         """ Test success query deliveries cercanos """
@@ -75,7 +75,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         'controllers.available_deliveries_controller.DeliveriesDisponiblesService',
         autospec=True)
     @patch(
-        'controllers.available_deliveries_controller.EliminarDeliveryDisponibleSchema',
+        'controllers.available_deliveries_controller.DeleteAvailableDeliverySchema',
         autospec=True)
     def test_success_eliminar_delivery(self, mock_schema, mock_service):
         """ Test success eliminar delivery """
@@ -99,9 +99,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #   Wrong Tests
     #
 
-    @patch(
-        'controllers.available_deliveries_controller.DeliveryDisponibleSchema',
-        autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_extra_fields_agregar_delivery(self, mock_schema):
         """ test wrong extra field in JSON al agregar delivery """
         # mocks
@@ -118,7 +116,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_empty_id_agregar_delivery(self, mock_schema):
         """ test wrong empty id field in JSON al agregar delivery """
         # mocks
@@ -135,7 +133,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_empty_name_agregar_delivery(self, mock_schema):
         """ test wrong empty name field in JSON al agregar delivery """
         # mocks
@@ -151,7 +149,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_empty_profile_image_agregar_delivery(self, mock_schema):
         """ test wrong empty profile image field in JSON al agregar delivery """
         # mocks
@@ -167,7 +165,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_empty_coordinates_agregar_delivery(self, mock_schema):
         """ test wrong empty coordinates field in JSON al agregar delivery """
         # mocks
@@ -183,7 +181,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_longitude_value_agregar_delivery(self, mock_schema):
         """ test wrong longitude value in coordinates field in JSON al agregar delivery """
         # mocks
@@ -199,7 +197,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_latitude_value_agregar_delivery(self, mock_schema):
         """ test wrong latitude value in coordinates field in JSON al agregar delivery """
         # mocks
@@ -215,7 +213,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_coordinates_length_agregar_delivery(self, mock_schema):
         """ test wrong length array in coordinates field in JSON al agregar delivery """
         # mocks
@@ -231,7 +229,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response._status_code == 400
 
-    @patch('controllers.available_deliveries_controller.DeliveryDisponibleSchema', autospec=True)
+    @patch('controllers.available_deliveries_controller.AvailableDeliverySchema', autospec=True)
     def test_wrong_malfomed_image_url_agregar_delivery(self, mock_schema):
         """ test wrong malformed url in profile image field in JSON al agregar delivery """
         # mocks

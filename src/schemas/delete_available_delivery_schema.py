@@ -4,7 +4,7 @@ from marshmallow import Schema, fields, validate, post_load
 
 from models.delete_available_delivery import DeleteAvailableDelivery
 
-class EliminarDeliveryDisponibleSchema(Schema):
+class DeleteAvailableDeliverySchema(Schema):
     """ This class is the Marshmallow Schema for DeleteAvailableDelivery """
     _id = fields.Str(required=True, validate=validate.Length(min=1))
 
@@ -13,6 +13,6 @@ class EliminarDeliveryDisponibleSchema(Schema):
         strict = True
 
     @post_load
-    def make_eliminar_delivery_disponible(self, data, **kwargs):
+    def make_delete_available_delivery(self, data, **kwargs):
         """ This method tells load() return DeleteAvailableDelivery """
         return DeleteAvailableDelivery(**data)

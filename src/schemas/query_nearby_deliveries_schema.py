@@ -5,7 +5,7 @@ from marshmallow import Schema, fields, validate, post_load
 from models.query_nearby_deliveries import QueryNearbyDeliveries
 from schemas.extra_validations import validate_coordinates
 
-class QueryDeliveriesCercanosSchema(Schema):
+class QueryNearbyDeliveriesSchema(Schema):
     """ This class is the Marshmallow Schema for QueryNearbyDeliveries """
     radius = fields.Int(required=True, validate=validate.Range(min=0, max=15))
     coordinates = fields.List(fields.Float, required=True, validate=validate_coordinates)
@@ -15,7 +15,7 @@ class QueryDeliveriesCercanosSchema(Schema):
         strict = True
 
     @post_load
-    def make_query_deliveries_cercanos(self, data, **kwargs):
+    def make_query_nearby_deliveries(self, data, **kwargs):
         """ This method tells load() return QueryNearbyDeliveries """
         return QueryNearbyDeliveries(**data)
         

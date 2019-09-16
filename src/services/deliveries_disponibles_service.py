@@ -3,7 +3,7 @@
 from repositories.database_api import DB
 from my_exceptions.available_deliveries_exceptions import (
     DeliveryAlreadyAvailableException, DeliveryNotAvailableException)
-from schemas.delivery_disponible_schema import DeliveryDisponibleSchema
+from schemas.available_delivery_schema import AvailableDeliverySchema
 
 # database collections
 COLLECTION_DELIVERIES_DISPONIBLES = 'deliveries_disponibles'
@@ -17,7 +17,7 @@ class DeliveriesDisponiblesService:
                                   delivery_disponible_data.get_id()) is not None:
             raise DeliveryAlreadyAvailableException('Delivery ya disponible')
 
-        delivery_disponible_schema = DeliveryDisponibleSchema()
+        delivery_disponible_schema = AvailableDeliverySchema()
         DB.agregar_documento(COLLECTION_DELIVERIES_DISPONIBLES,
                              delivery_disponible_schema.dump(delivery_disponible_data))
         return True
