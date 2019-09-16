@@ -1,11 +1,11 @@
-""" This module is the Marshmallow Schema for EliminarDeliveryDisponible """
+""" This module is the Marshmallow Schema for DeleteAvailableDelivery """
 
 from marshmallow import Schema, fields, validate, post_load
 
-from models.eliminar_delivery_disponible import EliminarDeliveryDisponible
+from models.delete_available_delivery import DeleteAvailableDelivery
 
 class EliminarDeliveryDisponibleSchema(Schema):
-    """ This class is the Marshmallow Schema for EliminarDeliveryDisponible """
+    """ This class is the Marshmallow Schema for DeleteAvailableDelivery """
     _id = fields.Str(required=True, validate=validate.Length(min=1))
 
     class Meta:
@@ -14,5 +14,5 @@ class EliminarDeliveryDisponibleSchema(Schema):
 
     @post_load
     def make_eliminar_delivery_disponible(self, data, **kwargs):
-        """ This method tells load() return EliminarDeliveryDisponible """
-        return EliminarDeliveryDisponible(**data)
+        """ This method tells load() return DeleteAvailableDelivery """
+        return DeleteAvailableDelivery(**data)

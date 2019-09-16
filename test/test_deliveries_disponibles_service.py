@@ -4,9 +4,9 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from services.deliveries_disponibles_service import DeliveriesDisponiblesService
-from models.delivery_disponible import DeliveryDisponible
-from models.eliminar_delivery_disponible import EliminarDeliveryDisponible
-from models.query_deliveries_cercanos import QueryDeliveriesCercanos
+from models.available_delivery import AvailableDelivery
+from models.delete_available_delivery import DeleteAvailableDelivery
+from models.query_nearby_deliveries import QueryNearbyDeliveries
 
 class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
     """ This class is the test case for deliveries_disponibles_service """
@@ -24,7 +24,7 @@ class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
         db_mock.agregar_documento.return_value = None
 
         service = DeliveriesDisponiblesService()
-        ret_value = service.agregar_delivery_disponible(DeliveryDisponible(
+        ret_value = service.agregar_delivery_disponible(AvailableDelivery(
             "1", "Santiago", "https://urlimagen.com", [-58.3772300, -34.6131500]))
 
         assert ret_value
@@ -37,7 +37,7 @@ class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
         db_mock.encontrar_lista_documentos.return_value = []
 
         service = DeliveriesDisponiblesService()
-        ret_value = service.query_deliveries_cercanos(QueryDeliveriesCercanos(
+        ret_value = service.query_deliveries_cercanos(QueryNearbyDeliveries(
             "5", [-58.3772300, -34.6131500]))
 
         assert ret_value == []
@@ -47,11 +47,11 @@ class DeliveriesDisponiblesServiceTestCase(unittest.TestCase):
         """ Test success eliminar delivery """
         # mocks
         db_mock.return_value = MagicMock()
-        db_mock.encontrar_documento.return_value = DeliveryDisponible(
+        db_mock.encontrar_documento.return_value = AvailableDelivery(
             "1", "Santiago", "https://urlimagen.com", [-58.3772300, -34.6131500])
         db_mock.eliminar_documento.return_value = None
 
         service = DeliveriesDisponiblesService()
-        ret_value = service.eliminar_delivery_disponible(EliminarDeliveryDisponible("1"))
+        ret_value = service.eliminar_delivery_disponible(DeleteAvailableDelivery("1"))
 
         assert ret_value

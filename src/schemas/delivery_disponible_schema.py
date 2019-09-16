@@ -1,12 +1,12 @@
-""" This module is the Marshmallow Schema for DeliveryDisponible """
+""" This module is the Marshmallow Schema for AvailableDelivery """
 
 from marshmallow import Schema, fields, validate, post_load
 
-from models.delivery_disponible import DeliveryDisponible
+from models.available_delivery import AvailableDelivery
 from schemas.extra_validations import validate_coordinates
 
 class DeliveryDisponibleSchema(Schema):
-    """ This class is the Marshmallow Schema for DeliveryDisponible """
+    """ This class is the Marshmallow Schema for AvailableDelivery """
     _id = fields.Str(required=True, validate=validate.Length(min=1))
     name = fields.Str(required=True, validate=validate.Length(min=1))
     profile_image = fields.URL(required=True, validate=validate.Length(min=1))
@@ -18,5 +18,5 @@ class DeliveryDisponibleSchema(Schema):
 
     @post_load
     def make_delivery_disponible(self, data, **kwargs):
-        """ This method tells load() return DeliveryDisponible """
-        return DeliveryDisponible(**data)
+        """ This method tells load() return AvailableDelivery """
+        return AvailableDelivery(**data)

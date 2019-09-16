@@ -1,8 +1,8 @@
-""" This module is the model that represents Eliminar Delivery Disponible """
+""" This module is the model that represents Delete Available Delivery. """
 
 from models import FoodieModel
 
-class EliminarDeliveryDisponible(FoodieModel):
+class DeleteAvailableDelivery(FoodieModel):
     """ Model Eliminar Delivery Disponible."""
     _id = None
 

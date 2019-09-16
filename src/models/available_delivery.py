@@ -1,9 +1,9 @@
-""" This module is the model that represents Delivery Disponible """
+""" This module is the model that represents Available Delivery. """
 
 from models import FoodieModel
 
-class DeliveryDisponible(FoodieModel):
-    """ Model Delivery Disponible."""
+class AvailableDelivery(FoodieModel):
+    """ Model Available Delivery."""
     _id = None
     name = None
     profile_image = None

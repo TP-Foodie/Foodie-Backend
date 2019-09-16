@@ -1,9 +1,9 @@
-""" This module is the model that represents Query de Deliveries Cercanos """
+""" This module is the model that represents the Query of Nearby Deliveries. """
 
 from models import FoodieModel
 
-class QueryDeliveriesCercanos(FoodieModel):
-    """ Model Query Deliveries Cercanos."""
+class QueryNearbyDeliveries(FoodieModel):
+    """ Model Query Nearby Deliveries."""
     radius = None
     coordinates = None
 
