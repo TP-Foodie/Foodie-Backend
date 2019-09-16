@@ -1,11 +1,12 @@
 """ This module is the testing module for deliveries_disponibles_controller """
 
 import unittest
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import patch, MagicMock
 import json
 from marshmallow import ValidationError
 
 from app import APP, PREFIX
+from services.available_deliveries_service import AVAILABLE_DELIVERIES_COLLECTION
 from models.available_delivery import AvailableDelivery
 from models.query_nearby_deliveries import QueryNearbyDeliveries
 from models.delete_available_delivery import DeleteAvailableDelivery
@@ -22,7 +23,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #
 
     @patch(
-        'controllers.available_deliveries_controller.DeliveriesDisponiblesService',
+        'controllers.available_deliveries_controller.AvailableDeliveriesService',
         autospec=True)
     @patch(
         'controllers.available_deliveries_controller.AvailableDeliverySchema',
@@ -31,7 +32,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         """ Test success agregar delivery """
         # mocks
         mock_service.return_value = MagicMock()
-        mock_service.agregar_delivery_disponible.return_value = True
+        mock_service.delete_available_delivery.return_value = True
 
         mock_schema.return_value = MagicMock()
         mock_schema.load.return_value = AvailableDelivery(
@@ -39,7 +40,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         # call controller
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": \
                 "https://urlimagen.com", "coordinates": [-58.3772300, -34.6131500]}),
@@ -48,7 +49,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         assert response._status_code == 201
 
     @patch(
-        'controllers.available_deliveries_controller.DeliveriesDisponiblesService',
+        'controllers.available_deliveries_controller.AvailableDeliveriesService',
         autospec=True)
     @patch(
         'controllers.available_deliveries_controller.QueryNearbyDeliveriesSchema',
@@ -57,7 +58,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         """ Test success query deliveries cercanos """
         # mocks
         mock_service.return_value = MagicMock()
-        mock_service.query_deliveries_cercanos.return_value = [AvailableDelivery(
+        mock_service.query_nearby_deliveries.return_value = [AvailableDelivery(
             "1", "Santiago", "https://urlimagen.com", [-58.3772300, -34.6131500])]
 
         mock_schema.return_value = MagicMock()
@@ -65,14 +66,14 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         # call controller
         response = self.app.get(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({"radius": "5", "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
         assert response._status_code == 200
 
     @patch(
-        'controllers.available_deliveries_controller.DeliveriesDisponiblesService',
+        'controllers.available_deliveries_controller.AvailableDeliveriesService',
         autospec=True)
     @patch(
         'controllers.available_deliveries_controller.DeleteAvailableDeliverySchema',
@@ -81,14 +82,14 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         """ Test success eliminar delivery """
         # mocks
         mock_service.return_value = MagicMock()
-        mock_service.eliminar_delivery_disponible.return_value = True
+        mock_service.delete_available_delivery.return_value = True
 
         mock_schema.return_value = MagicMock()
         mock_schema.load.return_value = DeleteAvailableDelivery("1")
 
         # call controller
         response = self.app.delete(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({"_id": "1"}),
             content_type='application/json')
 
@@ -107,7 +108,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": \
                 "https://urlimagen.com", "coordinates": [-58.3772300, -34.6131500],
@@ -124,7 +125,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "", "name": "Santiago", "profile_image": "https://urlimagen.com",
                 "coordinates": [-58.3772300, -34.6131500]}),
@@ -141,7 +142,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "", "profile_image": "https://urlimagen.com",
                 "coordinates": [-58.3772300, -34.6131500]}),
@@ -157,7 +158,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": "",
                 "coordinates": [-58.3772300, -34.6131500]}),
@@ -173,7 +174,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": "https://urlimagen.com",
                 "coordinates": []}),
@@ -189,7 +190,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": "https://urlimagen.com",
                 "coordinates": [-190, -34.6131500]}),
@@ -205,7 +206,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": "https://urlimagen.com",
                 "coordinates": [-58.3772300, -34.6131500]}),
@@ -221,7 +222,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": "https://urlimagen.com",
                 "coordinates": [-58.3772300, -34.6131500, 0]}),
@@ -237,7 +238,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         mock_schema.side_effect = ValidationError("error message")
 
         response = self.app.post(
-            f'{PREFIX}/deliveries_disponibles',
+            f'{PREFIX}/' + AVAILABLE_DELIVERIES_COLLECTION,
             data=json.dumps({
                 "_id": "1", "name": "Santiago", "profile_image": "urlimagen",
                 "coordinates": [-58.3772300, -34.6131500]
