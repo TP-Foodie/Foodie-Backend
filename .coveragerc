@@ -5,3 +5,6 @@ omit = src/app.py
     src/models/*
     src/schemas/*
     test/*
+    src/logger.py
+    src/error_handlers.py
+
