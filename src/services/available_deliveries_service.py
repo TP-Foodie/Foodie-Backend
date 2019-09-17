@@ -12,7 +12,9 @@ class AvailableDeliveriesService:
         for key in available_delivery_data.keys():
             available_delivery[key] = available_delivery_data[key]
 
-        return available_delivery.save()
+        available_delivery.save()
+
+        return True
 
     def query_nearby_deliveries(self, query_data):
         """ This method handles business logic of GET in available_deliveries endpoint """
@@ -31,5 +33,7 @@ class AvailableDeliveriesService:
         for key in available_delivery_data.keys():
             delete_available_delivery[key] = available_delivery_data[key]
 
-        return delete_available_delivery.delete()
+        delete_available_delivery.delete()
+
+        return True
         

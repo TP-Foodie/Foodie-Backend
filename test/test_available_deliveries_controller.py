@@ -3,7 +3,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import json
-from marshmallow import ValidationError
 
 from app import APP, PREFIX
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_ROUTE
