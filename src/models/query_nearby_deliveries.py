@@ -1,12 +1,8 @@
 """ This module is the model that represents the Query of Nearby Deliveries. """
 
-from models import FoodieModel
+from mongoengine import IntField, PointField
 
-class QueryNearbyDeliveries(FoodieModel):
+class QueryNearbyDeliveries:
     """ Model Query Nearby Deliveries."""
-    radius = None
-    coordinates = None
-
-    def __init__(self, radius, coordinates):
-        self.radius = radius
-        self.coordinates = coordinates
+    radius = IntField(required=True)
+    coordinates = PointField(required=True)

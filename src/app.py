@@ -2,15 +2,15 @@
 
 import os
 from flask import Flask
-from encoders import CustomJSONEncoder
 from flask_cors import CORS
-from controllers.places_controller import PLACES_BLUEPRINT
-from controllers.users_controller import USERS_BLUEPRINT
+from mongoengine import connect
+from encoders import CustomJSONEncoder
+from settings import Config
 
-from repositories.database_api import DB
+from controllers.place_controller import PLACES_BLUEPRINT
+from controllers.user_controller import USERS_BLUEPRINT
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLUEPRINT
-from exceptions_handlers.available_deliveries_exceptions_handler import (
-    AVAILABLE_DELIVERIES_EXCEPTIONS_HANDLER)
+from error_handlers import ERRORS_BLUEPRINT
 
 # initialize Flask app
 APP = Flask(__name__)
@@ -22,12 +22,18 @@ PREFIX = f"/api/{VERSION}"
 
 # register Flask blueprints
 APP.register_blueprint(AVAILABLE_DELIVERIES_BLUEPRINT, url_prefix=f'{PREFIX}/')
-APP.register_blueprint(AVAILABLE_DELIVERIES_EXCEPTIONS_HANDLER)
 APP.register_blueprint(PLACES_BLUEPRINT, url_prefix='/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix='/users')
+APP.register_blueprint(ERRORS_BLUEPRINT)
 
-# initialize database api
-DATABASE = DB.init()
+# initialize Mongo Engine (Database)
+connect(db=Config.DATABASE_NAME,
+        authentication_source=Config.DATABASE_AUTH_SOURCE,
+        host=Config.DATABASE_HOST,
+        port=Config.DATABASE_PORT,
+        username=Config.DATABASE_USERNAME,
+        password=Config.DATABASE_PASSWORD,
+        ssl=Config.DATABASE_SSL)
 
 APP.json_encoder = CustomJSONEncoder
 

@@ -2,6 +2,6 @@
 omit = src/app.py
     src/conftest.py
     src/settings.py
-    src/deliveries_disponibles/models/__init__.py
-    src/deliveries_disponibles/tests/test_deliveries_disponibles_controller.py
-    src/deliveries_disponibles/tests/test_deliveries_disponibles_service.py   
+    src/models/*
+    src/schemas/*
+    test/*

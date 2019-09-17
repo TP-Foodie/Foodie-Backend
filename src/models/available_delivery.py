@@ -1,20 +1,10 @@
 """ This module is the model that represents Available Delivery. """
 
-from models import FoodieModel
+from mongoengine import Document, StringField, ListField, FloatField
 
-class AvailableDelivery(FoodieModel):
+class AvailableDelivery(Document):
     """ Model Available Delivery."""
-    _id = None
-    name = None
-    profile_image = None
-    coordinates = None
-
-    def __init__(self, _id, name, profile_image, coordinates):
-        self._id = _id
-        self.name = name
-        self.profile_image = profile_image
-        self.coordinates = coordinates
-
-    def get_id(self):
-        """ Getter id """
-        return self._id
+    _id = StringField(required=True, primary_key=True)
+    name = StringField(required=True)
+    profile_image = StringField(required=True)
+    coordinates = ListField(field=FloatField(), required=True)
