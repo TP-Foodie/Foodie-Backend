@@ -1,9 +1,13 @@
 import json
 
+from src.models.order import Order
 from test.support.utils import assert_200
 
 
 class TestOrderController:
+    def get_favor_orders(self, client):
+        return client.get('/orders/favors')
+
     def get_orders(self, client):
         return client.get('/orders/')
 
@@ -45,3 +49,14 @@ class TestOrderController:
                 'phone': an_order.owner.phone
             }
         }
+
+    def test_get_orders_filtered_by_favors(self, a_client, a_favor_order, an_order_factory):
+        an_order_factory()
+        response = self.get_favor_orders(a_client)
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1
+        assert orders[0]['id'] == str(a_favor_order.id)

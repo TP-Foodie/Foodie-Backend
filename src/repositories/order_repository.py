@@ -7,3 +7,7 @@ def list_all():
 
 def get_order(order_id):
     return Order.objects.get(id=order_id)
+
+
+def get_favor_orders():
+    return Order.objects.filter(type=Order.FAVOR_TYPE)

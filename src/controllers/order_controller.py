@@ -16,3 +16,9 @@ def list_orders():
 def order_details(order_id):
     data = order_schema.dump(order_repository.get_order(order_id))
     return jsonify(data)
+
+
+@ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
+def list_favor_orders():
+    data = orders_schema.dump(order_repository.get_favor_orders())
+    return jsonify(data)

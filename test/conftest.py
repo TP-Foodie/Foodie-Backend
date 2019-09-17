@@ -30,11 +30,24 @@ def a_client_user(fake):
 
 
 @pytest.fixture
-def an_order(fake, a_client_user):
-    return Order(
-        number=fake.pydecimal(),
-        owner=a_client_user
-    ).save()
+def an_order_factory(fake, a_client_user):
+    def create_order(type=Order.NORMAL_TYPE):
+        return Order(
+            number=fake.pydecimal(),
+            owner=a_client_user,
+            type=type
+        ).save()
+    return create_order
+
+
+@pytest.fixture
+def an_order(an_order_factory):
+    return an_order_factory()
+
+
+@pytest.fixture
+def a_favor_order(an_order_factory):
+    return an_order_factory(Order.FAVOR_TYPE)
 
 
 @pytest.fixture

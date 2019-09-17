@@ -13,5 +13,5 @@ class Order(Document):
 
     number = IntField(required=True)
     status = StringField(choices=status, default=WAITING_STATUS)
-    type = StringField(choices=types, default=NORMAL_TYPE)
+    type = StringField(choices=types, default=NORMAL_TYPE)  # TODO: rename this
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
