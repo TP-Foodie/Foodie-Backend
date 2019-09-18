@@ -1,8 +1,10 @@
 [run]
-omit =
-    src/app.py
-    src/schemas/*
+omit = src/app.py
+    src/conftest.py
     src/settings.py
+    src/models/*
+    src/schemas/*
+    test/*
     src/logger.py
     src/error_handlers.py
-    models
+
