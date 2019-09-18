@@ -2,7 +2,7 @@
 
 from flask import request, jsonify, Blueprint
 
-from services.available_deliveries_service import AvailableDeliveriesService
+from services import available_deliveries_service
 from schemas.available_delivery_schema import AvailableDeliverySchema
 from schemas.query_nearby_deliveries_schema import QueryNearbyDeliveriesSchema
 from schemas.delete_available_delivery_schema import DeleteAvailableDeliverySchema
@@ -30,7 +30,6 @@ def post():
     available_delivery = available_delivery_schema.load(request_data)
 
     # add delivery as available.
-    available_deliveries_service = AvailableDeliveriesService()
     available_deliveries_service.add_available_delivery(available_delivery)
 
     return jsonify({'body': 'Created Succesfully'}), 201
@@ -46,7 +45,6 @@ def get():
     query_nearby_deliveries_data = query_nearby_deliveries_schema.load(request_data)
 
     # query nearby deliveries.
-    available_deliveries_service = AvailableDeliveriesService()
     lista_docs = available_deliveries_service.query_nearby_deliveries(
         query_nearby_deliveries_data)
 
@@ -63,7 +61,6 @@ def delete():
     delete_delivery_as_available_data = delete_delivery_as_available_schema.load(request_data)
 
     # delete delivery as available.
-    available_deliveries_service = AvailableDeliveriesService()
     available_deliveries_service.delete_available_delivery(delete_delivery_as_available_data)
 
     return jsonify({'body': 'Deleted Succesfully'}), 200

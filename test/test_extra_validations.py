@@ -17,7 +17,7 @@ class ExtraValidationsTestCase(unittest.TestCase):
         """ Test success valid coordinates """
         valid_coordinates = [-58.3772300, -34.6131500]
 
-        assert validate_coordinates(valid_coordinates)
+        self.assertEqual(validate_coordinates(valid_coordinates), True)
 
     #
     #   Wrong Tests

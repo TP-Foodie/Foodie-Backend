@@ -7,7 +7,6 @@ import json
 from app import APP, PREFIX
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_ROUTE
 from models.available_delivery import AvailableDelivery
-from models.query_nearby_deliveries import QueryNearbyDeliveries
 
 
 class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
@@ -21,7 +20,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #
 
     @patch(
-        'controllers.available_deliveries_controller.AvailableDeliveriesService',
+        'controllers.available_deliveries_controller.available_deliveries_service',
         autospec=True)
     def test_success_add_delivery(self, mock_service):
         """ Test success add delivery as available """
@@ -37,10 +36,10 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "https://urlimagen.com", "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
-        assert response._status_code == 201
+        assert response.status_code == 201
 
     @patch(
-        'controllers.available_deliveries_controller.AvailableDeliveriesService',
+        'controllers.available_deliveries_controller.available_deliveries_service',
         autospec=True)
     def test_success_query_nearby_deliveries(self, mock_service):
         """ Test success query nearby deliveries """
@@ -55,10 +54,10 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
             data=json.dumps({"radius": "5", "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
-        assert response._status_code == 200
+        assert response.status_code == 200
 
     @patch(
-        'controllers.available_deliveries_controller.AvailableDeliveriesService',
+        'controllers.available_deliveries_controller.available_deliveries_service',
         autospec=True)
     def test_success_delete_delivery(self, mock_service):
         """ Test success delete delivery as available """
@@ -72,7 +71,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
             data=json.dumps({"_id": "1"}),
             content_type='application/json')
 
-        assert response._status_code == 200
+        assert response.status_code == 200
 
 
     #
@@ -89,7 +88,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "extra_field": "extra"}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_empty_id_agregar_delivery(self):
         """ test wrong empty id field in JSON while adding delivery as available """
@@ -101,7 +100,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
             content_type='application/json'
         )
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_empty_name_agregar_delivery(self):
         """ test wrong empty name field in JSON while adding delivery as available """
@@ -112,7 +111,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_empty_profile_image_agregar_delivery(self):
         """ test wrong empty profile image field in JSON while adding delivery as available """
@@ -123,7 +122,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_empty_coordinates_agregar_delivery(self):
         """ test wrong empty coordinates field in JSON while adding delivery as available """
@@ -134,10 +133,10 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "coordinates": []}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_longitude_value_agregar_delivery(self):
-        """ test wrong longitude value in coordinates field in JSON while adding delivery as available """
+        """ test wrong longitude value in coordinates field while adding delivery as available """
         response = self.app.post(
             f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
             data=json.dumps({
@@ -145,10 +144,10 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "coordinates": [-190, -34.6131500]}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_latitude_value_agregar_delivery(self):
-        """ test wrong latitude value in coordinates field in JSON while adding delivery as available """
+        """ test wrong latitude value in coordinates field while adding delivery as available """
         response = self.app.post(
             f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
             data=json.dumps({
@@ -156,10 +155,10 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_coordinates_length_agregar_delivery(self):
-        """ test wrong length array in coordinates field in JSON while adding delivery as available """
+        """ test wrong length array in coordinates field while adding delivery as available """
         response = self.app.post(
             f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
             data=json.dumps({
@@ -167,10 +166,10 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
                 "coordinates": [-58.3772300, -34.6131500, 0]}),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
 
     def test_wrong_malfomed_image_url_agregar_delivery(self):
-        """ test wrong malformed url in profile image field in JSON while adding delivery as available """
+        """ test wrong malformed url in profile image field while adding delivery as available """
         response = self.app.post(
             f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
             data=json.dumps({
@@ -179,4 +178,4 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
             }),
             content_type='application/json')
 
-        assert response._status_code == 400
+        assert response.status_code == 400
