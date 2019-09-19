@@ -12,6 +12,11 @@ def list_orders():
     return jsonify(data)
 
 
+@ORDERS_BLUEPRINT.route('/', methods=['POST'])
+def create_order():
+    return ''
+
+
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['GET'])
 def order_details(order_id):
     data = DetailsOrderSchema().dump(order_repository.get_order(order_id))

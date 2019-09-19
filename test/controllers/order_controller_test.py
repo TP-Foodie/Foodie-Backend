@@ -1,9 +1,13 @@
 import json
 
+from src.models.order import Order
 from test.support.utils import assert_200
 
 
 class TestOrderController:
+    def create_order(self, client, order_type, user, product):
+        return client.post('/orders/', data={'order_type': order_type, 'owner': user.id, 'product': product.id})
+
     def get_orders(self, client):
         return client.get('/orders/')
 
@@ -55,3 +59,7 @@ class TestOrderController:
                 }
             }
         }
+
+    def test_user_should_be_able_to_create_order(self, a_client, a_client_user, a_product):
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+        assert_200(response)
