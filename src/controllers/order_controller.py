@@ -15,10 +15,7 @@ def list_orders():
 
 @ORDERS_BLUEPRINT.route('/', methods=['POST'])
 def create_order():
-    order_type = request.json.get('order_type')
-    owner = request.json.get('owner')
-    product = request.json.get('product')
-    order_service.create(order_type, owner, product)
+    order_service.create(*request.json.values())
     return ''
 
 
