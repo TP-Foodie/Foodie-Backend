@@ -14,3 +14,13 @@ class TestOrderService:
 
         assert order.owner.id == a_client_user.id
         assert order.product.id == a_product.id
+
+    def test_order_number_should_be_consecutive(self, a_client_user, a_product):
+        order_service.create(Order.NORMAL_TYPE, a_client_user.id, a_product.id)
+        order_service.create(Order.NORMAL_TYPE, a_client_user.id, a_product.id)
+
+        first_order = order_repository.list_all()[0]
+        second_order = order_repository.list_all()[1]
+
+        assert first_order.number == 1
+        assert second_order.number == 2
