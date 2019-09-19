@@ -5,7 +5,8 @@ from mongoengine import connect, disconnect
 
 from src.app import APP
 from src.models import User
-from src.models.order import Order
+from src.models.order import Order, Product
+
 
 # pylint: disable=redefined-outer-name
 # This is required, pylint doesn't work well with pytest
@@ -32,10 +33,16 @@ def a_client_user(cfaker):
 
 
 @pytest.fixture
-def an_order(cfaker, a_client_user):
+def a_product():
+    return Product().save()
+
+
+@pytest.fixture
+def an_order(cfaker, a_client_user, a_product):
     return Order(
         number=cfaker.pydecimal(),
-        owner=a_client_user
+        owner=a_client_user,
+        product=a_product
     ).save()
 
 

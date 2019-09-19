@@ -2,6 +2,8 @@ from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField
 
 from src.models import User
 
+class Product(Document):
+    pass
 
 class Order(Document):
     WAITING_STATUS = "WS"
@@ -15,3 +17,4 @@ class Order(Document):
     status = StringField(choices=status, default=WAITING_STATUS)
     type = StringField(choices=types, default=NORMAL_TYPE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
+    product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
