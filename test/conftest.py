@@ -11,7 +11,7 @@ from src.models.order import Order
 # This is required, pylint doesn't work well with pytest
 
 @pytest.fixture
-def fake():
+def cfaker():
     cfaker = Faker()
     for provider in [person, internet, phone_number]:
         cfaker.add_provider(provider)
