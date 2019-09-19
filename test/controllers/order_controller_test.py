@@ -1,6 +1,7 @@
 import json
 
 from src.models.order import Order
+from src.repositories import order_repository
 from test.support.utils import assert_200
 
 
@@ -63,3 +64,8 @@ class TestOrderController:
     def test_user_should_be_able_to_create_order(self, a_client, a_client_user, a_product):
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_200(response)
+
+    def test_create_orders_should_create_one_on_db(self, a_client, a_client_user, a_product):
+        self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+
+        assert len(order_repository.list_all()) == 1
