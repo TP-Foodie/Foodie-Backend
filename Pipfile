@@ -18,6 +18,7 @@ autopep8 = "==1.4.4"
 Flask = "==1.0.4"
 Flask-Cors = "==3.0.8"
 pylint-mongoengine = "*"
+faker = "*"
 
 [requires]
 python_version = "2.7"
