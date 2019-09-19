@@ -1,10 +1,10 @@
 import pytest
 from faker import Faker
-from faker.providers import person, internet, phone_number
+from faker.providers import person, internet, phone_number, geo
 from mongoengine import connect, disconnect
 
 from src.app import APP
-from src.models import User
+from src.models import User, Place, Coordinates
 from src.models.order import Order, Product
 
 
@@ -14,7 +14,7 @@ from src.models.order import Order, Product
 @pytest.fixture
 def cfaker():
     cfaker = Faker()
-    for provider in [person, internet, phone_number]:
+    for provider in [person, internet, phone_number, geo]:
         cfaker.add_provider(provider)
     return cfaker
 
@@ -33,8 +33,24 @@ def a_client_user(cfaker):
 
 
 @pytest.fixture
-def a_product():
-    return Product().save()
+def a_location(cfaker):
+    return Coordinates(cfaker.latitude(), cfaker.longitude())
+
+
+@pytest.fixture
+def a_place(cfaker, a_location):
+    return Place(
+        name=cfaker.name(),
+        coordinates=a_location
+    ).save()
+
+
+@pytest.fixture
+def a_product(cfaker, a_place):
+    return Product(
+        name=cfaker.name(),
+        place=a_place
+    ).save()
 
 
 @pytest.fixture

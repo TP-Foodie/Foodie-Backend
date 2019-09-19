@@ -15,3 +15,10 @@ class TestOrder:
 
     def test_order_should_be_of_normal_type_by_default(self, an_order):
         assert an_order.type == Order.NORMAL_TYPE
+
+
+@pytest.mark.usefixtures('a_client')
+class TestProduct:
+    @pytest.mark.parametrize('attr_name', ['name', 'place'])
+    def test_should_answer_to_attr(self, attr_name, a_product):
+        assert_attr_exists(a_product, attr_name)
