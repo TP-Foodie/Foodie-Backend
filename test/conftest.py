@@ -7,32 +7,34 @@ from src.app import APP
 from src.models import User
 from src.models.order import Order
 
+# pylint: disable=redefined-outer-name
+# This is required, pylint doesn't work well with pytest
 
 @pytest.fixture
 def fake():
-    fake = Faker()
+    cfaker = Faker()
     for provider in [person, internet, phone_number]:
-        fake.add_provider(provider)
-    return fake
+        cfaker.add_provider(provider)
+    return cfaker
 
 
 @pytest.fixture
-def a_client_user(fake):
+def a_client_user(cfaker):
     return User(
-        name=fake.first_name(),
-        last_name=fake.last_name(),
-        password=fake.prefix(),
-        email=fake.email(),
-        profile_image=fake.image_url(),
-        phone=fake.phone_number(),
+        name=cfaker.first_name(),
+        last_name=cfaker.last_name(),
+        password=cfaker.prefix(),
+        email=cfaker.email(),
+        profile_image=cfaker.image_url(),
+        phone=cfaker.phone_number(),
         type="CUSTOMER"
     ).save()
 
 
 @pytest.fixture
-def an_order(fake, a_client_user):
+def an_order(cfaker, a_client_user):
     return Order(
-        number=fake.pydecimal(),
+        number=cfaker.pydecimal(),
         owner=a_client_user
     ).save()
 

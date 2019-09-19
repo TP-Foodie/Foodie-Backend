@@ -13,4 +13,3 @@ class DetailsOrderSchema(Schema):
 
     class Meta:
         fields = ('id', 'number', 'status', 'type', 'owner')
-
