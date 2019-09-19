@@ -2,12 +2,20 @@ import json
 
 from src.models.order import Order
 from src.repositories import order_repository
-from test.support.utils import assert_200, assert_201
+from test.support.utils import assert_200, assert_201, assert_400
 
 
 class TestOrderController:
     def create_order(self, client, order_type, user, product):
-        return client.post('/orders/', json={'order_type': order_type, 'owner': user.id, 'product': product.id})
+        return client.post('/orders/',
+                           json={
+                               'order_type': order_type,
+                               'owner': user.id,
+                               'product': {
+                                   'name': product.name,
+                                   'place': product.place.id
+                               }
+                           })
 
     def get_orders(self, client):
         return client.get('/orders/')
@@ -73,3 +81,10 @@ class TestOrderController:
     def test_create_should_return_created_http_code(self, a_client, a_client_user, a_product):
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_201(response)
+
+    def test_create_with_wrong_type_should_return_400(self, a_client, a_client_user, a_product):
+        response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, a_product)
+        assert_400(response)
+
+    def test_create_with_non_existing_place_should_return_400(self, a_client, a_client_user):
+        pass
