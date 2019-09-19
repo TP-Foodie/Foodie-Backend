@@ -7,7 +7,7 @@ from test.support.utils import assert_200
 
 class TestOrderController:
     def create_order(self, client, order_type, user, product):
-        return client.post('/orders/', data={'order_type': order_type, 'owner': user.id, 'product': product.id})
+        return client.post('/orders/', json={'order_type': order_type, 'owner': user.id, 'product': product.id})
 
     def get_orders(self, client):
         return client.get('/orders/')

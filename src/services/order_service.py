@@ -1,4 +1,3 @@
-from src.models.order import Order
 from src.repositories import order_repository
 
 
