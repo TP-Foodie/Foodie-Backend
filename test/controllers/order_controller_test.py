@@ -43,5 +43,15 @@ class TestOrderController:
                 'email': an_order.owner.email,
                 'profile_image': an_order.owner.profile_image,
                 'phone': an_order.owner.phone
+            },
+            'product': {
+                'name': an_order.product.name,
+                'place': {
+                    'name': an_order.product.place.name,
+                    'coordinates': {
+                        'latitude': an_order.product.place.coordinates.latitude,
+                        'longitude': an_order.product.place.coordinates.longitude
+                    }
+                }
             }
         }
