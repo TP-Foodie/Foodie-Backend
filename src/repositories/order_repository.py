@@ -22,7 +22,8 @@ def create(order_type, owner, product, number):
 
 
 def get_or_create_product(name, place):
-    return Product.objects(name=name, place=place).modify(upsert=True, new=True, set__name=name, set__place=place)
+    product = Product.objects.filter(name=name, place=place).first()
+    return product if product else Product.objects.create(name=name, place=place)
 
 
 def products_count():
