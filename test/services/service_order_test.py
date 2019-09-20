@@ -4,7 +4,7 @@ from bson import ObjectId
 from src.models.order import Order
 from src.repositories import order_repository, product_repository
 from src.services import order_service, product_service
-from src.services.exceptions.product_exceptions import NonExistingProductException
+from src.services.exceptions.product_exceptions import NonExistingPlaceException
 
 
 @pytest.mark.usefixtures('a_client')
@@ -45,13 +45,13 @@ class TestOrderService:
     def test_create_product_with_invalid_place_id_should_rice_exception(self):
         invalid_place_id = 1
 
-        with pytest.raises(NonExistingProductException):
+        with pytest.raises(NonExistingPlaceException):
             product_service.create("some_name", invalid_place_id)
 
     def test_create_product_with_non_existing_place_should_rice_exception(self):
         non_existing_place_id = ObjectId()
 
-        with pytest.raises(NonExistingProductException):
+        with pytest.raises(NonExistingPlaceException):
             product_service.create("some_name", non_existing_place_id)
 
     def test_should_create_product_if_its_alright(self, a_place):

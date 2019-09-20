@@ -1,2 +1,2 @@
-class NonExistingProductException(Exception):
+class NonExistingPlaceException(Exception):
     pass
