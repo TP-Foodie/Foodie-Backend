@@ -11,3 +11,4 @@ mongoengine==0.18.2
 autopep8==1.4.4
 faker==2.0.1
 mongomock==3.17.0
+pylint_mongoengine==0.3.3

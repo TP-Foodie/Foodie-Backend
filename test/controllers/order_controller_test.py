@@ -1,12 +1,24 @@
 import json
 
 from src.models.order import Order
-from test.support.utils import assert_200
+from src.repositories import order_repository
+from test.support.utils import assert_200, assert_201, assert_400
 
 
 class TestOrderController:
     def get_favor_orders(self, client):
         return client.get('/orders/favors')
+
+    def create_order(self, client, order_type, user, product):
+        return client.post('/orders/',
+                           json={
+                               'order_type': order_type,
+                               'owner': user.id,
+                               'product': {
+                                   'name': product.name,
+                                   'place': product.place.id
+                               }
+                           })
 
     def get_orders(self, client):
         return client.get('/orders/')
@@ -47,6 +59,16 @@ class TestOrderController:
                 'email': an_order.owner.email,
                 'profile_image': an_order.owner.profile_image,
                 'phone': an_order.owner.phone
+            },
+            'product': {
+                'name': an_order.product.name,
+                'place': {
+                    'name': an_order.product.place.name,
+                    'coordinates': {
+                        'latitude': an_order.product.place.coordinates.latitude,
+                        'longitude': an_order.product.place.coordinates.longitude
+                    }
+                }
             }
         }
 
@@ -60,3 +82,23 @@ class TestOrderController:
 
         assert len(orders) == 1
         assert orders[0]['id'] == str(a_favor_order.id)
+
+    def test_user_should_be_able_to_create_order(self, a_client, a_client_user, a_product):
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+        assert_201(response)
+
+    def test_create_orders_should_create_one_on_db(self, a_client, a_client_user, a_product):
+        self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+
+        assert len(order_repository.list_all()) == 1
+
+    def test_create_should_return_created_http_code(self, a_client, a_client_user, a_product):
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+        assert_201(response)
+
+    def test_create_with_wrong_type_should_return_400(self, a_client, a_client_user, a_product):
+        response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, a_product)
+        assert_400(response)
+
+    def test_create_with_non_existing_place_should_return_400(self, a_client, a_client_user):
+        pass

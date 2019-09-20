@@ -1,6 +1,11 @@
-from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField
+from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, EmbeddedDocumentField
 
-from src.models import User
+from src.models import User, Place
+
+
+class Product(Document):
+    name = StringField(max_length=150, required=True)
+    place = ReferenceField(Place, required=True)
 
 
 class Order(Document):
@@ -15,3 +20,4 @@ class Order(Document):
     status = StringField(choices=status, default=WAITING_STATUS)
     type = StringField(choices=types, default=NORMAL_TYPE)  # TODO: rename this
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
+    product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
