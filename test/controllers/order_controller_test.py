@@ -102,5 +102,5 @@ class TestOrderController:
 
     def test_create_with_non_existing_place_should_return_400(self, a_client, a_client_user, a_product):
         a_product.place.id = 1
-        response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, a_product)
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_400(response)

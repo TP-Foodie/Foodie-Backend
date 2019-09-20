@@ -1,0 +1,2 @@
+class NonExistingProductException(Exception):
+    pass
