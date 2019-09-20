@@ -5,7 +5,7 @@
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "2.7"
+            "python_version": "3.6"
         },
         "sources": [
             {
@@ -235,6 +235,14 @@
             "index": "pypi",
             "version": "==0.18.2"
         },
+        "mongomock": {
+            "hashes": [
+                "sha256:6a087a2191baa77e38171f7f97363898871235419e169b1033eba2af4e25f196",
+                "sha256:7c9c829abfcb7ae9074a3d2e3db15e279edea73f560da3b0b306d929619cca45"
+            ],
+            "index": "pypi",
+            "version": "==3.17.0"
+        },
         "more-itertools": {
             "hashes": [
                 "sha256:409cd48d4db7052af495b09dec721011634af3753ae1ef92d2b32f73a745f832",
@@ -361,6 +369,12 @@
             ],
             "index": "pypi",
             "version": "==0.10.3"
+        },
+        "sentinels": {
+            "hashes": [
+                "sha256:7be0704d7fe1925e397e92d18669ace2f619c92b5d4eb21a89f31e026f9ff4b1"
+            ],
+            "version": "==1.0.0"
         },
         "six": {
             "hashes": [

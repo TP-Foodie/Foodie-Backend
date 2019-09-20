@@ -64,12 +64,13 @@ def a_favor_order(an_order_factory):
 
 
 @pytest.fixture
-def an_order_factory(fake, a_client_user):
+def an_order_factory(cfaker, a_client_user, a_product):
     def create_order(type=Order.NORMAL_TYPE):
         return Order(
-            number=fake.pydecimal(),
-            owner=a_client_user,
-            type=type
+            number=cfaker.pydecimal(),
+            owner=a_client_user.id,
+            type=type,
+            product=a_product.id
         ).save()
     return create_order
 
