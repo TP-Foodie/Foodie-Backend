@@ -1,7 +1,7 @@
 import pytest
 
 from src.models.order import Order
-from src.repositories import order_repository
+from src.repositories import order_repository, product_repository
 from src.services import order_service
 
 
@@ -38,4 +38,4 @@ class TestOrderService:
         order = order_repository.list_all()[0]
 
         assert order.product.id == a_product.id
-        assert order_repository.products_count() == 1
+        assert product_repository.count() == 1

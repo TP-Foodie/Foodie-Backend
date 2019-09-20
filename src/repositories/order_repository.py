@@ -19,12 +19,3 @@ def count():
 
 def create(order_type, owner, product, number):
     return Order.objects.create(type=order_type, owner=owner, product=product, number=number)
-
-
-def get_or_create_product(name, place):
-    product = Product.objects.filter(name=name, place=place).first()
-    return product if product else Product.objects.create(name=name, place=place)
-
-
-def products_count():
-    return Product.objects.count()
