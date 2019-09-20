@@ -53,3 +53,8 @@ class TestOrderService:
 
         with pytest.raises(NonExistingProductException):
             product_service.create("some_name", non_existing_place_id)
+
+    def test_should_create_product_if_its_alright(self, a_place):
+        product_service.create("some name", a_place.id)
+
+        assert product_repository.count() == 1
