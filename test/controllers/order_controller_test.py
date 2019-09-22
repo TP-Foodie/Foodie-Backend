@@ -117,3 +117,11 @@ class TestOrderController:
         assert_200(response)
 
         assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS
+
+    def test_should_return_400_if_delivery_does_not_exists(self, a_client, an_object_id, an_order):
+        response = self.patch_order(
+            a_client, an_order,
+            {'status': Order.TAKEN_STATUS, 'delivery': str(an_object_id)}
+        )
+
+        assert_400(response)

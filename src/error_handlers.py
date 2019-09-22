@@ -7,6 +7,7 @@ from mongoengine import DoesNotExist
 import logger
 
 from src.services.exceptions.invalid_usage_exception import InvalidUsage
+from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ERRORS_BLUEPRINT = Blueprint('errors', __name__)
 

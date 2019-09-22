@@ -7,6 +7,7 @@ from src.schemas.order import ListOrderSchema, DetailsOrderSchema
 from src.services import order_service
 from src.services.exceptions.invalid_usage_exception import InvalidUsage
 from src.services.exceptions.order_exceptions import NonExistingPlaceException
+from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller', url_prefix='/orders')
 NO_CONTENT = ''
@@ -42,5 +43,9 @@ def list_favor_orders():
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
 def update_order(order_id):
-    order_service.take(order_id, parse_take_order_request(request.json))
+    try:
+        order_service.take(order_id, parse_take_order_request(request.json))
+    except NonExistingDeliveryException:
+        raise InvalidUsage('Delivery does not exists',status_code=HTTP_400_BAD_REQUEST)
+
     return NO_CONTENT, HTTP_200_OK
