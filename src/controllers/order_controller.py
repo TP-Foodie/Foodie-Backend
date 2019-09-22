@@ -1,12 +1,14 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 
 from src.controllers.parser import parse_order_request, parse_take_order_request
-from src.controllers.utils import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
+from src.controllers.utils import HTTP_201_CREATED, \
+    HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
 from src.repositories import order_repository
 from src.schemas.order import ListOrderSchema, DetailsOrderSchema
 from src.services import order_service
 from src.services.exceptions.invalid_usage_exception import InvalidUsage
-from src.services.exceptions.order_exceptions import NonExistingPlaceException, NonExistingOrderException
+from src.services.exceptions.order_exceptions import NonExistingPlaceException, \
+    NonExistingOrderException
 from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller', url_prefix='/orders')

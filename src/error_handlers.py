@@ -4,11 +4,10 @@ from marshmallow import ValidationError as MarshmallowValidationError
 from mongoengine import ValidationError as MongoValidationError
 from mongoengine import DoesNotExist
 
-import logger
 from werkzeug.exceptions import MethodNotAllowed, NotFound
-
 from src.services.exceptions.invalid_usage_exception import InvalidUsage
-from src.services.exceptions.user_exceptions import NonExistingDeliveryException
+
+import logger
 
 ERRORS_BLUEPRINT = Blueprint('errors', __name__)
 
@@ -37,7 +36,7 @@ def handle_method_not_allowed(error):
 
 
 @ERRORS_BLUEPRINT.app_errorhandler(DoesNotExist)
-def not_found(error):
+def does_not_exists(error):
     logger.info(error)
     return "Not found", 404
 
