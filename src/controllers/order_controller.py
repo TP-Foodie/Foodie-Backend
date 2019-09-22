@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 
 from src.controllers.parser import parse_order_request
-from src.controllers.utils import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from src.controllers.utils import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
 from src.repositories import order_repository
 from src.schemas.order import ListOrderSchema, DetailsOrderSchema
 from src.services import order_service
@@ -42,4 +42,5 @@ def list_favor_orders():
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
 def update_order(order_id):
-    order_service.update(*request.json.values())
+    order_service.take(order_id, request.json)
+    return NO_CONTENT, HTTP_200_OK
