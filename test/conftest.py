@@ -9,7 +9,7 @@ from src.models import User, Place, Coordinates
 from src.models.order import Order, Product
 
 
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
 
 @pytest.fixture
@@ -79,11 +79,11 @@ def a_favor_order(an_order_factory):
 
 @pytest.fixture
 def an_order_factory(cfaker, a_client_user, a_product):
-    def create_order(type=Order.NORMAL_TYPE):
+    def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
             number=cfaker.pydecimal(),
             owner=a_client_user.id,
-            type=type,
+            type=order_type,
             product=a_product.id
         ).save()
     return create_order
