@@ -5,6 +5,7 @@ from src.controllers.utils import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from src.repositories import order_repository
 from src.schemas.order import ListOrderSchema, DetailsOrderSchema
 from src.services import order_service
+from src.services.exceptions.invalid_usage_exception import InvalidUsage
 from src.services.exceptions.product_exceptions import NonExistingPlaceException
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller', url_prefix='/orders')
@@ -19,13 +20,12 @@ def list_orders():
 
 @ORDERS_BLUEPRINT.route('/', methods=['POST'])
 def create_order():
-    status = HTTP_201_CREATED
     try:
         order_service.create(*parse_order_request(request.json).values())
     except NonExistingPlaceException:
-        status = HTTP_400_BAD_REQUEST
+        raise InvalidUsage("Place does not exists", status_code=HTTP_400_BAD_REQUEST)
 
-    return NO_CONTENT, status
+    return NO_CONTENT, HTTP_201_CREATED
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['GET'])
