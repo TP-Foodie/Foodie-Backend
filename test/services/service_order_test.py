@@ -5,6 +5,7 @@ from src.models.order import Order
 from src.repositories import order_repository, product_repository
 from src.services import order_service, product_service
 from src.services.exceptions.order_exceptions import NonExistingPlaceException
+from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')
@@ -66,3 +67,7 @@ class TestOrderService:
 
         assert order.status == Order.TAKEN_STATUS
         assert order.delivery.id == a_delivery_user.id
+
+    def test_take_order_with_non_existing_delivery_raises_error(self, an_order, an_object_id):
+        with pytest.raises(NonExistingDeliveryException):
+            order_service.take(an_order.id, {'status': Order.TAKEN_STATUS, 'delivery': an_object_id})

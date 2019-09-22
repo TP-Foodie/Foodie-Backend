@@ -1,0 +1,2 @@
+class NonExistingDeliveryException(Exception):
+    pass

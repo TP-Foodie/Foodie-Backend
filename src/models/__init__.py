@@ -18,6 +18,9 @@ class Place(Document):
 
 
 class User(Document):
+    DELIVERY_TYPE = "DELIVERY"
+    CUSTOMER_TYPE = "CUSTOMER"
+
     name = StringField(required=False)
     last_name = StringField(required=False)
     password = StringField(required=True)

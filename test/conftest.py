@@ -2,6 +2,7 @@ import pytest
 from faker import Faker
 from faker.providers import person, internet, phone_number, geo
 from mongoengine import connect, disconnect
+from mongomock import ObjectId
 
 from src.app import APP
 from src.models import User, Place, Coordinates
@@ -108,3 +109,8 @@ def a_client():
     yield client
 
     disconnect()
+
+
+@pytest.fixture
+def an_object_id():
+    return ObjectId()
