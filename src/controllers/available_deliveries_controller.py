@@ -19,6 +19,7 @@ AVAILABLE_DELIVERIES_BLUEPRINT = Blueprint(AVAILABLE_DELIVERIES_ROUTE, __name__)
 #   DELETE: delete delivery as available
 #
 
+
 @AVAILABLE_DELIVERIES_BLUEPRINT.route(AVAILABLE_DELIVERIES_ROUTE, methods=['POST'])
 def post():
     """ This methos handle POST in available_deliveries endpoint"""
@@ -33,6 +34,7 @@ def post():
     available_deliveries_service.add_available_delivery(available_delivery)
 
     return jsonify({'body': 'Created Succesfully'}), 201
+
 
 @AVAILABLE_DELIVERIES_BLUEPRINT.route(AVAILABLE_DELIVERIES_ROUTE, methods=['GET'])
 def get():
@@ -49,6 +51,7 @@ def get():
         query_nearby_deliveries_data)
 
     return jsonify({'body': lista_docs}), 200
+
 
 @AVAILABLE_DELIVERIES_BLUEPRINT.route(AVAILABLE_DELIVERIES_ROUTE, methods=['DELETE'])
 def delete():
