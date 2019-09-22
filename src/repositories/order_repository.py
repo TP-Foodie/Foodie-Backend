@@ -19,3 +19,9 @@ def count():
 
 def create(order_type, owner, product, number):
     return Order.objects.create(type=order_type, owner=owner, product=product, number=number)
+
+
+def update(order_id, field, value):
+    order = Order.objects.get(id=order_id)
+    order[field] = value
+    order.save()

@@ -2,7 +2,7 @@ from bson.objectid import ObjectId
 
 from src.models import Place
 from src.models.order import Product
-from src.services.exceptions.product_exceptions import NonExistingPlaceException
+from src.services.exceptions.order_exceptions import NonExistingPlaceException
 
 
 def create(name, place):

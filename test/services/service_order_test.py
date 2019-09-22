@@ -4,7 +4,7 @@ from bson import ObjectId
 from src.models.order import Order
 from src.repositories import order_repository, product_repository
 from src.services import order_service, product_service
-from src.services.exceptions.product_exceptions import NonExistingPlaceException
+from src.services.exceptions.order_exceptions import NonExistingPlaceException, InvalidOrderStatusException
 
 
 @pytest.mark.usefixtures('a_client')
@@ -58,3 +58,7 @@ class TestOrderService:
         product_service.create("some name", a_place.id)
 
         assert product_repository.count() == 1
+
+    def test_take_order_updates_status(self, an_order):
+        order_service.take(an_order.id, {'status': Order.TAKEN_STATUS})
+        assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS

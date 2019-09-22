@@ -6,7 +6,7 @@ from src.repositories import order_repository
 from src.schemas.order import ListOrderSchema, DetailsOrderSchema
 from src.services import order_service
 from src.services.exceptions.invalid_usage_exception import InvalidUsage
-from src.services.exceptions.product_exceptions import NonExistingPlaceException
+from src.services.exceptions.order_exceptions import NonExistingPlaceException
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller', url_prefix='/orders')
 NO_CONTENT = ''
@@ -38,3 +38,8 @@ def order_details(order_id):
 def list_favor_orders():
     data = ListOrderSchema(many=True).dump(order_repository.get_favor_orders())
     return jsonify(data)
+
+
+@ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
+def update_order(order_id):
+    order_service.update(*request.json.values())

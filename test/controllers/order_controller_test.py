@@ -6,6 +6,9 @@ from test.support.utils import assert_200, assert_201, assert_400
 
 
 class TestOrderController:
+    def patch_order(self, client, order, data):
+        return client.patch('orders/{}'.format(str(order.id)), json=data)
+
     def get_favor_orders(self, client):
         return client.get('/orders/favors')
 
@@ -104,3 +107,10 @@ class TestOrderController:
         a_product.place.id = '1'
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_400(response)
+
+    def test_update_should_change_order_status(self, a_client, an_order):
+        response = self.patch_order(a_client, an_order, {'status': Order.TAKEN_STATUS})
+
+        assert_200(response)
+
+        assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS

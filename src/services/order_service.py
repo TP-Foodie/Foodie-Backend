@@ -1,3 +1,4 @@
+from src.models.order import Order
 from src.repositories import order_repository, product_repository
 
 
@@ -9,3 +10,7 @@ def create(order_type, owner, product):
         product=created_product.id,
         number=order_repository.count() + 1
     )
+
+
+def take(order_id, new_data):
+    order_repository.update(order_id, 'status', new_data.get('status', Order.WAITING_STATUS))
