@@ -33,6 +33,19 @@ def a_client_user(cfaker):
 
 
 @pytest.fixture
+def a_delivery_user(cfaker):
+    return User(
+        name=cfaker.first_name(),
+        last_name=cfaker.last_name(),
+        password=cfaker.prefix(),
+        email=cfaker.email(),
+        profile_image=cfaker.image_url(),
+        phone=cfaker.phone_number(),
+        type="DELIVERY"
+    ).save()
+
+
+@pytest.fixture
 def a_location(cfaker):
     return Coordinates(cfaker.latitude(), cfaker.longitude())
 

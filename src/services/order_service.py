@@ -14,3 +14,4 @@ def create(order_type, owner, product):
 
 def take(order_id, new_data):
     order_repository.update(order_id, 'status', new_data.get('status', Order.WAITING_STATUS))
+    order_repository.update(order_id, 'delivery', new_data.get('delivery', None))

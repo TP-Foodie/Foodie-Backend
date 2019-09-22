@@ -59,6 +59,10 @@ class TestOrderService:
 
         assert product_repository.count() == 1
 
-    def test_take_order_updates_status(self, an_order):
-        order_service.take(an_order.id, {'status': Order.TAKEN_STATUS})
-        assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS
+    def test_take_order_updates_status_and_delivery(self, an_order, a_delivery_user):
+        order_service.take(an_order.id, {'status': Order.TAKEN_STATUS, 'delivery': a_delivery_user.id})
+
+        order = order_repository.get_order(an_order.id)
+
+        assert order.status == Order.TAKEN_STATUS
+        assert order.delivery.id == a_delivery_user.id
