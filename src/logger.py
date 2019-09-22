@@ -14,7 +14,7 @@ def info(msg, *args, **kwargs):
 
 
 def warn(msg, *args, **kwargs):
-    get_logger().warn(msg, *args, **kwargs)
+    get_logger().warning(msg, *args, **kwargs)
 
 
 def error(msg, *args, **kwargs):
