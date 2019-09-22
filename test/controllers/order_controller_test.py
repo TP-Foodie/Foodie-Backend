@@ -108,8 +108,11 @@ class TestOrderController:
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_400(response)
 
-    def test_update_should_change_order_status(self, a_client, an_order):
-        response = self.patch_order(a_client, an_order, {'status': Order.TAKEN_STATUS})
+    def test_update_should_change_order_status(self, a_client, an_order, a_delivery_user):
+        response = self.patch_order(
+            a_client, an_order,
+            {'status': Order.TAKEN_STATUS, 'delivery': str(a_delivery_user.id)}
+        )
 
         assert_200(response)
 
