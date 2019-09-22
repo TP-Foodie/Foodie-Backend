@@ -1,4 +1,4 @@
-from src.models.order import Order, Product
+from src.models.order import Order
 
 
 def list_all():

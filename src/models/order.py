@@ -1,4 +1,4 @@
-from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, EmbeddedDocumentField
+from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, NULLIFY
 
 from src.models import User, Place
 
@@ -22,3 +22,4 @@ class Order(Document):
     type = StringField(choices=types, default=NORMAL_TYPE)  # TODO: rename this
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
     product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
+    delivery = ReferenceField(User, reverse_delete_rule=NULLIFY)
