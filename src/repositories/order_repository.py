@@ -1,4 +1,5 @@
 from src.models.order import Order
+from src.services.exceptions.order_exceptions import NonExistingOrderException
 
 
 def list_all():
@@ -22,6 +23,10 @@ def create(order_type, owner, product, number):
 
 
 def update(order_id, field, value):
-    order = Order.objects.get(id=order_id)
+    order = Order.objects.filter(id=order_id).first()
+
+    if not order:
+        raise NonExistingOrderException()
+
     order[field] = value
     order.save()

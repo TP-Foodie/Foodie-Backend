@@ -1,4 +1,4 @@
-from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 
 def assert_attr_exists(obj, attr_name):
@@ -19,3 +19,7 @@ def assert_201(response):
 
 def assert_400(response):
     assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+def assert_404(response):
+    assert response.status_code == HTTP_404_NOT_FOUND
