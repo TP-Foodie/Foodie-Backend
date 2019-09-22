@@ -5,6 +5,7 @@ from mongoengine import ValidationError as MongoValidationError
 from mongoengine import DoesNotExist
 
 import logger
+from werkzeug.exceptions import MethodNotAllowed, NotFound
 
 from src.services.exceptions.invalid_usage_exception import InvalidUsage
 from src.services.exceptions.user_exceptions import NonExistingDeliveryException
@@ -29,7 +30,19 @@ def error_handler(error):
     return "Internal error", 500
 
 
+@ERRORS_BLUEPRINT.app_errorhandler(MethodNotAllowed)
+def handle_method_not_allowed(error):
+    logger.error(error)
+    return "Method not allowed", 405
+
+
 @ERRORS_BLUEPRINT.app_errorhandler(DoesNotExist)
+def not_found(error):
+    logger.info(error)
+    return "Not found", 404
+
+
+@ERRORS_BLUEPRINT.app_errorhandler(NotFound)
 def not_found(error):
     logger.info(error)
     return "Not found", 404
