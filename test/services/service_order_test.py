@@ -4,7 +4,7 @@ from bson import ObjectId
 from src.models.order import Order
 from src.repositories import order_repository, product_repository
 from src.services import order_service, product_service
-from src.services.exceptions.order_exceptions import NonExistingPlaceException, InvalidOrderStatusException
+from src.services.exceptions.order_exceptions import NonExistingPlaceException
 
 
 @pytest.mark.usefixtures('a_client')
