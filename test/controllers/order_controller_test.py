@@ -6,14 +6,17 @@ from test.support.utils import assert_200, assert_201, assert_400, assert_404
 
 
 class TestOrderController:
+    def build_url(self, url):
+        return f'/api/v1{url}'
+
     def patch_order(self, client, order, data):
-        return client.patch('orders/{}'.format(str(order.id)), json=data)
+        return client.patch(self.build_url('/orders/{}'.format(str(order.id))), json=data)
 
     def get_favor_orders(self, client):
-        return client.get('/orders/favors')
+        return client.get(self.build_url('/orders/favors'))
 
     def create_order(self, client, order_type, user, product):
-        return client.post('/orders/',
+        return client.post(self.build_url('/orders/'),
                            json={
                                'order_type': order_type,
                                'owner': user.id,
@@ -24,10 +27,10 @@ class TestOrderController:
                            })
 
     def get_orders(self, client):
-        return client.get('/orders/')
+        return client.get(self.build_url('/orders/'))
 
     def get_order(self, client, order_id):
-        return client.get('/orders/{}'.format(str(order_id)))
+        return client.get(self.build_url('/orders/{}'.format(str(order_id))))
 
     def test_orders_endpoint_exists(self, a_client):
         response = self.get_orders(a_client)
