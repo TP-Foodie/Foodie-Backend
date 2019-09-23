@@ -5,6 +5,7 @@ from marshmallow.validate import OneOf
 class CreateUserSchema(Schema):
     name = fields.Str(required=False)
     last_name = fields.Str(required=False)
+    user_name = fields.Str(required=False)
     password = fields.Str(required=True)
     email = fields.Email(required=True)
     type = fields.Str(

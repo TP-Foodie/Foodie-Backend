@@ -11,6 +11,7 @@ from models.available_delivery import AvailableDelivery
 
 class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     """ This class is the test case for available deliveries controller """
+
     def setUp(self):
         APP.config['TESTING'] = True
         self.app = APP.test_client()
@@ -32,7 +33,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         response = self.app.post(
             f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
             data=json.dumps({
-                "_id": "1", "name": "Santiago", "profile_image": \
+                "_id": "1", "name": "Santiago", "profile_image":
                 "https://urlimagen.com", "coordinates": [-58.3772300, -34.6131500]}),
             content_type='application/json')
 
@@ -73,7 +74,6 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
 
         assert response.status_code == 200
 
-
     #
     #   Wrong Tests
     #
@@ -83,7 +83,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
         response = self.app.post(
             f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
             data=json.dumps({
-                "id": "1", "name": "Santiago", "profile_image": \
+                "id": "1", "name": "Santiago", "profile_image":
                 "https://urlimagen.com", "coordinates": [-58.3772300, -34.6131500],
                 "extra_field": "extra"}),
             content_type='application/json')

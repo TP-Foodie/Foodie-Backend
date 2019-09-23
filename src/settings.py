@@ -15,3 +15,4 @@ class Config:
     DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "password")
     DATABASE_USERNAME = os.getenv("DATABASE_USERNAME", "app")
     DATABASE_AUTH_SOURCE = os.getenv("DATABASE_AUTH_SOURCE", "foodie")
+    JWT_SECRET = os.getenv("JWT_SECRET", "foodie")

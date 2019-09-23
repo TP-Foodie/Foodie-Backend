@@ -2,6 +2,7 @@
 
 from mongoengine import Document, StringField, ListField, FloatField
 
+
 class AvailableDelivery(Document):
     """ Model Available Delivery."""
     _id = StringField(required=True, primary_key=True)

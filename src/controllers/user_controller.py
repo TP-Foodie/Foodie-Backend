@@ -10,7 +10,7 @@ USERS_BLUEPRINT = Blueprint('users', __name__)
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['GET'])
 def get_user(_id):
-    return jsonify(user_service.get_user(_id)), 200
+    return jsonify(user_service.get_user_by_id(_id)), 200
 
 
 @USERS_BLUEPRINT.route('/', methods=['GET'])

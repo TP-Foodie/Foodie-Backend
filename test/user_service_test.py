@@ -25,7 +25,7 @@ def test_get_user(mock_user):
 
     from services import user_service
 
-    assert user == user_service.get_user(1)
+    assert user == user_service.get_user_by_id(1)
 
 
 @mock.patch('services.user_service.User')
