@@ -11,7 +11,7 @@ from src.services.exceptions.order_exceptions import NonExistingPlaceException, 
     NonExistingOrderException
 from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
-ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller', url_prefix='/orders')
+ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
 NO_CONTENT = ''
 
 
