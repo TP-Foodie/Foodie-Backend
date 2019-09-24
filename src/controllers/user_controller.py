@@ -2,8 +2,7 @@ from flask import jsonify
 from flask import Blueprint
 from flask import request
 
-from schemas.update_user_schema import UpdateUserSchema
-from schemas.create_user_schema import CreateUserSchema
+from schemas.user import CreateUserSchema, UpdateUserSchema
 from services import user_service
 
 USERS_BLUEPRINT = Blueprint('users', __name__)
@@ -11,7 +10,7 @@ USERS_BLUEPRINT = Blueprint('users', __name__)
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['GET'])
 def get_user(_id):
-    return jsonify(user_service.get_user_by_id(_id)), 200
+    return jsonify(user_service.get_user(_id)), 200
 
 
 @USERS_BLUEPRINT.route('/', methods=['GET'])
