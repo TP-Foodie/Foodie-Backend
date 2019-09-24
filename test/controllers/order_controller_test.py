@@ -24,7 +24,7 @@ class TestOrderController:
                                    'name': product.name,
                                    'place': product.place.id
                                }
-                           })
+        })
 
     def get_orders(self, client):
         return client.get(self.build_url('/orders/'))

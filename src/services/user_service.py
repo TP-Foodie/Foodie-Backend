@@ -12,8 +12,8 @@ def get_user(_id):
     return User.objects.get(id=_id)  # pylint: disable=E1101
 
 
-def get_user_by_user_name(user_name):
-    return User.objects.get(user_name=user_name)
+def get_user_by_email(email):
+    return User.objects.get(email=email)
 
 
 def create_user(user_data):
@@ -26,7 +26,7 @@ def create_user(user_data):
 
 
 def update_user(_id, user_data):
-    user = get_user_by_id(_id)
+    user = get_user(_id)
 
     for key in user_data.keys():
         user[key] = _get_property(user_data, key)
@@ -34,9 +34,13 @@ def update_user(_id, user_data):
     return user.save()
 
 
-def is_valid(user_name, password):
-    return get_user_by_user_name(
-        user_name).password == _hash_password(password)
+def is_valid(email, password):
+    user = get_user_by_email(email)
+
+    if user is None:
+        return False
+
+    return user.password == _hash_password(password)
 
 
 def _hash_password(password):

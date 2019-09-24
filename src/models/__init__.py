@@ -23,7 +23,6 @@ class User(Document):
 
     name = StringField(required=False)
     last_name = StringField(required=False)
-    user_name = StringField(required=True, unique=True)
     password = StringField(required=True)
     email = EmailField(required=True)
     profile_image = StringField(required=False)

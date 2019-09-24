@@ -2,7 +2,8 @@ from flask import jsonify
 from flask import Blueprint
 from flask import request
 
-from schemas import CreateUserSchema, UpdateUserSchema
+from schemas.update_user_schema import UpdateUserSchema
+from schemas.create_user_schema import CreateUserSchema
 from services import user_service
 
 USERS_BLUEPRINT = Blueprint('users', __name__)
