@@ -7,6 +7,7 @@ from mongoengine import connect
 from encoders import CustomJSONEncoder
 from settings import Config
 
+from controllers.auth_controller import AUTH_BLUEPRINT
 from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLUEPRINT
