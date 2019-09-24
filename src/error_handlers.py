@@ -1,7 +1,11 @@
+from bson.errors import InvalidId
 from flask import jsonify, Blueprint
 from marshmallow import ValidationError as MarshmallowValidationError
 from mongoengine import ValidationError as MongoValidationError
 from mongoengine import DoesNotExist
+
+from werkzeug.exceptions import MethodNotAllowed, NotFound
+from src.services.exceptions.invalid_usage_exception import InvalidUsage
 
 import logger
 
@@ -25,7 +29,33 @@ def error_handler(error):
     return "Internal error", 500
 
 
+@ERRORS_BLUEPRINT.app_errorhandler(MethodNotAllowed)
+def handle_method_not_allowed(error):
+    logger.error(error)
+    return "Method not allowed", 405
+
+
 @ERRORS_BLUEPRINT.app_errorhandler(DoesNotExist)
+def does_not_exists(error):
+    logger.info(error)
+    return "Not found", 404
+
+
+@ERRORS_BLUEPRINT.app_errorhandler(NotFound)
 def not_found(error):
     logger.info(error)
     return "Not found", 404
+
+
+@ERRORS_BLUEPRINT.app_errorhandler(InvalidId)
+def invalid_id(error):
+    logger.info(error)
+    return "Invalid id", 400
+
+
+@ERRORS_BLUEPRINT.app_errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    logger.info(error)
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response

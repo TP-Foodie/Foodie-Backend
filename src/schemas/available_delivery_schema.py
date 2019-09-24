@@ -4,6 +4,7 @@ from marshmallow import Schema, fields, validate
 
 from schemas.extra_validations import validate_coordinates
 
+
 class AvailableDeliverySchema(Schema):
     """ This class is the Marshmallow Schema for AvailableDelivery """
     _id = fields.Str(required=True, validate=validate.Length(min=1))

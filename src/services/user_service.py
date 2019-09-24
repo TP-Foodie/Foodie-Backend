@@ -6,7 +6,7 @@ def get_users(page, limit):
 
 
 def get_user(_id):
-    return User.objects.get(id=_id) # pylint: disable=E1101
+    return User.objects.get(id=_id)  # pylint: disable=E1101
 
 
 def create_user(user_data):

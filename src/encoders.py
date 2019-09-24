@@ -3,6 +3,7 @@ from flask.json import JSONEncoder
 from bson import ObjectId
 from mongoengine.base import BaseDocument
 
+
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):  # pylint: disable=E0202, W0221
         if isinstance(obj, BaseDocument):

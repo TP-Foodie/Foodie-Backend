@@ -2,6 +2,7 @@
 
 from models.available_delivery import AvailableDelivery
 
+
 def add_available_delivery(available_delivery_data):
     """ This method handles business logic of POST in available_deliveries endpoint """
     available_delivery = AvailableDelivery()
@@ -13,6 +14,7 @@ def add_available_delivery(available_delivery_data):
 
     return True
 
+
 def query_nearby_deliveries(query_data):
     """ This method handles business logic of GET in available_deliveries endpoint """
     # create geospatial query
@@ -20,8 +22,9 @@ def query_nearby_deliveries(query_data):
     latitude = query_data['coordinates'][1]
     radius = query_data['radius']
 
-    return [delivery for delivery in AvailableDelivery.objects(# pylint: disable=E1101
+    return [delivery for delivery in AvailableDelivery.objects(  # pylint: disable=E1101
         coordinates__geo_within_center=[[longitude, latitude], radius])]
+
 
 def delete_available_delivery(available_delivery_data):
     """ This method handles business logic of DELETE in available_deliveries endpoint """
