@@ -6,7 +6,7 @@ MOCK_OBJECT = Mock()
 
 class TestUserService:
 
-    @mock.patch('services.user_service.User')
+    @mock.patch('src.services.user_service.User')
     def test_get_users(self, mock_user):
         users = ['user1', 'user2']
         mock_user.objects = MOCK_OBJECT
@@ -18,7 +18,7 @@ class TestUserService:
 
         assert users == user_service.get_users(0, 10)
 
-    @mock.patch('services.user_service.User')
+    @mock.patch('src.services.user_service.User')
     def test_get_user(self, mock_user):
         user = "user"
         mock_user.objects = MOCK_OBJECT
@@ -28,7 +28,7 @@ class TestUserService:
 
         assert user == user_service.get_user(1)
 
-    @mock.patch('services.user_service.User')
+    @mock.patch('src.services.user_service.User')
     def test_create_user(self, mock_user):
         user = {"id": 1}
         new_user = MagicMock()
@@ -38,7 +38,7 @@ class TestUserService:
         from src.services import user_service
         assert user_service.create_user(user) == user
 
-    @mock.patch('services.user_service.User')
+    @mock.patch('src.services.user_service.User')
     def test_update_user(self, mock_user):
         old_user = MagicMock()
         mock_user.get.return_value = old_user

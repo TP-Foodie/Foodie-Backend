@@ -9,7 +9,7 @@ MOCK_OBJECT = MagicMock()
 #
 
 
-@patch('services.available_deliveries_service.AvailableDelivery')
+@patch('src.services.available_deliveries_service.AvailableDelivery')
 def test_success_add_delivery(mock_available_delivery):
     """ Test success add delivery as available """
     available_delivery = {
@@ -28,7 +28,7 @@ def test_success_add_delivery(mock_available_delivery):
     assert ret_value
 
 
-@patch('services.available_deliveries_service.AvailableDelivery')
+@patch('src.services.available_deliveries_service.AvailableDelivery')
 def test_success_delete_delivery(mock_available_delivery):
     """ Test success delete delivery as available"""
     available_delivery = {"_id": "1"}
@@ -43,7 +43,7 @@ def test_success_delete_delivery(mock_available_delivery):
     assert ret_value
 
 
-@patch('services.available_deliveries_service.AvailableDelivery')
+@patch('src.services.available_deliveries_service.AvailableDelivery')
 def test_success_query_nearby_deliveries(mock_available_delivery):
     """ Test success query nearby deliveries """
     nearby_deliveries = []
