@@ -1,8 +1,8 @@
 import json
 
+from test.support.utils import assert_200, assert_201, assert_400, assert_404
 from src.models.order import Order
 from src.repositories import order_repository
-from test.support.utils import assert_200, assert_201, assert_400, assert_404
 
 
 class TestOrderController:
@@ -23,8 +23,7 @@ class TestOrderController:
                                'product': {
                                    'name': product.name,
                                    'place': product.place.id
-                               }
-        })
+                               }})
 
     def get_orders(self, client):
         return client.get(self.build_url('/orders/'))
@@ -106,7 +105,8 @@ class TestOrderController:
         response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, a_product)
         assert_400(response)
 
-    def test_create_with_invalid_place_id_should_return_400(self, a_client, a_client_user, a_product):
+    def test_create_with_invalid_place_id_should_return_400(
+            self, a_client, a_client_user, a_product):
         a_product.place.id = '1'
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_400(response)
@@ -129,7 +129,8 @@ class TestOrderController:
 
         assert_400(response)
 
-    def test_should_return_404_if_order_does_not_exists(self, a_client, an_object_id, a_delivery_user):
+    def test_should_return_404_if_order_does_not_exists(
+            self, a_client, an_object_id, a_delivery_user):
         response = a_client.patch(
             'orders/{}'.format(str(an_object_id)),
             json={'status': Order.TAKEN_STATUS, 'delivery': str(a_delivery_user.id)}

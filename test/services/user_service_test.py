@@ -14,7 +14,7 @@ class TestUserService:
         MOCK_OBJECT.skip.return_value = mock_skip
         mock_skip.limit.return_value = users
 
-        from services import user_service
+        from src.services import user_service
 
         assert users == user_service.get_users(0, 10)
 
@@ -24,7 +24,7 @@ class TestUserService:
         mock_user.objects = MOCK_OBJECT
         MOCK_OBJECT.get.return_value = user
 
-        from services import user_service
+        from src.services import user_service
 
         assert user == user_service.get_user(1)
 
@@ -35,7 +35,7 @@ class TestUserService:
         new_user.save.return_value = user
         mock_user.return_value = new_user
 
-        from services import user_service
+        from src.services import user_service
         assert user_service.create_user(user) == user
 
     @mock.patch('services.user_service.User')
@@ -44,5 +44,5 @@ class TestUserService:
         mock_user.get.return_value = old_user
         old_user.save.return_value = True
 
-        from services import user_service
+        from src.services import user_service
         assert user_service.update_user(1, {"name": "nombre"})
