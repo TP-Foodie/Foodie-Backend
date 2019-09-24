@@ -8,7 +8,7 @@ def get_users(page, limit):
         page * limit).limit(limit)]  # pylint: disable=E1101
 
 
-def get_user_by_id(_id):
+def get_user(_id):
     return User.objects.get(id=_id)  # pylint: disable=E1101
 
 
