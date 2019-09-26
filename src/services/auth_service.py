@@ -16,16 +16,22 @@ def authenticate(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
         auth = request.headers['Authorization']
-        way, token = auth.split()
+        way = ''
+        token = ''
+
+        try:
+            way, token = auth.split()
+        except ValueError:
+            pass
 
         if way != "Bearer":
-            raise UnauthorizedUserException()
+            raise UnauthorizedUserException
 
         auth_data = jwt_service.decode_jwt_data(token)
         user_is_valid = user_service.is_valid(auth_data['email'], auth_data['password'])
 
         if not user_is_valid:
-            raise UnauthorizedUserException()
+            raise UnauthorizedUserException
 
         return function(*args, **kwargs)
 
