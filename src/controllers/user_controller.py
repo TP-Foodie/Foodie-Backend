@@ -4,6 +4,7 @@ from flask import request
 
 from schemas.user import CreateUserSchema, UpdateUserSchema
 from services import user_service
+from services.auth_service import authenticate
 
 USERS_BLUEPRINT = Blueprint('users', __name__)
 
@@ -28,6 +29,7 @@ def get_users():
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['PUT'])
+@authenticate
 def patch(_id):
     content = request.get_json()
     schema = UpdateUserSchema()

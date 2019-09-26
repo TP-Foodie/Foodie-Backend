@@ -14,3 +14,4 @@ mongomock==3.17.0
 pylint_mongoengine==0.3.3
 flake8==3.7.8
 PyJWT==1.4.0
+flask-swagger-ui==3.20.9

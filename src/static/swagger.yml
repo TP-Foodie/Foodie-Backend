@@ -1,0 +1,47 @@
+swagger: "2.0"
+info:
+  description: "Api para soportar las features de Foodie app y Foodie web"
+  version: "1.0.0"
+  title: "Foodie"
+host: "t2-foodie-server.herokuapp.com"
+basePath: "/api/v1"
+schemes:
+- "https"
+paths:
+  /auth:
+    post:
+      summary: "Obtener un JWT para la autenticación"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Autenticación"
+        description: "Datos de la persona a autenticar"
+        required: true
+        schema:
+          $ref: "#/definitions/auth_request"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/auth_response"
+        401:
+          description: "Unauthorized"
+definitions:
+  auth_request:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "foo@email.com"
+      password:
+        type: "string"
+        example: "password"
+  auth_response:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+        example: "xxxxx.yyyyy.zzzzz"
