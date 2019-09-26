@@ -1,12 +1,11 @@
 """This module initiates Flask APP."""
 
-import os
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
 from mongoengine import connect
+from flask_swagger_ui import get_swaggerui_blueprint
 from encoders import CustomJSONEncoder
 from settings import Config
-from flask_swagger_ui import get_swaggerui_blueprint
 
 from controllers.auth_controller import AUTH_BLUEPRINT
 from controllers.place_controller import PLACES_BLUEPRINT
