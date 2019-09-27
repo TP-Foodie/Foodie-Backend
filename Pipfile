@@ -21,6 +21,7 @@ pylint-mongoengine = "*"
 faker = "*"
 mongomock = "*"
 flake8 = "*"
+flask-swagger-ui = "*"
 
 [requires]
 python_version = "3.6"
