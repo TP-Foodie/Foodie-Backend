@@ -24,7 +24,7 @@ class User(Document):
     name = StringField(required=False)
     last_name = StringField(required=False)
     password = StringField(required=True)
-    email = EmailField(required=True)
+    email = EmailField(required=True, unique=True)
     profile_image = StringField(required=False)
     phone = StringField(required=False)
     type = StringField(

@@ -5,6 +5,10 @@ Application Server
 - [Release Plan](https://docs.google.com/spreadsheets/d/1V6PulNcmdxFSB4VBtAvh1eBTG40W4kyfb-GfkZr9fRQ/edit?usp=sharing)
 - [Board](https://github.com/orgs/TP-Foodie/projects/1)
 
+### Swagger
+
+- [Documentacion de la API](https://t2-foodie-server.herokuapp.com/swagger)
+
 ### Instalar los requerimientos con pip
 
 ```pip install -r requirements.txt```
@@ -16,8 +20,8 @@ Application Server
 ### Arreglar automaticamente los errores de estilos
 
 ```
-find src/ -name "*.py" | xargs -t -I{} autopep8 -v --in-place --aggressive --aggressive {}
-find test/ -name "*.py" | xargs -t -I{} autopep8 -v --in-place --aggressive --aggressive {}
+find src/ -name "*.py" | xargs -n 1 -P 8 -t -I{} autopep8 -v --in-place --aggressive --aggressive --max-line-length 100 {}
+find test/ -name "*.py" | xargs -n 1 -P 8 -t -I{} autopep8 -v --in-place --aggressive --aggressive --max-line-length 100 {}
 ```
 
 ### Correr pytest

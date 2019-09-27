@@ -10,4 +10,7 @@ class AvailableDeliverySchema(Schema):
     _id = fields.Str(required=True, validate=validate.Length(min=1))
     name = fields.Str(required=True, validate=validate.Length(min=1))
     profile_image = fields.URL(required=True, validate=validate.Length(min=1))
-    coordinates = fields.List(fields.Float, required=True, validate=validate_coordinates)
+    coordinates = fields.List(
+        fields.Float,
+        required=True,
+        validate=validate_coordinates)
