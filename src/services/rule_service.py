@@ -18,3 +18,6 @@ class RuleService:
         consequence = RuleConsequence(**{key: kwargs[key] for key in self.CONSEQUENCE_ARGUMENTS if key in kwargs})
 
         return self.rule_repository.create(kwargs.get('name', ''), condition, consequence)
+
+    def list(self):
+        return self.rule_repository.list()

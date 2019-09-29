@@ -15,7 +15,7 @@ def validate_user(auth_data):
 def authenticate(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
-        auth = request.headers['Authorization']
+        auth = request.headers.get('Authorization', '')
         way = ''
         token = ''
 

@@ -12,6 +12,7 @@ from src.models.order import Order, Product
 # pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
 from src.models.rule import RuleCondition, RuleConsequence, Rule
+from src.services import user_service
 
 
 @pytest.fixture
@@ -24,7 +25,7 @@ def cfaker():
 
 @pytest.fixture
 def a_client_user(cfaker):
-    return User(
+    user = User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
         password=cfaker.prefix(),
@@ -32,8 +33,15 @@ def a_client_user(cfaker):
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
         type="CUSTOMER"
-    ).save()
+    )
 
+    user_service.create_user({
+        'email': user.email,
+        'password': user.password,
+        'type': "CUSTOMER"
+    })
+
+    return user
 
 @pytest.fixture
 def a_delivery_user(cfaker):
@@ -107,7 +115,6 @@ def a_client():
     disconnect()
     connect('mongoenginetest', host='mongomock://localhost')
     client = APP.test_client()
-
     yield client
 
     disconnect()
@@ -120,14 +127,18 @@ def an_object_id():
 
 @pytest.fixture
 def a_condition():
-    return RuleCondition()
+    return RuleCondition(variable=RuleCondition.USER_REPUTATION, operator=RuleCondition.GREATER_THAN)
 
 
 @pytest.fixture
 def a_consequence():
-    return RuleConsequence()
+    return RuleConsequence(consequence_type=RuleConsequence.VALUE, value=0)
 
 
 @pytest.fixture
-def a_rule():
-    return Rule()
+def a_rule(cfaker, a_condition, a_consequence):
+    return Rule(
+        name=cfaker.name(),
+        condition=a_condition,
+        consequence=a_consequence
+    ).save()
