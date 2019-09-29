@@ -20,7 +20,7 @@ class TestRuleController:
         response = a_client.get('api/v1/rules/')
         assert_401(response)
 
-    def test_list_return_all_rules(self, a_client, a_rule, a_client_user):
+    def test_get_rule_return_rule(self, a_client, a_rule, a_client_user):
         response = self.get_rules(a_client, a_client_user)
 
         assert_200(response)
@@ -30,13 +30,5 @@ class TestRuleController:
         assert rule == {
             'id': str(a_rule.id),
             'name': a_rule.name,
-            'condition': {
-                'variable': a_rule.condition.variable,
-                'operator': a_rule.condition.operator,
-                'condition_value': a_rule.condition.condition_value
-            },
-            'consequence': {
-                'consequence_type': a_rule.consequence.consequence_type,
-                'value': a_rule.consequence.value
-            }
+            'active': a_rule.active
         }

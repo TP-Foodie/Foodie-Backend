@@ -11,9 +11,6 @@ class ConsequenceSchema(Schema):
         fields = ('consequence_type', 'value')
 
 
-class RuleSchema(Schema):
-    condition = fields.Nested(ConditionSchema)
-    consequence = fields.Nested(ConsequenceSchema)
-
+class ListRuleSchema(Schema):
     class Meta:
-        fields = ('id', 'name', 'condition', 'consequence')
+        fields = ('id', 'name', 'active')

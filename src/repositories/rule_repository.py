@@ -1,9 +1,9 @@
 from src.models.rule import Rule
-from src.schemas.rule_schema import RuleSchema
+from src.schemas.rule_schema import ListRuleSchema
 
 
 class RuleRepository:
-    list_repository = RuleSchema(many=True)
+    list_repository = ListRuleSchema(many=True)
 
     def create(self, name, condition, consequence):
         return Rule.objects.create(
