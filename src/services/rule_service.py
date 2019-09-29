@@ -21,9 +21,13 @@ class RuleService:
             if arg not in args:
                 raise MissingArgumentsException()
 
-        args['consequence_type'] = args['consequence_type'] if 'consequence_type' in args \
-            else RuleConsequence.VALUE
-        args['value'] = args['value'] if 'value' in args else self.DEFAULT_VALUE
-        args['condition_value'] = args['condition_value'] if 'condition_value' in args else self.DEFAULT_VALUE
-        args['name'] = args['name'] if 'name' in args else None
+        self.check_arg(args, 'consequence_type', RuleConsequence.VALUE)
+        self.check_arg(args, 'value', self.DEFAULT_VALUE)
+        self.check_arg(args, 'condition_value', self.DEFAULT_VALUE)
+        self.check_arg(args, 'name', None)
+
+        return args
+
+    def check_arg(self, args, arg_name, default):
+        args[arg_name] = args.get(arg_name, default)
         return args
