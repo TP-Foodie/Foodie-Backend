@@ -58,14 +58,6 @@ class TestRuleService:
                 consequence_value=5
             )
 
-    def test_create_rule_without_condition_value_should_not_raise(self):
-        self.rule_service.create(
-            variable=RuleCondition.ORDER_DATE,
-            operator=RuleCondition.IS,
-            consequence_type=RuleConsequence.PERCENTAGE,
-            consequence_value=5,
-        )
-
     def test_create_rule_with_name(self):
         rule = self.rule_service.create(
             name='some rule',

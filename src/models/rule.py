@@ -65,11 +65,11 @@ class RuleConsequence(EmbeddedDocument):
 
     CONSEQUENCE_TYPES = (PERCENTAGE, VALUE)
 
-    consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES)
-    value = fields.StringField(max_length=100)
+    consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES, default=VALUE)
+    value = fields.IntField(max_length=100, default=0)
 
 
 class Rule(Document):
-    name = fields.StringField(max_length=100)
+    name = fields.StringField(max_length=100, default=None)
     consequence = fields.EmbeddedDocumentField(RuleConsequence)
     condition = fields.EmbeddedDocumentField(RuleCondition)
