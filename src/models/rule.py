@@ -40,4 +40,19 @@ class RuleCondition(Document):
         TravelDay,
     )
 
+    GreaterThanEqual = 'GTE'
+    GreaterThan = 'GT',
+    LessThan = 'LT',
+    LessThanEqual = 'LTE',
+    IsTrue = 'IT'
+
+    OPERATORS = (
+        GreaterThanEqual,
+        GreaterThan,
+        LessThan,
+        LessThanEqual,
+        IsTrue
+    )
+
     variable = fields.StringField(max_length=10, choices=VARIABLES)
+    operator = fields.StringField(max_length=10, choices=OPERATORS)
