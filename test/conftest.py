@@ -11,7 +11,7 @@ from src.models.order import Order, Product
 
 # pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
-from src.models.rule import RuleCondition, RuleConsequence
+from src.models.rule import RuleCondition, RuleConsequence, Rule
 
 
 @pytest.fixture
@@ -126,3 +126,8 @@ def a_condition():
 @pytest.fixture
 def a_consequence():
     return RuleConsequence()
+
+
+@pytest.fixture
+def a_rule():
+    return Rule()

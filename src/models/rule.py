@@ -1,7 +1,7 @@
-from mongoengine import Document, fields
+from mongoengine import Document, fields, EmbeddedDocument
 
 
-class RuleCondition(Document):
+class RuleCondition(EmbeddedDocument):
     UserReputation = 'UR'
     UserDailyTravels = 'UDT'
     UserMonthlyTravels = 'UMT'
@@ -59,7 +59,7 @@ class RuleCondition(Document):
     condition_value = fields.StringField(max_length=100)
 
 
-class RuleConsequence(Document):
+class RuleConsequence(EmbeddedDocument):
     PERCENTAGE = 'P'
     VALUE = 'V'
 
@@ -67,3 +67,8 @@ class RuleConsequence(Document):
 
     consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES)
     value = fields.StringField(max_length=100)
+
+
+class Rule(Document):
+    consequence = fields.EmbeddedDocumentField(RuleConsequence)
+    condition = fields.EmbeddedDocumentField(RuleCondition)
