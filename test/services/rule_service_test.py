@@ -57,3 +57,11 @@ class TestRuleService:
                 consequence_type=RuleConsequence.PERCENTAGE,
                 consequence_value=5
             )
+
+    def test_create_rule_without_condition_value_should_not_raise(self):
+        self.rule_service.create(
+            variable=RuleCondition.OrderDate,
+            operator=RuleCondition.IsTrue,
+            consequence_type=RuleConsequence.PERCENTAGE,
+            consequence_value=5,
+        )

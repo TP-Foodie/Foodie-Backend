@@ -22,4 +22,5 @@ class RuleService:
         args['consequence_type'] = args['consequence_type'] if 'consequence_type' in args \
             else RuleConsequence.VALUE
         args['value'] = args['value'] if 'value' in args else '0'
+        args['condition_value'] = args['condition_value'] if 'condition_value' in args else '0'
         return args
