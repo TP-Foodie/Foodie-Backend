@@ -65,3 +65,15 @@ class TestRuleService:
             consequence_type=RuleConsequence.PERCENTAGE,
             consequence_value=5,
         )
+
+    def test_create_rule_with_name(self):
+        rule = self.rule_service.create(
+            name='some rule',
+            variable=RuleCondition.ORDER_DATE,
+            operator=RuleCondition.IS,
+            condition_value='wednesday',
+            consequence_type=RuleConsequence.PERCENTAGE,
+            consequence_value=5,
+        )
+
+        assert rule.name == 'some rule'

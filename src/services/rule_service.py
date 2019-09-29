@@ -14,7 +14,7 @@ class RuleService:
         condition = RuleCondition(**{key: str(kwargs[key]) for key in ['variable', 'operator', 'condition_value']})
         consequence = RuleConsequence(**{key: str(kwargs[key]) for key in ['consequence_type', 'value']})
 
-        self.rule_repository.create(condition, consequence)
+        return self.rule_repository.create(kwargs['name'], condition, consequence)
 
     def check_args(self, args):
         for arg in ['variable', 'operator']:
@@ -25,4 +25,5 @@ class RuleService:
             else RuleConsequence.VALUE
         args['value'] = args['value'] if 'value' in args else self.DEFAULT_VALUE
         args['condition_value'] = args['condition_value'] if 'condition_value' in args else self.DEFAULT_VALUE
+        args['name'] = args['name'] if 'name' in args else None
         return args
