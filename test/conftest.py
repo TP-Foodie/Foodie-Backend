@@ -11,6 +11,8 @@ from src.models.order import Order, Product
 
 # pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
+from src.models.rule import RuleCondition
+
 
 @pytest.fixture
 def cfaker():
@@ -114,3 +116,8 @@ def a_client():
 @pytest.fixture
 def an_object_id():
     return ObjectId()
+
+
+@pytest.fixture
+def a_condition():
+    return RuleCondition()
