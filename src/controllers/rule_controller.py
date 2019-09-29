@@ -20,4 +20,5 @@ def list_rules():
 @RULES_BLUEPRINT.route('/<rule_id>', methods=['GET'])
 @authenticate
 def get_rule(rule_id):
-    pass
+    data = jsonify(rule_service.get(rule_id))
+    return data, HTTP_200_OK

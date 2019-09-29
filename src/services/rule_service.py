@@ -21,3 +21,6 @@ class RuleService:
 
     def list(self):
         return self.rule_repository.list()
+
+    def get(self, rule_id):
+        return self.rule_repository.get(rule_id)
