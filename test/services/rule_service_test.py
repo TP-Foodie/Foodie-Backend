@@ -21,7 +21,7 @@
 import pytest
 
 from src.models.rule import RuleCondition, Rule
-from src.services.RuleService import RuleService
+from src.services.rule_service import RuleService
 
 
 @pytest.mark.usefixtures('a_client')
@@ -36,14 +36,3 @@ class TestRuleService:
         )
 
         assert Rule.objects.count() == 1
-
-    def test_get_value_for_user_reputation_rule_should_return_user_reputation(self, a_client_user, an_order):
-        rule = self.rule_service.create(
-            variable=RuleCondition.UserReputation,
-            operator=RuleCondition.GreaterThan,
-            condition_value=3
-        )
-
-        value = self.rule_service.get_value_for(rule, an_order)
-
-        assert value == a_client_user.reputation
