@@ -7,17 +7,17 @@ class RuleCondition(EmbeddedDocument):
     UserMonthlyTravels = 'UMT'
     UserAntiquity = 'UA'
     DeliveryReputation = 'DR'
-    DeliveryDailyTravels = 'DDT',
-    DeliveryMonthlyTravels = 'DMT',
-    DeliveryAntiquity = 'DA',
-    DeliveryBalance = 'DB',
-    CashPaymentMethod = 'CPM',
+    DeliveryDailyTravels = 'DDT'
+    DeliveryMonthlyTravels = 'DMT'
+    DeliveryAntiquity = 'DA'
+    DeliveryBalance = 'DB'
+    CashPaymentMethod = 'CPM'
     CreditPaymentMethod = 'CRPM'
-    OrderDuration = 'OD',
-    OrderDistance = 'ODI',
-    OrderPosition = 'OP',
-    OrderTime = 'OT',
-    OrdersQuantity = 'OC',
+    OrderDuration = 'OD'
+    OrderDistance = 'ODI'
+    OrderPosition = 'OP'
+    OrderTime = 'OT'
+    OrdersQuantity = 'OC'
     TravelDay = 'TD'
 
     VARIABLES = (
@@ -41,9 +41,9 @@ class RuleCondition(EmbeddedDocument):
     )
 
     GreaterThanEqual = 'GTE'
-    GreaterThan = 'GT',
-    LessThan = 'LT',
-    LessThanEqual = 'LTE',
+    GreaterThan = 'GT'
+    LessThan = 'LT'
+    LessThanEqual = 'LTE'
     IsTrue = 'IT'
 
     OPERATORS = (
