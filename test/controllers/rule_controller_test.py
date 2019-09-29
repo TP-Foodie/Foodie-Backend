@@ -20,7 +20,7 @@ class TestRuleController:
         response = a_client.get('api/v1/rules/')
         assert_401(response)
 
-    def test_get_rule_return_rule(self, a_client, a_rule, a_client_user):
+    def test_list_rules_returns_all(self, a_client, a_rule, a_client_user):
         response = self.get_rules(a_client, a_client_user)
 
         assert_200(response)
@@ -32,3 +32,7 @@ class TestRuleController:
             'name': a_rule.name,
             'active': a_rule.active
         }
+
+    def test_get_rule_details_fails_for_unauthenticated(self, a_client, a_rule):
+        response = a_client.get('api/v1/rules/{}'.format(str(a_rule.id)))
+        assert_401(response)
