@@ -57,3 +57,12 @@ class RuleCondition(Document):
     variable = fields.StringField(max_length=10, choices=VARIABLES)
     operator = fields.StringField(max_length=10, choices=OPERATORS)
     condition_value = fields.StringField(max_length=100)
+
+
+class RuleConsequence(Document):
+    PERCENTAGE = 'P'
+    VALUE = 'V'
+
+    CONSEQUENCE_TYPES = (PERCENTAGE, VALUE)
+
+    consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES)
