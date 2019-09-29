@@ -66,3 +66,4 @@ class RuleConsequence(Document):
     CONSEQUENCE_TYPES = (PERCENTAGE, VALUE)
 
     consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES)
+    value = fields.StringField(max_length=100)
