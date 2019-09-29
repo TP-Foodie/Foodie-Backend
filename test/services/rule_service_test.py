@@ -20,7 +20,7 @@
 # }
 import pytest
 
-from src.models.rule import RuleCondition, Rule
+from src.models.rule import RuleCondition, Rule, RuleConsequence
 from src.services.rule_service import RuleService
 
 
@@ -28,11 +28,22 @@ from src.services.rule_service import RuleService
 class TestRuleService:
     rule_service = RuleService()
 
-    def test_create_rule_should_create_one(self):
+    def test_create_rule_with_no_consequence_should_create_one(self):
         self.rule_service.create(
             variable=RuleCondition.DeliveryReputation,
             operator=RuleCondition.GreaterThan,
             condition_value=1
+        )
+
+        assert Rule.objects.count() == 1
+
+    def test_create_rule_with_consequence(self):
+        self.rule_service.create(
+            variable=RuleCondition.OrderDate,
+            operator=RuleCondition.IsTrue,
+            condition_value='wednesday',
+            consequence_type=RuleConsequence.PERCENTAGE,
+            consequence_value=5,
         )
 
         assert Rule.objects.count() == 1

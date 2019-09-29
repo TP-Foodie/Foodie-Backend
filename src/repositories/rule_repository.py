@@ -1,8 +1,9 @@
-from src.models.rule import Rule, RuleCondition
+from src.models.rule import Rule, RuleCondition, RuleConsequence
 
 
 class RuleRepository:
-    def create(self, variable, operator, condition_value):
+    def create(self, condition, consequence):
         return Rule.objects.create(
-            condition=RuleCondition(variable=variable, operator=operator, condition_value=condition_value)
+            condition=condition,
+            consequence=consequence
         )
