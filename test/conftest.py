@@ -24,8 +24,8 @@ def cfaker():
 
 
 @pytest.fixture
-def a_client_user(cfaker):
-    user = User(
+def a_customer_user(cfaker):
+    return User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
         password=cfaker.prefix(),
@@ -33,15 +33,8 @@ def a_client_user(cfaker):
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
         type="CUSTOMER"
-    )
+    ).save()
 
-    user_service.create_user({
-        'email': user.email,
-        'password': user.password,
-        'type': "CUSTOMER"
-    })
-
-    return user
 
 @pytest.fixture
 def a_delivery_user(cfaker):
@@ -88,11 +81,11 @@ def a_favor_order(an_order_factory):
 
 
 @pytest.fixture
-def an_order_factory(cfaker, a_client_user, a_product):
+def an_order_factory(cfaker, a_customer_user, a_product):
     def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
             number=cfaker.pydecimal(),
-            owner=a_client_user.id,
+            owner=a_customer_user.id,
             type=order_type,
             product=a_product.id
         ).save()
@@ -115,9 +108,29 @@ def a_client():
     disconnect()
     connect('mongoenginetest', host='mongomock://localhost')
     client = APP.test_client()
+
     yield client
 
     disconnect()
+
+
+@pytest.fixture
+def a_client_user(cfaker):
+    password = 'password123123'
+
+    user = user_service.create_user({
+        'name': cfaker.name(),
+        'last_name': cfaker.last_name(),
+        'email': cfaker.email(),
+        'password': password,
+        'profile_image': cfaker.image_url(),
+        'phone': cfaker.phone_number(),
+        'type': "CUSTOMER"
+    })
+
+    user.password = password
+
+    return user
 
 
 @pytest.fixture

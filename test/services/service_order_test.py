@@ -10,21 +10,21 @@ from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 @pytest.mark.usefixtures('a_client')
 class TestOrderService:
-    def test_create_order(self, a_client_user, a_product):
+    def test_create_order(self, a_customer_user, a_product):
         order_service.create(
-            Order.NORMAL_TYPE, a_client_user.id, {
+            Order.NORMAL_TYPE, a_customer_user.id, {
                 'name': a_product.name, 'place': a_product.place.id})
 
         order = order_repository.list_all()[0]
 
-        assert order.owner.id == a_client_user.id
+        assert order.owner.id == a_customer_user.id
 
-    def test_order_number_should_be_consecutive(self, a_client_user, a_product):
+    def test_order_number_should_be_consecutive(self, a_customer_user, a_product):
         order_service.create(
-            Order.NORMAL_TYPE, a_client_user.id, {
+            Order.NORMAL_TYPE, a_customer_user.id, {
                 'name': a_product.name, 'place': a_product.place.id})
         order_service.create(
-            Order.NORMAL_TYPE, a_client_user.id, {
+            Order.NORMAL_TYPE, a_customer_user.id, {
                 'name': a_product.name, 'place': a_product.place.id})
 
         first_order = order_repository.list_all()[0]
@@ -34,9 +34,9 @@ class TestOrderService:
         assert second_order.number == 2
 
     def test_creating_order_should_create_product_if_it_does_not_exists(
-            self, a_client_user, a_product):
+            self, a_customer_user, a_product):
         order_service.create(
-            Order.NORMAL_TYPE, a_client_user.id, {
+            Order.NORMAL_TYPE, a_customer_user.id, {
                 'name': "hamburger", 'place': a_product.place.id})
 
         order = order_repository.list_all()[0]
@@ -44,9 +44,9 @@ class TestOrderService:
         assert order.product.id != a_product.id
         assert order.product.name == "hamburger"
 
-    def test_creating_order_should_not_create_product_if_it_exists(self, a_client_user, a_product):
+    def test_creating_order_should_not_create_product_if_it_exists(self, a_customer_user, a_product):
         order_service.create(
-            Order.NORMAL_TYPE, a_client_user.id, {
+            Order.NORMAL_TYPE, a_customer_user.id, {
                 'name': a_product.name, 'place': a_product.place.id})
 
         order = order_repository.list_all()[0]
