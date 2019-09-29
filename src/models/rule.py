@@ -2,56 +2,56 @@ from mongoengine import Document, fields, EmbeddedDocument
 
 
 class RuleCondition(EmbeddedDocument):
-    UserReputation = 'UR'
-    UserDailyTravels = 'UDT'
-    UserMonthlyTravels = 'UMT'
-    UserAntiquity = 'UA'
-    DeliveryReputation = 'DR'
-    DeliveryDailyTravels = 'DDT'
-    DeliveryMonthlyTravels = 'DMT'
-    DeliveryAntiquity = 'DA'
-    DeliveryBalance = 'DB'
-    CashPaymentMethod = 'CPM'
-    CreditPaymentMethod = 'CRPM'
-    OrderDuration = 'OD'
-    OrderDistance = 'ODI'
-    OrderPosition = 'OP'
-    OrderDate = 'ODA'
-    OrdersQuantity = 'OC'
-    TravelDay = 'TD'
+    USER_REPUTATION = 'UR'
+    USER_DAILY_TRAVELS = 'UDT'
+    USER_MONTHLY_TRAVELS = 'UMT'
+    USER_ANTIQUITY = 'UA'
+    DELIVERY_REPUTATION = 'DR'
+    DELIVERY_DAILY_TRAVELS = 'DDT'
+    DELIVERY_MONTHLY_TRAVELS = 'DMT'
+    DELIVERY_ANTIQUITY = 'DA'
+    USER_BALANCE = 'DB'
+    CASH_PAYMENT_METHOD = 'CPM'
+    CREDIT_PAYMENT_METHOD = 'CRPM'
+    ORDER_DURATION = 'OD'
+    ORDER_DISTANCE = 'ODI'
+    ORDER_POSITION = 'OP'
+    ORDER_DATE = 'ODA'
+    ORDER_QUANTITY = 'OC'
+    TRAVEL_DAY = 'TD'
 
     VARIABLES = (
-        UserReputation,
-        UserDailyTravels,
-        UserMonthlyTravels,
-        UserAntiquity,
-        DeliveryReputation,
-        DeliveryDailyTravels,
-        DeliveryMonthlyTravels,
-        DeliveryAntiquity,
-        DeliveryBalance,
-        CashPaymentMethod,
-        CreditPaymentMethod,
-        OrderDuration,
-        OrderDistance,
-        OrderPosition,
-        OrderDate,
-        OrdersQuantity,
-        TravelDay,
+        USER_REPUTATION,
+        USER_DAILY_TRAVELS,
+        USER_MONTHLY_TRAVELS,
+        USER_ANTIQUITY,
+        DELIVERY_REPUTATION,
+        DELIVERY_DAILY_TRAVELS,
+        DELIVERY_MONTHLY_TRAVELS,
+        DELIVERY_ANTIQUITY,
+        USER_BALANCE,
+        CASH_PAYMENT_METHOD,
+        CREDIT_PAYMENT_METHOD,
+        ORDER_DURATION,
+        ORDER_DISTANCE,
+        ORDER_POSITION,
+        ORDER_DATE,
+        ORDER_QUANTITY,
+        TRAVEL_DAY,
     )
 
-    GreaterThanEqual = 'GTE'
-    GreaterThan = 'GT'
-    LessThan = 'LT'
-    LessThanEqual = 'LTE'
-    IsTrue = 'IT'
+    GREATER_THAN_EQUAL = 'GTE'
+    GREATER_THAN = 'GT'
+    LESS_THAN = 'LT'
+    LESS_THAN_EQUAL = 'LTE'
+    IS = 'IT'
 
     OPERATORS = (
-        GreaterThanEqual,
-        GreaterThan,
-        LessThan,
-        LessThanEqual,
-        IsTrue
+        GREATER_THAN_EQUAL,
+        GREATER_THAN,
+        LESS_THAN,
+        LESS_THAN_EQUAL,
+        IS
     )
 
     variable = fields.StringField(max_length=10, choices=VARIABLES)
