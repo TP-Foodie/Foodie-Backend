@@ -16,7 +16,7 @@ class RuleCondition(EmbeddedDocument):
     OrderDuration = 'OD'
     OrderDistance = 'ODI'
     OrderPosition = 'OP'
-    OrderTime = 'OT'
+    OrderDate = 'ODA'
     OrdersQuantity = 'OC'
     TravelDay = 'TD'
 
@@ -35,7 +35,7 @@ class RuleCondition(EmbeddedDocument):
         OrderDuration,
         OrderDistance,
         OrderPosition,
-        OrderTime,
+        OrderDate,
         OrdersQuantity,
         TravelDay,
     )
@@ -73,3 +73,4 @@ class Rule(Document):
     name = fields.StringField(max_length=100)
     consequence = fields.EmbeddedDocumentField(RuleConsequence)
     condition = fields.EmbeddedDocumentField(RuleCondition)
+    value = fields.StringField(max_length=100)

@@ -15,7 +15,8 @@
 #         'id': 1,
 #         'type': '',
 #         'value': -5
-#     }
+#     },
+#     fact: 'jueves'
 # }
 import pytest
 
