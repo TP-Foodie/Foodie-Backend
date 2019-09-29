@@ -21,6 +21,7 @@
 import pytest
 
 from src.models.rule import RuleCondition, Rule, RuleConsequence
+from src.services.exceptions.rule_exception import MissingArgumentsException
 from src.services.rule_service import RuleService
 
 
@@ -47,3 +48,12 @@ class TestRuleService:
         )
 
         assert Rule.objects.count() == 1
+
+    def test_create_rule_without_variable_should_right_exception(self):
+        with pytest.raises(MissingArgumentsException):
+            self.rule_service.create(
+                operator=RuleCondition.IsTrue,
+                condition_value='wednesday',
+                consequence_type=RuleConsequence.PERCENTAGE,
+                consequence_value=5
+            )
