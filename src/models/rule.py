@@ -17,6 +17,7 @@ class RuleCondition(EmbeddedDocument):
     ORDER_DISTANCE = 'ODI'
     ORDER_POSITION = 'OP'
     ORDER_DATE = 'ODA'
+    ORDER_TIME = 'OT'
     ORDER_QUANTITY = 'OC'
     TRAVEL_DAY = 'TD'
 
@@ -36,6 +37,7 @@ class RuleCondition(EmbeddedDocument):
         ORDER_DISTANCE,
         ORDER_POSITION,
         ORDER_DATE,
+        ORDER_TIME,
         ORDER_QUANTITY,
         TRAVEL_DAY,
     )
