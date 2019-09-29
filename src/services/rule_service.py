@@ -4,6 +4,8 @@ from src.services.exceptions.rule_exception import MissingArgumentsException
 
 
 class RuleService:
+    DEFAULT_VALUE = '0'
+
     rule_repository = RuleRepository()
 
     def create(self, **kwargs):
@@ -21,6 +23,6 @@ class RuleService:
 
         args['consequence_type'] = args['consequence_type'] if 'consequence_type' in args \
             else RuleConsequence.VALUE
-        args['value'] = args['value'] if 'value' in args else '0'
-        args['condition_value'] = args['condition_value'] if 'condition_value' in args else '0'
+        args['value'] = args['value'] if 'value' in args else self.DEFAULT_VALUE
+        args['condition_value'] = args['condition_value'] if 'condition_value' in args else self.DEFAULT_VALUE
         return args
