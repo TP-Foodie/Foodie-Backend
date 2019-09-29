@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from src.controllers.parser import parse_order_request, parse_take_order_request
 from src.controllers.utils import HTTP_201_CREATED, \
-    HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
+    HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND, NO_CONTENT
 from src.repositories import order_repository
 from src.schemas.order import ListOrderSchema, DetailsOrderSchema
 from src.services import order_service
@@ -12,7 +12,6 @@ from src.services.exceptions.order_exceptions import NonExistingPlaceException, 
 from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
-NO_CONTENT = ''
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['GET'])
