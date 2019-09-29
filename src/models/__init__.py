@@ -1,10 +1,10 @@
-from mongoengine import Document,\
-    StringField,\
-    EmbeddedDocumentField,\
-    FloatField,\
-    EmbeddedDocument,\
+from mongoengine import Document, \
+    StringField, \
+    EmbeddedDocumentField, \
+    FloatField, \
+    EmbeddedDocument, \
     EmailField, \
-    BooleanField
+    BooleanField, IntField
 
 
 class Coordinates(EmbeddedDocument):
@@ -30,6 +30,7 @@ class User(Document):
     type = StringField(
         required=True,
         regex="CUSTOMER|DELIVERY")  # CUSTOMER, DELIVERY
+    reputation = IntField(default=0)
 
 
 class Transaction(Document):

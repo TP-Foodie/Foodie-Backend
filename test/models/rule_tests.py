@@ -16,6 +16,6 @@ class TestRule:
             assert_attr_exists(a_consequence, attr_name)
 
     class TestRule:
-        @pytest.mark.parametrize('attr_name', ['condition', 'consequence', 'name', 'value'])
+        @pytest.mark.parametrize('attr_name', ['condition', 'consequence', 'name'])
         def test_has_attribute(self, attr_name, a_rule):
             assert_attr_exists(a_rule, attr_name)

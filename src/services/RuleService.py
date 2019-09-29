@@ -6,3 +6,6 @@ class RuleService:
 
     def create(self, variable, operator, condition_value):
         self.rule_repository.create(variable, operator, str(condition_value))
+
+    def get_value_for(self, rule, order):
+        return 0

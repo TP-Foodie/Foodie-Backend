@@ -73,4 +73,3 @@ class Rule(Document):
     name = fields.StringField(max_length=100)
     consequence = fields.EmbeddedDocumentField(RuleConsequence)
     condition = fields.EmbeddedDocumentField(RuleCondition)
-    value = fields.StringField(max_length=100)
