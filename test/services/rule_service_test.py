@@ -49,3 +49,8 @@ class TestRuleService:
         )
 
         assert rule.name == 'some rule'
+
+    def test_update_rule_should_update_its_fields(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        assert Rule.objects.get(id=a_rule.id).name == 'new name'
