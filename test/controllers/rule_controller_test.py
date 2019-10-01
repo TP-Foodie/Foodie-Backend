@@ -1,6 +1,7 @@
 import json
 
-from test.support.utils import assert_401, assert_200
+from src.models.rule import Rule
+from test.support.utils import assert_401, assert_200, assert_201
 
 
 class TestRuleController:
@@ -62,3 +63,8 @@ class TestRuleController:
             },
             'active': a_rule.active
         }
+
+    def test_fails_for_unauthenticated(self, a_client):
+        response = a_client.post('api/v1/rules/')
+
+        assert_401(response)
