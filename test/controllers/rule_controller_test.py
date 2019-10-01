@@ -108,6 +108,25 @@ class TestRuleController:
                     'value': '5'
                 },
                 'condition': {
+                    'operator': 'GTE',  # missing variable argument
+                    'condition_value': '3'
+                },
+                'name': 'a rule'
+            }
+        )
+        assert_400(response)
+
+    def test_post_rule_should_return_400_if_arguments_are_wrong(self, a_client, a_client_user):
+        response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'consequence': {
+                    'consequence_type': 'V',
+                    'value': '5'
+                },
+                'condition': {
+                    'variable': 'DOES NOT EXISTS',
                     'operator': 'GTE',
                     'condition_value': '3'
                 },
