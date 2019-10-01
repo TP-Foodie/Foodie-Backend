@@ -19,7 +19,7 @@ def parse_take_order_request(values):
 
 def parse_rule_request(values):
     return {
-        **values['condition'],
-        **values['consequence'],
-        'name': values['name'],
+        **values.get('condition', {}),
+        **values.get('consequence', {}),
+        'name': values.get('name', ''),
     }

@@ -1,7 +1,7 @@
 import json
 
 from src.models.rule import Rule
-from test.support.utils import assert_401, assert_200, assert_201
+from test.support.utils import assert_401, assert_200, assert_201, assert_400
 
 
 class TestRuleController:
@@ -22,22 +22,11 @@ class TestRuleController:
         return client.get('api/v1/rules/{}'.format(str(a_rule.id)),
                           headers={'Authorization': 'Bearer {}'.format(token)})
 
-    def create_rule(self, client, a_client_user):
+    def create_rule(self, client, a_client_user, data):
         token = self.login(client, a_client_user.email, a_client_user.password)
         return client.post(
             'api/v1/rules/',
-            json={
-                'consequence': {
-                    'consequence_type': 'V',
-                    'value': '5'
-                },
-                'condition': {
-                    'variable': 'OT',
-                    'operator': 'GTE',
-                    'condition_value': '3'
-                },
-                'name': 'a rule'
-            },
+            json=data,
             headers={'Authorization': 'Bearer {}'.format(token)}
         )
 
@@ -84,12 +73,45 @@ class TestRuleController:
         }
 
     def test_create_fails_for_unauthenticated(self, a_client):
-        response = a_client.post('api/v1/rules/')
+        response = a_client.post('api/v1/rules/', )
 
         assert_401(response)
 
     def test_post_rule_should_create_one(self, a_client, a_client_user):
-        response = self.create_rule(a_client, a_client_user)
+        response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'consequence': {
+                    'consequence_type': 'V',
+                    'value': '5'
+                },
+                'condition': {
+                    'variable': 'OT',
+                    'operator': 'GTE',
+                    'condition_value': '3'
+                },
+                'name': 'a rule'
+            }
+        )
         assert_201(response)
 
         assert Rule.objects.count() == 1
+
+    def test_post_rule_should_return_400_if_missing_argument(self, a_client, a_client_user):
+        response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'consequence': {
+                    'consequence_type': 'V',
+                    'value': '5'
+                },
+                'condition': {
+                    'operator': 'GTE',
+                    'condition_value': '3'
+                },
+                'name': 'a rule'
+            }
+        )
+        assert_400(response)
