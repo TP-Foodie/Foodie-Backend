@@ -15,3 +15,11 @@ def parse_take_order_request(values):
         'delivery': ObjectId(values['delivery'])
     })
     return values
+
+
+def parse_rule_request(values):
+    return {
+        **values['condition'],
+        **values['consequence'],
+        'name': values['name'],
+    }

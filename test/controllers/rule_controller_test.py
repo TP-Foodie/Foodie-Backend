@@ -22,6 +22,25 @@ class TestRuleController:
         return client.get('api/v1/rules/{}'.format(str(a_rule.id)),
                           headers={'Authorization': 'Bearer {}'.format(token)})
 
+    def create_rule(self, client, a_client_user):
+        token = self.login(client, a_client_user.email, a_client_user.password)
+        return client.post(
+            'api/v1/rules/',
+            json={
+                'consequence': {
+                    'consequence_type': 'V',
+                    'value': '5'
+                },
+                'condition': {
+                    'variable': 'OT',
+                    'operator': 'GTE',
+                    'condition_value': '3'
+                },
+                'name': 'a rule'
+            },
+            headers={'Authorization': 'Bearer {}'.format(token)}
+        )
+
     def test_list_rules_fail_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/rules/')
         assert_401(response)
@@ -64,7 +83,13 @@ class TestRuleController:
             'active': a_rule.active
         }
 
-    def test_fails_for_unauthenticated(self, a_client):
+    def test_create_fails_for_unauthenticated(self, a_client):
         response = a_client.post('api/v1/rules/')
 
         assert_401(response)
+
+    def test_post_rule_should_create_one(self, a_client, a_client_user):
+        response = self.create_rule(a_client, a_client_user)
+        assert_201(response)
+
+        assert Rule.objects.count() == 1

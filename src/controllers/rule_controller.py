@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
-from src.controllers.utils import HTTP_200_OK
+from src.controllers.parser import parse_rule_request
+from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
 from src.services.auth_service import authenticate
 from src.services.rule_service import RuleService
 
@@ -27,4 +28,5 @@ def get_rule(rule_id):
 @RULES_BLUEPRINT.route('/', methods=['POST'])
 @authenticate
 def create_rule():
-    return ''
+    rule_service.create(**parse_rule_request(request.json))
+    return NO_CONTENT, HTTP_201_CREATED
