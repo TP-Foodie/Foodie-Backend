@@ -20,6 +20,4 @@ class RuleService:
         return self.rule_repository.get(rule_id)
 
     def update(self, rule_id, new_fields):
-        pass
-
-    #  TODO: delegate create and update validation to marashmallow
+        self.rule_repository.update(rule_id, new_fields)
