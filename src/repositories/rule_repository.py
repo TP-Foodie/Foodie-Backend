@@ -6,12 +6,8 @@ class RuleRepository:
     rules_schema = ListRuleSchema(many=True)
     rule_schema = RuleSchema()
 
-    def create(self, name, condition, consequence):
-        return Rule.objects.create(
-            name=name,
-            condition=condition,
-            consequence=consequence
-        )
+    def create(self, data):
+        return Rule.objects.create(**data)
 
     def list(self):
         return self.rules_schema.dump(Rule.objects.all())

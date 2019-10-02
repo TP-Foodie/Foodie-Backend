@@ -22,3 +22,9 @@ class RuleSchema(Schema):
 
     class Meta:
         fields = ('id', 'name', 'active', 'condition', 'consequence')
+
+
+class CreateRuleSchema(Schema):
+    condition = fields.Nested(ConditionSchema, required=True)
+    consequence = fields.Nested(ConsequenceSchema, required=True)
+    name = fields.String(required=True)

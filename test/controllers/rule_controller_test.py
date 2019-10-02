@@ -77,20 +77,13 @@ class TestRuleController:
 
         assert_401(response)
 
-    def test_post_rule_should_create_one(self, a_client, a_client_user):
+    def test_post_rule_should_create_one(self, a_client, a_client_user, a_consequence_data, a_condition_data):
         response = self.create_rule(
             a_client,
             a_client_user,
             {
-                'consequence': {
-                    'consequence_type': 'V',
-                    'value': '5'
-                },
-                'condition': {
-                    'variable': 'OT',
-                    'operator': 'GTE',
-                    'condition_value': '3'
-                },
+                'consequence': a_consequence_data,
+                'condition': a_condition_data,
                 'name': 'a rule'
             }
         )
@@ -98,19 +91,12 @@ class TestRuleController:
 
         assert Rule.objects.count() == 1
 
-    def test_post_rule_should_return_400_if_missing_argument(self, a_client, a_client_user):
+    def test_post_rule_should_return_400_if_missing_argument(self, a_client, a_client_user, a_condition_data):
         response = self.create_rule(
             a_client,
             a_client_user,
             {
-                'consequence': {
-                    'consequence_type': 'V',
-                    'value': '5'
-                },
-                'condition': {
-                    'operator': 'GTE',  # missing variable argument
-                    'condition_value': '3'
-                },
+                'condition': a_condition_data,
                 'name': 'a rule'
             }
         )
@@ -130,6 +116,22 @@ class TestRuleController:
                     'operator': 'GTE',
                     'condition_value': '3'
                 },
+                'name': 'a rule'
+            }
+        )
+        assert_400(response)
+
+    def test_post_rule_should_return_400_if_consequence_values_are_wrong(self, a_client, a_client_user,
+                                                                         a_condition_data):
+        response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'consequence': {
+                    'consequence_type': 'DOES NOT EXISTS',
+                    'value': '5'
+                },
+                'condition': a_condition_data,
                 'name': 'a rule'
             }
         )

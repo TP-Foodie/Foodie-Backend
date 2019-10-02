@@ -1,10 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from src.controllers.parser import parse_rule_request
-from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT, HTTP_400_BAD_REQUEST
+from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
 from src.services.auth_service import authenticate
-from src.services.exceptions.invalid_usage_exception import InvalidUsage
-from src.services.exceptions.rule_exception import MissingArgumentsException
 from src.services.rule_service import RuleService
 
 RULES_BLUEPRINT = Blueprint('rules', __name__)
@@ -31,8 +28,5 @@ def get_rule(rule_id):
 @RULES_BLUEPRINT.route('/', methods=['POST'])
 @authenticate
 def create_rule():
-    try:
-        rule_service.create(**parse_rule_request(request.json))
-    except MissingArgumentsException:
-        raise InvalidUsage(MISSING_ARGS_ERROR_MESSAGE, HTTP_400_BAD_REQUEST)
+    rule_service.create(**request.json)
     return NO_CONTENT, HTTP_201_CREATED

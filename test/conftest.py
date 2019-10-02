@@ -140,7 +140,21 @@ def an_object_id():
 
 @pytest.fixture
 def a_condition():
-    return RuleCondition(variable=RuleCondition.USER_REPUTATION, operator=RuleCondition.GREATER_THAN)
+    return RuleCondition(
+        variable=RuleCondition.USER_REPUTATION,
+        operator=RuleCondition.GREATER_THAN,
+        condition_value='1'
+    )
+
+
+@pytest.fixture
+def a_condition_data(a_condition):
+    return a_condition.to_mongo()
+
+
+@pytest.fixture
+def a_consequence_data(a_consequence):
+    return a_consequence.to_mongo()
 
 
 @pytest.fixture

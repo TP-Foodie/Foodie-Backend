@@ -1,6 +1,5 @@
-from src.models.rule import RuleConsequence, RuleCondition
 from src.repositories.rule_repository import RuleRepository
-from src.services.exceptions.rule_exception import MissingArgumentsException
+from src.schemas.rule_schema import CreateRuleSchema
 
 
 class RuleService:
@@ -8,16 +7,11 @@ class RuleService:
     CONSEQUENCE_ARGUMENTS = ['consequence_type', 'value']
 
     rule_repository = RuleRepository()
+    create_schema = CreateRuleSchema()
 
     def create(self, **kwargs):
-        for arg in self.CONDITION_ARGUMENTS:
-            if arg not in kwargs:
-                raise MissingArgumentsException()
-
-        condition = RuleCondition(**{key: str(kwargs[key]) for key in self.CONDITION_ARGUMENTS})
-        consequence = RuleConsequence(**{key: kwargs[key] for key in self.CONSEQUENCE_ARGUMENTS if key in kwargs})
-
-        return self.rule_repository.create(kwargs.get('name', ''), condition, consequence)
+        data = self.create_schema.load(kwargs)
+        return self.rule_repository.create(data)
 
     def list(self):
         return self.rule_repository.list()

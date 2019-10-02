@@ -1,7 +1,7 @@
 import pytest
+from marshmallow import ValidationError
 
-from src.models.rule import RuleCondition, Rule, RuleConsequence
-from src.services.exceptions.rule_exception import MissingArgumentsException
+from src.models.rule import Rule
 from src.services.rule_service import RuleService
 
 
@@ -9,46 +9,23 @@ from src.services.rule_service import RuleService
 class TestRuleService:
     rule_service = RuleService()
 
-    def test_create_rule_with_no_consequence_should_create_one(self):
-        self.rule_service.create(
-            variable=RuleCondition.DELIVERY_REPUTATION,
-            operator=RuleCondition.GREATER_THAN,
-            condition_value=1
-        )
+    def test_create_rule_with_no_consequence_should_raise_error(self, a_condition):
+        with pytest.raises(ValidationError):
+            self.rule_service.create(condition=a_condition, name='a rule')
+
+    def test_create_rule_with_consequence(self, a_condition_data, a_consequence_data):
+        self.rule_service.create(condition=a_condition_data, consequence=a_consequence_data, name='a rule')
 
         assert Rule.objects.count() == 1
 
-    def test_create_rule_with_consequence(self):
-        self.rule_service.create(
-            variable=RuleCondition.ORDER_DATE,
-            operator=RuleCondition.IS,
-            condition_value='wednesday',
-            consequence_type=RuleConsequence.PERCENTAGE,
-            consequence_value=5,
-        )
-
-        assert Rule.objects.count() == 1
-
-    def test_create_rule_without_variable_should_right_exception(self):
-        with pytest.raises(MissingArgumentsException):
-            self.rule_service.create(
-                operator=RuleCondition.IS,
-                condition_value='wednesday',
-                consequence_type=RuleConsequence.PERCENTAGE,
-                consequence_value=5
-            )
-
-    def test_create_rule_with_name(self):
+    def test_create_rule_with_name(self, a_condition_data, a_consequence_data):
         rule = self.rule_service.create(
-            name='some rule',
-            variable=RuleCondition.ORDER_DATE,
-            operator=RuleCondition.IS,
-            condition_value='wednesday',
-            consequence_type=RuleConsequence.PERCENTAGE,
-            consequence_value=5,
+            condition=a_condition_data,
+            consequence=a_consequence_data,
+            name='a rule'
         )
 
-        assert rule.name == 'some rule'
+        assert rule.name == 'a rule'
 
     def test_update_rule_should_update_its_fields(self, a_rule):
         self.rule_service.update(a_rule.id, {'name': 'new name'})
