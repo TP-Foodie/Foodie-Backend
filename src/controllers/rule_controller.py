@@ -28,5 +28,5 @@ def get_rule(rule_id):
 @RULES_BLUEPRINT.route('/', methods=['POST'])
 @authenticate
 def create_rule():
-    rule_service.create(**request.json)
-    return NO_CONTENT, HTTP_201_CREATED
+    new_rule = rule_service.create(**request.json)
+    return jsonify(new_rule), HTTP_201_CREATED

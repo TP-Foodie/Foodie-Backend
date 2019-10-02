@@ -136,3 +136,21 @@ class TestRuleController:
             }
         )
         assert_400(response)
+
+    def test_create_rule_should_return_newly_created(self, a_client, a_client_user, a_condition_data,
+                                                     a_consequence_data):
+        response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'condition': a_condition_data,
+                'consequence': a_consequence_data,
+                'name': 'a rule'
+            }
+        )
+
+        assert_201(response)
+
+        rule = json.loads(response.data)
+
+        assert rule
