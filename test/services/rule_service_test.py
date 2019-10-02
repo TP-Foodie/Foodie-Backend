@@ -31,3 +31,8 @@ class TestRuleService:
         self.rule_service.update(a_rule.id, {'name': 'new name'})
 
         assert Rule.objects.get(id=a_rule.id).name == 'new name'
+
+    def test_update_does_not_duplicate(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        assert Rule.objects.count() == 1
