@@ -1,5 +1,6 @@
 import pytest
 from marshmallow import ValidationError
+from mongoengine.errors import ValidationError as MongoEngineValidationError
 
 from src.models.rule import Rule
 from src.services.rule_service import RuleService
@@ -36,3 +37,7 @@ class TestRuleService:
         self.rule_service.update(a_rule.id, {'name': 'new name'})
 
         assert Rule.objects.count() == 1
+
+    def test_update_with_invalid_field_throws_error(self, a_rule):
+        with pytest.raises(MongoEngineValidationError):
+            self.rule_service.update(a_rule.id, {'condition': {'variable': 'DOES NOT EXISTS'}})
