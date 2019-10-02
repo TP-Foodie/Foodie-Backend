@@ -13,7 +13,7 @@ from controllers.user_controller import USERS_BLUEPRINT
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLUEPRINT
 from error_handlers import ERRORS_BLUEPRINT
 
-from src.controllers.order_controller import ORDERS_BLUEPRINT
+from controllers.order_controller import ORDERS_BLUEPRINT
 
 # initialize Flask app
 APP = Flask(__name__)

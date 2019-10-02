@@ -1,11 +1,11 @@
 import pytest
 from bson import ObjectId
 
-from src.models.order import Order
-from src.repositories import order_repository, product_repository
-from src.services import order_service, product_service
-from src.services.exceptions.order_exceptions import NonExistingPlaceException
-from src.services.exceptions.user_exceptions import NonExistingDeliveryException
+from models.order import Order
+from repositories import order_repository, product_repository
+from services import order_service, product_service
+from services.exceptions.order_exceptions import NonExistingPlaceException
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')

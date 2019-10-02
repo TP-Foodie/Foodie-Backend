@@ -2,7 +2,7 @@ import datetime
 from unittest.mock import create_autospec
 from mongoengine import Document
 
-from src.encoders import CustomJSONEncoder
+from encoders import CustomJSONEncoder
 
 ENCODER = CustomJSONEncoder()
 

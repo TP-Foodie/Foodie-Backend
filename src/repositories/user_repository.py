@@ -1,4 +1,4 @@
-from src.models import User
+from models import User
 
 
 def delivery_exists(delivery_id):

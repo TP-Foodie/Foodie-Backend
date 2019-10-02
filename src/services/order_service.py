@@ -1,6 +1,6 @@
-from src.models.order import Order
-from src.repositories import order_repository, product_repository, user_repository
-from src.services.exceptions.user_exceptions import NonExistingDeliveryException
+from models.order import Order
+from repositories import order_repository, product_repository, user_repository
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 def create(order_type, owner, product):

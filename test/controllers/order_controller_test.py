@@ -1,8 +1,8 @@
 import json
 
 from test.support.utils import assert_200, assert_201, assert_400, assert_404
-from src.models.order import Order
-from src.repositories import order_repository
+from models.order import Order
+from repositories import order_repository
 
 
 class TestOrderController:
