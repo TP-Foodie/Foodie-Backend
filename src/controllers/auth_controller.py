@@ -16,7 +16,7 @@ def post():
 
     return jsonify({
         'token': auth_service.validate_user(auth_data),
-        'id': user_service.get_user_by_email(auth_data['email'])
+        'id': user_service.get_user_by_email(auth_data['email']).id
     }), HTTP_200_OK
 
 
@@ -28,5 +28,5 @@ def google_post():
 
     return jsonify({
         'token': auth_service.validate_google_user(auth_data),
-        'id': user_service.get_user_by_email(auth_data['email'])
+        'id': user_service.get_user_by_email(auth_data['email']).id
     }), HTTP_200_OK
