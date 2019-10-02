@@ -24,6 +24,9 @@ flask-swagger-ui = "==3.20.9"
 Faker = "==2.0.1"
 PyJWT = "==1.4.0"
 pipenv = "==2018.11.26"
+google-auth = "*"
+google-api-python-client = "*"
+requests = "*"
 
 [requires]
 python_version = "3.6"

@@ -1,9 +1,11 @@
 from functools import wraps
-
 from flask import request
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 from services import user_service, jwt_service
 from services.exceptions.unauthorized_user import UnauthorizedUserException
+from settings import Config
 
 
 def validate_user(auth_data):
@@ -28,7 +30,13 @@ def authenticate(function):
             raise UnauthorizedUserException
 
         auth_data = jwt_service.decode_jwt_data(token)
-        user_is_valid = user_service.is_valid(auth_data['email'], auth_data['password'])
+
+        if 'sub' in auth_data:
+            user_is_valid = user_service.is_valid(google_id=auth_data['sub'])
+        else:
+            user_is_valid = user_service.is_valid(
+                email=auth_data['email'],
+                password=auth_data['password'])
 
         if not user_is_valid:
             raise UnauthorizedUserException
@@ -36,3 +44,21 @@ def authenticate(function):
         return function(*args, **kwargs)
 
     return wrapper
+
+
+def validate_google_user(auth_data):
+    id_info = id_token \
+        .verify_oauth2_token(
+            auth_data['google_token'],
+            requests.Request(),
+            Config.GOOGLE_CLIENT_ID)
+
+    if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        raise UnauthorizedUserException
+
+    user = user_service.get_user_by_email(id_info)
+
+    if user is None:
+        user_service.create_user_from_google_data(id_info)
+
+    return jwt_service.encode_data_to_jwt(id_info)
