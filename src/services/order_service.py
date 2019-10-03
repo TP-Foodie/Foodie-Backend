@@ -5,7 +5,7 @@ from src.services.exceptions.user_exceptions import NonExistingDeliveryException
 
 def create(order_type, owner, product):
     created_product = product_repository.get_or_create(*product.values())
-    order_repository.create(
+    return order_repository.create(
         order_type=order_type,
         owner=owner,
         product=created_product.id,
