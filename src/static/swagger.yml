@@ -56,7 +56,7 @@ definitions:
       password:
         type: "string"
         example: "password"
-  auth__google_request:
+  auth_google_request:
     type: "object"
     properties:
       token:
