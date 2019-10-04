@@ -178,3 +178,23 @@ class TestRuleController:
         assert_200(response)
 
         assert Rule.objects.get(id=a_rule.id).condition.variable == RuleCondition.ORDER_DISTANCE
+
+    def test_patch_field_with_wrong_value_returns_400(self, a_client, a_client_user, a_rule):
+        response = self.update_rule(
+            a_client,
+            a_client_user,
+            a_rule,
+            {'condition': {'variable': 'DOES NOT EXISTS'}}
+        )
+
+        assert_400(response)
+
+    def test_patch_field_should_return_updated_object(self, a_client, a_client_user, a_rule):
+        response = self.update_rule(
+            a_client,
+            a_client_user,
+            a_rule,
+            {'name': 'new name'}
+        )
+
+        assert json.loads(response.data)

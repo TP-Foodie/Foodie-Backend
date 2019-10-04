@@ -16,4 +16,4 @@ class RuleRepository:
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))
 
     def update(self, rule_id, new_data):
-        Rule(**new_data, id=rule_id).save()
+        return Rule(**new_data, id=rule_id).save()

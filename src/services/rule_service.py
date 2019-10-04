@@ -17,4 +17,4 @@ class RuleService:
         return self.rule_repository.get(rule_id)
 
     def update(self, rule_id, new_fields):
-        self.rule_repository.update(rule_id, new_fields)
+        return self.rule_repository.update(rule_id, new_fields)
