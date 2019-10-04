@@ -1,6 +1,6 @@
 from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, NULLIFY
 
-from src.models import User, Place
+from models import User, Place
 
 
 class Product(Document):

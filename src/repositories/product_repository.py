@@ -1,5 +1,5 @@
-from src.models.order import Product
-from src.services import product_service
+from models.order import Product
+from services import product_service
 
 
 def get_or_create(name, place):

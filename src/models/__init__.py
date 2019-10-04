@@ -20,16 +20,18 @@ class Place(Document):
 class User(Document):
     DELIVERY_TYPE = "DELIVERY"
     CUSTOMER_TYPE = "CUSTOMER"
+    BACK_OFFICE_TYPE = "BACK_OFFICE"
 
     name = StringField(required=False)
     last_name = StringField(required=False)
+    google_id = StringField(required=False)
     password = StringField(required=True)
     email = EmailField(required=True, unique=True)
     profile_image = StringField(required=False)
     phone = StringField(required=False)
     type = StringField(
         required=True,
-        regex="CUSTOMER|DELIVERY")  # CUSTOMER, DELIVERY
+        regex="CUSTOMER|DELIVERY|BACK_OFFICE")
 
 
 class Transaction(Document):

@@ -1,8 +1,8 @@
 from bson.objectid import ObjectId
 
-from src.models import Place
-from src.models.order import Product
-from src.services.exceptions.order_exceptions import NonExistingPlaceException
+from models import Place
+from models.order import Product
+from services.exceptions.order_exceptions import NonExistingPlaceException
 
 
 def create(name, place):

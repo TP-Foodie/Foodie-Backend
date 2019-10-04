@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
-from src.schemas.place import PlaceSchema
-from src.schemas.user import UserSchema
+from schemas.place import PlaceSchema
+from schemas.user import UserSchema
 
 
 class ProductSchema(Schema):

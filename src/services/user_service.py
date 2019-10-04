@@ -12,6 +12,10 @@ def get_user(_id):
     return User.objects.get(id=_id)  # pylint: disable=E1101
 
 
+def get_user_by_google_id(google_id):
+    return User.objects.get(google_id=google_id)
+
+
 def get_user_by_email(email):
     return User.objects.get(email=email)
 
@@ -34,7 +38,11 @@ def update_user(_id, user_data):
     return user.save()
 
 
-def is_valid(email, password):
+def is_valid(email=None, password=None, google_id=None):
+    if google_id is not None:
+        user = get_user_by_google_id(google_id)
+        return user is not None
+
     user = get_user_by_email(email)
 
     if user is None:
@@ -52,3 +60,15 @@ def _get_property(data, key):
         return _hash_password(data[key])
 
     return data[key]
+
+
+def create_user_from_google_data(google_data):
+    user_data = {
+        'name': google_data['email'],
+        'last_name': google_data['family_name'],
+        'google_id': google_data['sub'],
+        'email': google_data['email'],
+        'profile_image': google_data['picture'],
+    }
+
+    create_user(user_data)
