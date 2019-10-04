@@ -1,6 +1,6 @@
 import json
 
-from src.models.rule import Rule
+from src.models.rule import Rule, RuleCondition
 from test.support.utils import assert_401, assert_200, assert_201, assert_400
 
 
@@ -27,6 +27,14 @@ class TestRuleController:
         return client.post(
             'api/v1/rules/',
             json=data,
+            headers={'Authorization': 'Bearer {}'.format(token)}
+        )
+
+    def update_rule(self, client, client_user, rule, new_data):
+        token = self.login(client, client_user.email, client_user.password)
+        return client.patch(
+            'api/v1/rules/{}'.format(str(rule.id)),
+            json=new_data,
             headers={'Authorization': 'Bearer {}'.format(token)}
         )
 
@@ -158,3 +166,15 @@ class TestRuleController:
     def test_update_field_for_unauthorized(self, a_client, a_rule):
         response = a_client.patch('api/v1/rules/{}'.format(str(a_rule.id)))
         assert_401(response)
+
+    def test_patch_field_should_update_it(self, a_client, a_client_user, a_rule):
+        response = self.update_rule(
+            a_client,
+            a_client_user,
+            a_rule,
+            {'condition': {'variable': RuleCondition.ORDER_DISTANCE}}
+        )
+
+        assert_200(response)
+
+        assert Rule.objects.get(id=a_rule.id).condition.variable == RuleCondition.ORDER_DISTANCE
