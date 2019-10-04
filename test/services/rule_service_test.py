@@ -15,7 +15,11 @@ class TestRuleService:
             self.rule_service.create(condition=a_condition, name='a rule')
 
     def test_create_rule_with_consequence(self, a_condition_data, a_consequence_data):
-        self.rule_service.create(condition=a_condition_data, consequence=a_consequence_data, name='a rule')
+        self.rule_service.create(
+            condition=a_condition_data,
+            consequence=a_consequence_data,
+            name='a rule'
+        )
 
         assert Rule.objects.count() == 1
 

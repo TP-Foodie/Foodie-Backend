@@ -44,7 +44,8 @@ class TestOrderService:
         assert order.product.id != a_product.id
         assert order.product.name == "hamburger"
 
-    def test_creating_order_should_not_create_product_if_it_exists(self, a_customer_user, a_product):
+    def test_creating_order_should_not_create_product_if_it_exists(self, a_customer_user,
+                                                                   a_product):
         order_service.create(
             Order.NORMAL_TYPE, a_customer_user.id, {
                 'name': a_product.name, 'place': a_product.place.id})

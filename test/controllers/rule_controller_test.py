@@ -1,7 +1,7 @@
 import json
 
-from src.models.rule import Rule, RuleCondition
 from test.support.utils import assert_401, assert_200, assert_201, assert_400
+from src.models.rule import Rule, RuleCondition
 
 
 class TestRuleController:
@@ -85,7 +85,8 @@ class TestRuleController:
 
         assert_401(response)
 
-    def test_post_rule_should_create_one(self, a_client, a_client_user, a_consequence_data, a_condition_data):
+    def test_post_rule_should_create_one(self, a_client, a_client_user, a_consequence_data,
+                                         a_condition_data):
         response = self.create_rule(
             a_client,
             a_client_user,
@@ -99,7 +100,8 @@ class TestRuleController:
 
         assert Rule.objects.count() == 1
 
-    def test_post_rule_should_return_400_if_missing_argument(self, a_client, a_client_user, a_condition_data):
+    def test_post_rule_should_return_400_if_missing_argument(self, a_client, a_client_user,
+                                                             a_condition_data):
         response = self.create_rule(
             a_client,
             a_client_user,
@@ -110,7 +112,8 @@ class TestRuleController:
         )
         assert_400(response)
 
-    def test_post_rule_should_return_400_if_arguments_are_wrong(self, a_client, a_client_user):
+    def test_post_rule_should_return_400_if_arguments_are_wrong(self, a_client,
+                                                                a_client_user):
         response = self.create_rule(
             a_client,
             a_client_user,
@@ -129,7 +132,8 @@ class TestRuleController:
         )
         assert_400(response)
 
-    def test_post_rule_should_return_400_if_consequence_values_are_wrong(self, a_client, a_client_user,
+    def test_post_rule_should_return_400_if_consequence_values_are_wrong(self, a_client,
+                                                                         a_client_user,
                                                                          a_condition_data):
         response = self.create_rule(
             a_client,
@@ -145,8 +149,8 @@ class TestRuleController:
         )
         assert_400(response)
 
-    def test_create_rule_should_return_newly_created(self, a_client, a_client_user, a_condition_data,
-                                                     a_consequence_data):
+    def test_create_rule_should_return_newly_created(self, a_client, a_client_user,
+                                                     a_condition_data, a_consequence_data):
         response = self.create_rule(
             a_client,
             a_client_user,

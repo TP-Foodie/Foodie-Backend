@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
+from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED
 from src.services.auth_service import authenticate
 from src.services.rule_service import RuleService
 
@@ -8,7 +8,7 @@ RULES_BLUEPRINT = Blueprint('rules', __name__)
 
 MISSING_ARGS_ERROR_MESSAGE = "missing arguments"
 
-rule_service = RuleService()
+rule_service = RuleService()  # pylint: disable=invalid-name
 
 
 @RULES_BLUEPRINT.route('/', methods=['GET'])
