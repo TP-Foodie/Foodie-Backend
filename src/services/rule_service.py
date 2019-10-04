@@ -3,9 +3,6 @@ from src.schemas.rule_schema import CreateRuleSchema
 
 
 class RuleService:
-    CONDITION_ARGUMENTS = ['variable', 'operator', 'condition_value']
-    CONSEQUENCE_ARGUMENTS = ['consequence_type', 'value']
-
     rule_repository = RuleRepository()
     create_schema = CreateRuleSchema()
 

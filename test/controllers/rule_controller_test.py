@@ -154,3 +154,7 @@ class TestRuleController:
         rule = json.loads(response.data)
 
         assert rule
+
+    def test_update_field_for_unauthorized(self, a_client, a_rule):
+        response = a_client.patch('api/v1/rules/{}'.format(str(a_rule.id)))
+        assert_401(response)

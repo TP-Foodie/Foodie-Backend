@@ -30,3 +30,9 @@ def get_rule(rule_id):
 def create_rule():
     new_rule = rule_service.create(**request.json)
     return jsonify(new_rule), HTTP_201_CREATED
+
+
+@RULES_BLUEPRINT.route('/<rule_id>', methods=['PATCH'])
+@authenticate
+def update_rule(rule_id):
+    return NO_CONTENT, HTTP_200_OK
