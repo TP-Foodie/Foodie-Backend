@@ -2,6 +2,7 @@ from functools import wraps
 from flask import request
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from mongoengine import DoesNotExist
 
 from services import user_service, jwt_service
 from services.exceptions.unauthorized_user import UnauthorizedUserException
@@ -10,7 +11,7 @@ from settings import Config
 
 def validate_user(auth_data):
     if user_service.is_valid(auth_data['email'], auth_data['password']):
-        return jwt_service.encode_data_to_jwt(auth_data)
+        return auth_data
     raise UnauthorizedUserException()
 
 
@@ -56,9 +57,9 @@ def validate_google_user(auth_data):
     if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
         raise UnauthorizedUserException
 
-    user = user_service.get_user_by_email(id_info)
-
-    if user is None:
+    try:
+        user_service.get_user_by_email(id_info['email'])
+    except DoesNotExist:
         user_service.create_user_from_google_data(id_info)
 
-    return jwt_service.encode_data_to_jwt(id_info)
+    return id_info

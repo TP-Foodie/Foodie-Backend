@@ -64,7 +64,7 @@ def _get_property(data, key):
 
 def create_user_from_google_data(google_data):
     user_data = {
-        'name': google_data['email'],
+        'name': google_data['given_name'],
         'last_name': google_data['family_name'],
         'google_id': google_data['sub'],
         'email': google_data['email'],

@@ -1,5 +1,7 @@
 from unittest import mock, TestCase
 
+from mongoengine import DoesNotExist
+
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 
 
@@ -67,11 +69,10 @@ class TestAuthService(TestCase):
         auth_service.authenticate(function)()
 
     @mock.patch('services.auth_service.id_token')
-    @mock.patch('services.auth_service.jwt_service')
     @mock.patch('services.auth_service.user_service')
-    def test_validate_google_user(self, user_service, jwt_service, id_token):
-        id_token.verify_oauth2_token.return_value = {'iss': 'accounts.google.com'}
-        jwt_service.encode_data_to_jwt.return_value = True
+    def test_validate_google_user(self, user_service, id_token):
+        id_token.verify_oauth2_token.return_value = {
+            'iss': 'accounts.google.com', 'email': 'foo@foo.foo'}
         user_service.get_user_by_email.return_value = "user"
 
         from services import auth_service
@@ -79,12 +80,11 @@ class TestAuthService(TestCase):
         assert auth_service.validate_google_user({'google_token': 'asd'})
 
     @mock.patch('services.auth_service.id_token')
-    @mock.patch('services.auth_service.jwt_service')
     @mock.patch('services.auth_service.user_service')
-    def test_validate_google_user_with_creation(self, user_service, jwt_service, id_token):
-        id_token.verify_oauth2_token.return_value = {'iss': 'accounts.google.com'}
-        jwt_service.encode_data_to_jwt.return_value = True
-        user_service.get_user_by_email.return_value = None
+    def test_validate_google_user_with_creation(self, user_service, id_token):
+        id_token.verify_oauth2_token.return_value = {
+            'iss': 'accounts.google.com', 'email': 'foo@foo.foo'}
+        user_service.get_user_by_email.side_effect = DoesNotExist
 
         from services import auth_service
 
