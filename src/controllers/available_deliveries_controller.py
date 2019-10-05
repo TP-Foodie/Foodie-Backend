@@ -2,6 +2,7 @@
 
 from flask import request, jsonify, Blueprint
 
+from controllers.parser import parse_available_deliveries_request
 from services import available_deliveries_service
 from schemas.available_delivery_schema import AvailableDeliverySchema
 from schemas.query_nearby_deliveries_schema import QueryNearbyDeliveriesSchema
@@ -40,7 +41,7 @@ def post():
 def get():
     """ This methos handle GET in deliveries_disponibles endpoint"""
     # get json data, validates and deserializes it.
-    request_data = request.get_json()
+    request_data = parse_available_deliveries_request(request.args)
 
     # convert JSON to dict.
     query_nearby_deliveries_schema = QueryNearbyDeliveriesSchema()
