@@ -25,12 +25,12 @@ class User(Document):
     name = StringField(required=False)
     last_name = StringField(required=False)
     google_id = StringField(required=False)
-    password = StringField(required=True)
+    password = StringField(required=False)
     email = EmailField(required=True, unique=True)
     profile_image = StringField(required=False)
     phone = StringField(required=False)
     type = StringField(
-        required=True,
+        required=False,
         regex="CUSTOMER|DELIVERY|BACK_OFFICE")
 
 
