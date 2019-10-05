@@ -50,10 +50,9 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
             "1", "Santiago", "https://urlimagen.com", [-58.3772300, -34.6131500])]
 
         # call controller
-        response = self.app.get(
-            f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE,
-            data=json.dumps({"radius": "5", "coordinates": [-58.3772300, -34.6131500]}),
-            content_type='application/json')
+        params = "?radius=5&latitude=-58.3772300&longitude=-34.6131500"
+        response = self.app.get(f'{PREFIX}/' + AVAILABLE_DELIVERIES_ROUTE + params,
+                                content_type='application/json')
 
         assert response.status_code == 200
 
