@@ -30,8 +30,11 @@ class User(Document):
     profile_image = StringField(required=False)
     phone = StringField(required=False)
     type = StringField(
-        required=True,
+        required=False,
         regex="CUSTOMER|DELIVERY|BACK_OFFICE")
+    subscription = StringField(
+        required=False,
+        regex="FLAT|PREMIUM")
 
 
 class Transaction(Document):
