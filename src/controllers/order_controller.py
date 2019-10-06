@@ -47,10 +47,11 @@ def list_favor_orders():
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
 def update_order(order_id):
     try:
-        order_service.take(order_id, parse_take_order_request(request.json))
+        order = order_service.take(order_id, parse_take_order_request(request.json))
+        data = DetailsOrderSchema().dump(order)
     except NonExistingDeliveryException:
         raise InvalidUsage('Delivery does not exists', status_code=HTTP_400_BAD_REQUEST)
     except NonExistingOrderException:
         raise InvalidUsage('Order does not exists', status_code=HTTP_404_NOT_FOUND)
 
-    return NO_CONTENT, HTTP_200_OK
+    return jsonify(data), HTTP_200_OK

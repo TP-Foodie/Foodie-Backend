@@ -30,3 +30,4 @@ def update(order_id, field, value):
 
     order[field] = value
     order.save()
+    return order

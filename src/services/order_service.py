@@ -19,4 +19,4 @@ def take(order_id, new_data):
         raise NonExistingDeliveryException()
 
     order_repository.update(order_id, 'status', new_data.get('status', Order.WAITING_STATUS))
-    order_repository.update(order_id, 'delivery', delivery)
+    return order_repository.update(order_id, 'delivery', delivery)
