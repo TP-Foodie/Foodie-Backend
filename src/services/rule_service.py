@@ -11,6 +11,10 @@ class RuleService:
     def variables(self):
         return RuleCondition.VARIABLES
 
+    @property
+    def operators(self):
+        return RuleCondition.OPERATORS
+
     def create(self, **kwargs):
         data = self.create_schema.load(kwargs)
         return self.rule_repository.create(data)

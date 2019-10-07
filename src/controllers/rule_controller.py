@@ -43,3 +43,9 @@ def update_rule(rule_id):
 @authenticate
 def get_variables():
     return jsonify(rule_service.variables), HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/operators', methods=['PATCH'])
+@authenticate
+def get_operators():
+    return jsonify(rule_service.operators), HTTP_200_OK

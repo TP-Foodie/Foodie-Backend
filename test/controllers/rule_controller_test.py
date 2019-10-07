@@ -222,3 +222,16 @@ class TestRuleController:
         variables = json.loads(response.data)
 
         assert variables == list(RuleCondition.VARIABLES)
+
+    def test_get_operators_for_unauthenticated(self, a_client):
+        response = a_client.get('api/v1/rules/operators')
+        assert_401(response)
+
+    def test_get_operators_should_list_all(self, a_client, a_client_user):
+        response = self.get('operators', a_client, a_client_user)
+
+        assert_200(response)
+
+        variables = json.loads(response.data)
+
+        assert variables == list(RuleCondition.OPERATORS)
