@@ -68,11 +68,11 @@ class TestRuleController:
         assert rule == {
             'id': str(a_rule.id),
             'name': a_rule.name,
-            'condition': {
-                'variable': a_rule.condition.variable,
-                'operator': a_rule.condition.operator,
-                'condition_value': a_rule.condition.condition_value
-            },
+            'conditions': [{
+                'variable': a_rule.conditions[0].variable,
+                'operator': a_rule.conditions[0].operator,
+                'condition_value': a_rule.conditions[0].condition_value
+            }],
             'consequence': {
                 'consequence_type': a_rule.consequence.consequence_type,
                 'value': a_rule.consequence.value
@@ -92,7 +92,7 @@ class TestRuleController:
             a_client_user,
             {
                 'consequence': a_consequence_data,
-                'condition': a_condition_data,
+                'conditions': [a_condition_data],
                 'name': 'a rule'
             }
         )
@@ -106,7 +106,7 @@ class TestRuleController:
             a_client,
             a_client_user,
             {
-                'condition': a_condition_data,
+                'conditions': [a_condition_data],
                 'name': 'a rule'
             }
         )
@@ -122,11 +122,11 @@ class TestRuleController:
                     'consequence_type': 'V',
                     'value': '5'
                 },
-                'condition': {
+                'conditions': [{
                     'variable': 'DOES NOT EXISTS',
                     'operator': 'GTE',
                     'condition_value': '3'
-                },
+                }],
                 'name': 'a rule'
             }
         )
@@ -143,7 +143,7 @@ class TestRuleController:
                     'consequence_type': 'DOES NOT EXISTS',
                     'value': '5'
                 },
-                'condition': a_condition_data,
+                'conditions': [a_condition_data],
                 'name': 'a rule'
             }
         )
@@ -155,7 +155,7 @@ class TestRuleController:
             a_client,
             a_client_user,
             {
-                'condition': a_condition_data,
+                'conditions': [a_condition_data],
                 'consequence': a_consequence_data,
                 'name': 'a rule'
             }
@@ -176,19 +176,19 @@ class TestRuleController:
             a_client,
             a_client_user,
             a_rule,
-            {'condition': {'variable': RuleCondition.ORDER_DISTANCE}}
+            {'conditions': [{'variable': RuleCondition.ORDER_DISTANCE}]}
         )
 
         assert_200(response)
 
-        assert Rule.objects.get(id=a_rule.id).condition.variable == RuleCondition.ORDER_DISTANCE
+        assert Rule.objects.get(id=a_rule.id).conditions[0].variable == RuleCondition.ORDER_DISTANCE
 
     def test_patch_field_with_wrong_value_returns_400(self, a_client, a_client_user, a_rule):
         response = self.update_rule(
             a_client,
             a_client_user,
             a_rule,
-            {'condition': {'variable': 'DOES NOT EXISTS'}}
+            {'conditions': [{'variable': 'DOES NOT EXISTS'}]}
         )
 
         assert_400(response)

@@ -17,14 +17,14 @@ class ListRuleSchema(Schema):
 
 
 class RuleSchema(Schema):
-    condition = fields.Nested(ConditionSchema)
+    conditions = fields.List(fields.Nested(ConditionSchema))
     consequence = fields.Nested(ConsequenceSchema)
 
     class Meta:
-        fields = ('id', 'name', 'active', 'condition', 'consequence')
+        fields = ('id', 'name', 'active', 'conditions', 'consequence')
 
 
 class CreateRuleSchema(Schema):
-    condition = fields.Nested(ConditionSchema, required=True)
+    conditions = fields.List(fields.Nested(ConditionSchema, required=True))
     consequence = fields.Nested(ConsequenceSchema, required=True)
     name = fields.String(required=True)

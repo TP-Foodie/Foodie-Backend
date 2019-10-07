@@ -74,5 +74,5 @@ class RuleConsequence(EmbeddedDocument):
 class Rule(Document):
     name = fields.StringField(max_length=100, default=None)
     consequence = fields.EmbeddedDocumentField(RuleConsequence)
-    condition = fields.EmbeddedDocumentField(RuleCondition)
+    conditions = fields.ListField(fields.EmbeddedDocumentField(RuleCondition))
     active = fields.BooleanField(default=True)

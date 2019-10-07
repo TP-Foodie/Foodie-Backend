@@ -16,7 +16,7 @@ class TestRuleService:
 
     def test_create_rule_with_consequence(self, a_condition_data, a_consequence_data):
         self.rule_service.create(
-            condition=a_condition_data,
+            conditions=[a_condition_data],
             consequence=a_consequence_data,
             name='a rule'
         )
@@ -25,7 +25,7 @@ class TestRuleService:
 
     def test_create_rule_with_name(self, a_condition_data, a_consequence_data):
         rule = self.rule_service.create(
-            condition=a_condition_data,
+            conditions=[a_condition_data],
             consequence=a_consequence_data,
             name='a rule'
         )
@@ -44,4 +44,4 @@ class TestRuleService:
 
     def test_update_with_invalid_field_throws_error(self, a_rule):
         with pytest.raises(MongoEngineValidationError):
-            self.rule_service.update(a_rule.id, {'condition': {'variable': 'DOES NOT EXISTS'}})
+            self.rule_service.update(a_rule.id, {'conditions': [{'variable': 'DOES NOT EXISTS'}]})

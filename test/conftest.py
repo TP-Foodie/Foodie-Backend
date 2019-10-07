@@ -166,6 +166,6 @@ def a_consequence():
 def a_rule(cfaker, a_condition, a_consequence):
     return Rule(
         name=cfaker.name(),
-        condition=a_condition,
+        conditions=[a_condition],
         consequence=a_consequence
     ).save()
