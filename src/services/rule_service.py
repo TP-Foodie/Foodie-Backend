@@ -1,3 +1,4 @@
+from src.models.rule import RuleCondition
 from src.repositories.rule_repository import RuleRepository
 from src.schemas.rule_schema import CreateRuleSchema
 
@@ -5,6 +6,10 @@ from src.schemas.rule_schema import CreateRuleSchema
 class RuleService:
     rule_repository = RuleRepository()
     create_schema = CreateRuleSchema()
+
+    @property
+    def variables(self):
+        return RuleCondition.VARIABLES
 
     def create(self, **kwargs):
         data = self.create_schema.load(kwargs)

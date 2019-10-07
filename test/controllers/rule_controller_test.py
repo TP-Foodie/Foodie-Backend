@@ -38,6 +38,13 @@ class TestRuleController:
             headers={'Authorization': 'Bearer {}'.format(token)}
         )
 
+    def get(self, data_name, client, client_user):
+        token = self.login(client, client_user.email, client_user.password)
+        return client.patch(
+            'api/v1/rules/{}'.format(data_name),
+            headers={'Authorization': 'Bearer {}'.format(token)}
+        )
+
     def test_list_rules_fail_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/rules/')
         assert_401(response)
@@ -202,3 +209,16 @@ class TestRuleController:
         )
 
         assert json.loads(response.data)
+
+    def test_get_variables_for_unauthenticated(self, a_client):
+        response = a_client.get('api/v1/rules/variables')
+        assert_401(response)
+
+    def test_get_variables_should_list_all(self, a_client, a_client_user):
+        response = self.get('variables', a_client, a_client_user)
+
+        assert_200(response)
+
+        variables = json.loads(response.data)
+
+        assert variables == list(RuleCondition.VARIABLES)

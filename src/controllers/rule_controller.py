@@ -37,3 +37,9 @@ def create_rule():
 def update_rule(rule_id):
     updated = rule_service.update(rule_id, request.json)
     return jsonify(updated), HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/variables', methods=['PATCH'])
+@authenticate
+def get_variables():
+    return jsonify(rule_service.variables), HTTP_200_OK
