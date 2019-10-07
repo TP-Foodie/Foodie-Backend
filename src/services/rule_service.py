@@ -1,4 +1,4 @@
-from src.models.rule import RuleCondition
+from src.models.rule import RuleCondition, RuleConsequence
 from src.repositories.rule_repository import RuleRepository
 from src.schemas.rule_schema import CreateRuleSchema
 
@@ -14,6 +14,10 @@ class RuleService:
     @property
     def operators(self):
         return RuleCondition.OPERATORS
+
+    @property
+    def consequence_types(self):
+        return RuleConsequence.CONSEQUENCE_TYPES
 
     def create(self, **kwargs):
         data = self.create_schema.load(kwargs)

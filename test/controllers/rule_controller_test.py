@@ -1,7 +1,7 @@
 import json
 
 from test.support.utils import assert_401, assert_200, assert_201, assert_400
-from src.models.rule import Rule, RuleCondition
+from src.models.rule import Rule, RuleCondition, RuleConsequence
 
 
 class TestRuleController:
@@ -235,3 +235,16 @@ class TestRuleController:
         variables = json.loads(response.data)
 
         assert variables == list(RuleCondition.OPERATORS)
+
+    def test_get_consequence_types_for_unauthenticated(self, a_client):
+        response = a_client.get('api/v1/rules/consequence_types')
+        assert_401(response)
+
+    def test_consequence_types_should_list_all(self, a_client, a_client_user):
+        response = self.get('consequence_types', a_client, a_client_user)
+
+        assert_200(response)
+
+        variables = json.loads(response.data)
+
+        assert variables == list(RuleConsequence.CONSEQUENCE_TYPES)

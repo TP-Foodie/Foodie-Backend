@@ -49,3 +49,9 @@ def get_variables():
 @authenticate
 def get_operators():
     return jsonify(rule_service.operators), HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/consequence_types', methods=['PATCH'])
+@authenticate
+def get_consequence_types():
+    return jsonify(rule_service.consequence_types), HTTP_200_OK
