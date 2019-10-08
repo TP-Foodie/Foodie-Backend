@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 
 from controllers.utils import HTTP_200_OK, HTTP_202_ACCEPTED
-from schemas.authorization_schema import AuthorizationSchema, GoogleAuthorizationSchema,\
-    RecoveryTokenSchema
+from schemas.authorization_schema import AuthorizationSchema, GoogleAuthorizationSchema, \
+    RecoveryTokenSchema, UpdatePasswordSchema
 
 from services import auth_service, user_service, jwt_service
 
@@ -51,10 +51,10 @@ def post_recovery_token():
 
 @AUTH_BLUEPRINT.route('/password', methods=['POST'])
 def post_update_password():
-    # content = request.get_json()
-    # schema = UpdatePasswordSchema()
-    # update_password_data = schema.load(content)
+    content = request.get_json()
+    schema = UpdatePasswordSchema()
+    update_password_data = schema.load(content)
 
-    auth_service.update_password()
+    auth_service.update_password(update_password_data)
 
     return "Ok", HTTP_200_OK

@@ -70,5 +70,6 @@ def generate_and_send_token(recovery_data):
     send_email_service.send_token(recovery_data['email'], recovery_token)
 
 
-def update_password():
-    return None
+def update_password(update_password_data):
+    user_service.verify_user_token(update_password_data)
+    user_service.update_user_password(update_password_data)

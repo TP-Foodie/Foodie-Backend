@@ -4,7 +4,7 @@ from mongoengine import Document, \
     FloatField, \
     EmbeddedDocument, \
     EmailField, \
-    BooleanField, DateField
+    BooleanField, DateTimeField
 
 
 class Coordinates(EmbeddedDocument):
@@ -36,7 +36,7 @@ class User(Document):
         required=False,
         regex="FLAT|PREMIUM")
     recovery_token = StringField(required=False)
-    recovery_token_date = DateField(required=False)
+    recovery_token_date = DateTimeField(required=False)
 
 
 class Transaction(Document):

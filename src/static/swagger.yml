@@ -29,6 +29,8 @@ paths:
             $ref: "#/definitions/auth_response"
         401:
           description: "Unauthorized"
+        404:
+          description: "User not found"
   /auth/google:
     post:
       summary: "Obtener un JWT para la autenticación"
@@ -46,6 +48,42 @@ paths:
             $ref: "#/definitions/auth_response"
         401:
           description: "Unauthorized"
+        404:
+          description: "User not found"
+  /auth/recovery_token:
+    post:
+      summary: "Obtener un token para la recuperacioń de la contraseña"
+      parameters:
+        - in: "body"
+          name: "Token de recupero de contraseña"
+          description: "Token de google para ingresar válido por un dia via mail"
+          required: true
+          schema:
+            $ref: "#/definitions/recovery_token"
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+        404:
+          description: "User not found"
+  /auth/password:
+    post:
+      summary: "Actualizar la contraseña cuando via un token de recuperacion"
+      parameters:
+        - in: "body"
+          name: "Actualización de la contraseña"
+          description: "Actualización de la contraseña"
+          required: true
+          schema:
+            $ref: "#/definitions/update_password"
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+        404:
+          description: "User not found"
 definitions:
   auth_request:
     type: "object"
@@ -71,3 +109,21 @@ definitions:
       id:
         type: "string"
         example: "123"
+  recovery_token:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "foo@foo.foo"
+  update_password:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "foo@foo.foo"
+      recovery_token:
+        type: "string"
+        example: "1234"
+      password:
+        type: "string"
+        example: "asdf"
