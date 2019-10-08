@@ -8,3 +8,13 @@ class AuthorizationSchema(Schema):
 
 class GoogleAuthorizationSchema(Schema):
     google_token = fields.Str(required=True)
+
+
+class RecoveryTokenSchema(Schema):
+    email = fields.Str(required=True)
+
+
+class UpdatePasswordSchema(Schema):
+    email = fields.Str(required=True)
+    recovery_token = fields.Str(required=True)
+    password = fields.Str(required=True)

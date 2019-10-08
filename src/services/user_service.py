@@ -1,3 +1,5 @@
+import random
+from datetime import datetime
 import hashlib
 
 from models import User
@@ -72,3 +74,16 @@ def create_user_from_google_data(google_data):
     }
 
     create_user(user_data)
+
+
+def set_recovery_token(email):
+    recovery_token = _get_random_number()
+    user = get_user_by_email(email)
+    user.recovery_token = recovery_token
+    user.recovery_token_date = datetime.utcnow()
+    user.save()
+    return recovery_token
+
+
+def _get_random_number():
+    return str(round(random.random() * 10000))

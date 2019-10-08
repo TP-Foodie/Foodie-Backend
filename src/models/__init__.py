@@ -1,10 +1,10 @@
-from mongoengine import Document,\
-    StringField,\
-    EmbeddedDocumentField,\
-    FloatField,\
-    EmbeddedDocument,\
+from mongoengine import Document, \
+    StringField, \
+    EmbeddedDocumentField, \
+    FloatField, \
+    EmbeddedDocument, \
     EmailField, \
-    BooleanField
+    BooleanField, DateField
 
 
 class Coordinates(EmbeddedDocument):
@@ -35,6 +35,8 @@ class User(Document):
     subscription = StringField(
         required=False,
         regex="FLAT|PREMIUM")
+    recovery_token = StringField(required=False)
+    recovery_token_date = DateField(required=False)
 
 
 class Transaction(Document):

@@ -27,6 +27,7 @@ pipenv = "==2018.11.26"
 google-auth = "*"
 google-api-python-client = "*"
 requests = "*"
+sendgrid = "*"
 
 [requires]
 python_version = "3.6"
