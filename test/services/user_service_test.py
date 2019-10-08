@@ -1,11 +1,14 @@
 import hashlib
-from unittest import mock
+from datetime import timedelta, datetime
+from unittest import mock, TestCase
 from unittest.mock import Mock, MagicMock
+
+from services.exceptions.unauthorized_user import UnauthorizedUserException
 
 MOCK_OBJECT = Mock()
 
 
-class TestUserService:
+class TestUserService(TestCase):
 
     @mock.patch('services.user_service.User')
     def test_get_users_should_return_users(self, mock_user):
@@ -72,3 +75,47 @@ class TestUserService:
 
         from services import user_service
         assert user_service.is_valid(google_id="asd")
+
+    @mock.patch('services.user_service.User')
+    def test_token_not_matching_should_raise_exception(self, mock_user):
+        current_user = MagicMock()
+        mock_user.objects.get.return_value = current_user
+        current_user.recovery_token = 'un_token'
+
+        from services import user_service
+        with self.assertRaises(UnauthorizedUserException):
+            user_service.verify_user_token(
+                {
+                    'email': 'foo@foo.foo',
+                    'recovery_token': 'recovery_token'
+                }
+            )
+
+    @mock.patch('services.user_service.User')
+    def test_token_out_of_date_should_raise_exception(self, mock_user):
+        current_user = MagicMock()
+        mock_user.objects.get.return_value = current_user
+        current_user.recovery_token = 'recovery_token'
+        current_user.recovery_token_date = datetime.utcnow() - timedelta(days=2)
+
+        from services import user_service
+        with self.assertRaises(UnauthorizedUserException):
+            user_service.verify_user_token(
+                {
+                    'email': 'foo@foo.foo',
+                    'recovery_token': 'recovery_token'
+                }
+            )
+
+    @mock.patch('services.user_service.User')
+    def test_update_password(self, mock_user):
+        current_user = MagicMock()
+        mock_user.objects.get.return_value = current_user
+
+        from services import user_service
+        user_service.update_user_password({
+            'email': 'foo@foo.foo',
+            'password': 'asd'
+        })
+
+        assert current_user.password == hashlib.md5('asd'.encode('utf-8')).hexdigest()
