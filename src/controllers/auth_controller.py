@@ -51,9 +51,9 @@ def post_recovery_token():
 
 @AUTH_BLUEPRINT.route('/password', methods=['POST'])
 def post_update_password():
-    #content = request.get_json()
-    #schema = UpdatePasswordSchema()
-    #update_password_data = schema.load(content)
+    # content = request.get_json()
+    # schema = UpdatePasswordSchema()
+    # update_password_data = schema.load(content)
 
     auth_service.update_password()
 
