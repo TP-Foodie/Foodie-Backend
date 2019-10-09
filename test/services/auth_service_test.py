@@ -91,3 +91,21 @@ class TestAuthService(TestCase):
         auth_service.validate_google_user({'google_token': 'asd'})
 
         self.assertTrue(user_service.create_user_from_google_data.called)
+
+    @mock.patch('services.auth_service.user_service')
+    @mock.patch('services.auth_service.send_email_service')
+    def test_new_token(self, send_email_service_mock, user_service_mock):
+        from services import auth_service
+        auth_service.generate_and_send_token({"email": "foo@foo.foo"})
+
+        self.assertTrue(send_email_service_mock.send_token.called)
+        self.assertTrue(user_service_mock.set_recovery_token.called)\
+
+
+    @mock.patch('services.auth_service.user_service')
+    def test_update_password(self, user_service_mock):
+        from services import auth_service
+        auth_service.update_password({})
+
+        self.assertTrue(user_service_mock.verify_user_token.called)
+        self.assertTrue(user_service_mock.update_user_password.called)

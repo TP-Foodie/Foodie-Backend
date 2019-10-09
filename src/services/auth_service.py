@@ -4,7 +4,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from mongoengine import DoesNotExist
 
-from services import user_service, jwt_service
+from services import user_service, jwt_service, send_email_service
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 from settings import Config
 
@@ -63,3 +63,13 @@ def validate_google_user(auth_data):
         user_service.create_user_from_google_data(id_info)
 
     return id_info
+
+
+def generate_and_send_token(recovery_data):
+    recovery_token = user_service.set_recovery_token(recovery_data['email'])
+    send_email_service.send_token(recovery_data['email'], recovery_token)
+
+
+def update_password(update_password_data):
+    user_service.verify_user_token(update_password_data)
+    user_service.update_user_password(update_password_data)

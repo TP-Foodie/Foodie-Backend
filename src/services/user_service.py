@@ -1,6 +1,9 @@
+import random
+from datetime import datetime, timedelta
 import hashlib
 
 from models import User
+from services.exceptions.unauthorized_user import UnauthorizedUserException
 
 
 def get_users(page, limit):
@@ -72,3 +75,32 @@ def create_user_from_google_data(google_data):
     }
 
     create_user(user_data)
+
+
+def set_recovery_token(email):
+    recovery_token = _get_random_number()
+    user = get_user_by_email(email)
+    user.recovery_token = recovery_token
+    user.recovery_token_date = datetime.utcnow()
+    user.save()
+    return recovery_token
+
+
+def _get_random_number():
+    return str(round(random.random() * 10000))
+
+
+def verify_user_token(update_password_data):
+    user = get_user_by_email(update_password_data['email'])
+
+    if user.recovery_token != update_password_data['recovery_token']:
+        raise UnauthorizedUserException
+
+    if user.recovery_token_date + timedelta(days=1) < datetime.utcnow():
+        raise UnauthorizedUserException
+
+
+def update_user_password(update_password_data):
+    user = get_user_by_email(update_password_data['email'])
+    user.password = _hash_password(update_password_data['password'])
+    user.save()
