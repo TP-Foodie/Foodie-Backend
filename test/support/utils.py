@@ -1,4 +1,4 @@
-from src.controllers.utils import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST,\
+from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, \
     HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED
 
 

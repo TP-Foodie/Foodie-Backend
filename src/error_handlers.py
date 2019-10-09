@@ -7,7 +7,7 @@ from mongoengine import DoesNotExist
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 
 from services.exceptions.unauthorized_user import UnauthorizedUserException
-from src.services.exceptions.invalid_usage_exception import InvalidUsage
+from services.exceptions.invalid_usage_exception import InvalidUsage
 
 from controllers.utils import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, \
     HTTP_405_METHOD_NOT_ALLOWED, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_ERROR

@@ -4,7 +4,7 @@ from mongoengine import Document, \
     FloatField, \
     EmbeddedDocument, \
     EmailField, \
-    BooleanField, IntField
+    BooleanField, IntField, DateTimeField
 
 
 class Coordinates(EmbeddedDocument):
@@ -20,16 +20,23 @@ class Place(Document):
 class User(Document):
     DELIVERY_TYPE = "DELIVERY"
     CUSTOMER_TYPE = "CUSTOMER"
+    BACK_OFFICE_TYPE = "BACK_OFFICE"
 
     name = StringField(required=False)
     last_name = StringField(required=False)
-    password = StringField(required=True)
+    google_id = StringField(required=False)
+    password = StringField(required=False)
     email = EmailField(required=True, unique=True)
     profile_image = StringField(required=False)
     phone = StringField(required=False)
     type = StringField(
-        required=True,
-        regex="CUSTOMER|DELIVERY")  # CUSTOMER, DELIVERY
+        required=False,
+        regex="CUSTOMER|DELIVERY|BACK_OFFICE")
+    subscription = StringField(
+        required=False,
+        regex="FLAT|PREMIUM")
+    recovery_token = StringField(required=False)
+    recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
 
 

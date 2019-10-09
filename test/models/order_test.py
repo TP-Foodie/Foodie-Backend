@@ -1,6 +1,6 @@
 import pytest
 
-from src.models.order import Order
+from models.order import Order
 from test.support.utils import assert_attr_exists
 
 

@@ -1,14 +1,17 @@
 from functools import wraps
-
 from flask import request
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from mongoengine import DoesNotExist
 
-from services import user_service, jwt_service
+from services import user_service, jwt_service, send_email_service
 from services.exceptions.unauthorized_user import UnauthorizedUserException
+from settings import Config
 
 
 def validate_user(auth_data):
     if user_service.is_valid(auth_data['email'], auth_data['password']):
-        return jwt_service.encode_data_to_jwt(auth_data)
+        return auth_data
     raise UnauthorizedUserException()
 
 
@@ -28,7 +31,13 @@ def authenticate(function):
             raise UnauthorizedUserException
 
         auth_data = jwt_service.decode_jwt_data(token)
-        user_is_valid = user_service.is_valid(auth_data['email'], auth_data['password'])
+
+        if 'sub' in auth_data:
+            user_is_valid = user_service.is_valid(google_id=auth_data['sub'])
+        else:
+            user_is_valid = user_service.is_valid(
+                email=auth_data['email'],
+                password=auth_data['password'])
 
         if not user_is_valid:
             raise UnauthorizedUserException
@@ -36,3 +45,31 @@ def authenticate(function):
         return function(*args, **kwargs)
 
     return wrapper
+
+
+def validate_google_user(auth_data):
+    id_info = id_token \
+        .verify_oauth2_token(
+            auth_data['google_token'],
+            requests.Request(),
+            Config.GOOGLE_CLIENT_ID)
+
+    if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        raise UnauthorizedUserException
+
+    try:
+        user_service.get_user_by_email(id_info['email'])
+    except DoesNotExist:
+        user_service.create_user_from_google_data(id_info)
+
+    return id_info
+
+
+def generate_and_send_token(recovery_data):
+    recovery_token = user_service.set_recovery_token(recovery_data['email'])
+    send_email_service.send_token(recovery_data['email'], recovery_token)
+
+
+def update_password(update_password_data):
+    user_service.verify_user_token(update_password_data)
+    user_service.update_user_password(update_password_data)

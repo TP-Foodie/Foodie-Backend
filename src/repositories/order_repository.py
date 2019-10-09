@@ -1,5 +1,5 @@
-from src.models.order import Order
-from src.services.exceptions.order_exceptions import NonExistingOrderException
+from models.order import Order
+from services.exceptions.order_exceptions import NonExistingOrderException
 
 
 def list_all():
@@ -30,3 +30,4 @@ def update(order_id, field, value):
 
     order[field] = value
     order.save()
+    return order

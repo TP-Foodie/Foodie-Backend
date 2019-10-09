@@ -28,7 +28,7 @@ def get_users():
     ), 200
 
 
-@USERS_BLUEPRINT.route('/<_id>', methods=['PUT'])
+@USERS_BLUEPRINT.route('/<_id>', methods=['PATCH'])
 @authenticate
 def patch(_id):
     content = request.get_json()

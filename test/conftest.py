@@ -4,9 +4,9 @@ from faker.providers import person, internet, phone_number, geo
 from mongoengine import connect, disconnect
 from mongomock import ObjectId
 
-from src.app import APP
-from src.models import User, Place, Coordinates
-from src.models.order import Order, Product
+from app import APP
+from models import User, Place, Coordinates
+from models.order import Order, Product
 
 
 # pylint: disable=redefined-outer-name, function-redefined
