@@ -39,19 +39,19 @@ def update_rule(rule_id):
     return jsonify(updated), HTTP_200_OK
 
 
-@RULES_BLUEPRINT.route('/variables', methods=['PATCH'])
+@RULES_BLUEPRINT.route('/variables/', methods=['GET'])
 @authenticate
 def get_variables():
     return jsonify(rule_service.variables), HTTP_200_OK
 
 
-@RULES_BLUEPRINT.route('/operators', methods=['PATCH'])
+@RULES_BLUEPRINT.route('/operators/', methods=['GET'])
 @authenticate
 def get_operators():
     return jsonify(rule_service.operators), HTTP_200_OK
 
 
-@RULES_BLUEPRINT.route('/consequence_types', methods=['PATCH'])
+@RULES_BLUEPRINT.route('/consequence_types/', methods=['GET'])
 @authenticate
 def get_consequence_types():
     return jsonify(rule_service.consequence_types), HTTP_200_OK

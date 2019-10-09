@@ -4,7 +4,7 @@ from test.support.utils import assert_401, assert_200, assert_201, assert_400
 from src.models.rule import Rule, RuleCondition, RuleConsequence
 
 
-class TestRuleController:
+class TestRuleController:  # pylint: disable=too-many-public-methods
     def login(self, client, email, password):
         response = client.post(
             '/api/v1/auth/',
@@ -40,8 +40,8 @@ class TestRuleController:
 
     def get(self, data_name, client, client_user):
         token = self.login(client, client_user.email, client_user.password)
-        return client.patch(
-            'api/v1/rules/{}'.format(data_name),
+        return client.get(
+            'api/v1/rules/{}/'.format(data_name),
             headers={'Authorization': 'Bearer {}'.format(token)}
         )
 
@@ -211,7 +211,7 @@ class TestRuleController:
         assert json.loads(response.data)
 
     def test_get_variables_for_unauthenticated(self, a_client):
-        response = a_client.get('api/v1/rules/variables')
+        response = a_client.get('api/v1/rules/variables/')
         assert_401(response)
 
     def test_get_variables_should_list_all(self, a_client, a_client_user):
@@ -224,7 +224,7 @@ class TestRuleController:
         assert variables == list(RuleCondition.VARIABLES)
 
     def test_get_operators_for_unauthenticated(self, a_client):
-        response = a_client.get('api/v1/rules/operators')
+        response = a_client.get('api/v1/rules/operators/')
         assert_401(response)
 
     def test_get_operators_should_list_all(self, a_client, a_client_user):
@@ -237,7 +237,7 @@ class TestRuleController:
         assert variables == list(RuleCondition.OPERATORS)
 
     def test_get_consequence_types_for_unauthenticated(self, a_client):
-        response = a_client.get('api/v1/rules/consequence_types')
+        response = a_client.get('api/v1/rules/consequence_types/')
         assert_401(response)
 
     def test_consequence_types_should_list_all(self, a_client, a_client_user):
