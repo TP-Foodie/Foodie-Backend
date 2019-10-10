@@ -10,4 +10,4 @@ def encode_data_to_jwt(data):
 
 
 def decode_jwt_data(token):
-    return jwt.decode(token, Config.JWT_SECRET, algorithm='HS256')
+    return jwt.decode(token, Config.JWT_SECRET, algorithm='HS256', audience=Config.GOOGLE_CLIENT_ID)
