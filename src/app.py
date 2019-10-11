@@ -16,7 +16,7 @@ from error_handlers import ERRORS_BLUEPRINT
 
 
 # initialize Flask app
-from src.controllers.rule_controller import RULES_BLUEPRINT
+from controllers.rule_controller import RULES_BLUEPRINT
 
 APP = Flask(__name__)
 CORS(APP)

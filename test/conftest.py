@@ -7,12 +7,12 @@ from mongomock import ObjectId
 from app import APP
 from models import User, Place, Coordinates
 from models.order import Order, Product
+from services import user_service
+from models.rule import RuleCondition, RuleConsequence, Rule
 
 
 # pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
-from src.models.rule import RuleCondition, RuleConsequence, Rule
-from src.services import user_service
 
 
 @pytest.fixture

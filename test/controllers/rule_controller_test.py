@@ -1,7 +1,7 @@
 import json
 
 from test.support.utils import assert_401, assert_200, assert_201, assert_400
-from src.models.rule import Rule, RuleCondition, RuleConsequence
+from models.rule import Rule, RuleCondition, RuleConsequence
 
 
 class TestRuleController:  # pylint: disable=too-many-public-methods

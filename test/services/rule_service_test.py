@@ -2,8 +2,8 @@ import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
-from src.models.rule import Rule
-from src.services.rule_service import RuleService
+from models.rule import Rule
+from services.rule_service import RuleService
 
 
 @pytest.mark.usefixtures('a_client')

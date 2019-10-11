@@ -1,5 +1,5 @@
-from src.models.rule import Rule
-from src.schemas.rule_schema import ListRuleSchema, RuleSchema
+from models.rule import Rule
+from schemas.rule_schema import ListRuleSchema, RuleSchema
 
 
 class RuleRepository:

@@ -1,6 +1,6 @@
-from src.models.rule import RuleCondition, RuleConsequence
-from src.repositories.rule_repository import RuleRepository
-from src.schemas.rule_schema import CreateRuleSchema
+from models.rule import RuleCondition, RuleConsequence
+from repositories.rule_repository import RuleRepository
+from schemas.rule_schema import CreateRuleSchema
 
 
 class RuleService:
