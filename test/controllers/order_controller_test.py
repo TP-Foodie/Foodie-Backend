@@ -12,8 +12,9 @@ class TestOrderController(TestMixin):
     def patch_order(self, client, order, data):
         return client.patch(self.build_url('/orders/{}'.format(str(order.id))), json=data)
 
-    def get_favor_orders(self, client):
-        return client.get(self.build_url('/orders/favors'))
+    def get_favor_orders(self, client, user):
+        self.login(client, user.email, user.password)
+        return self.get(client, self.build_url('/orders/favors'))
 
     def create_order(self, client, order_type, user, product):
         return client.post(self.build_url('/orders/'),
@@ -87,9 +88,14 @@ class TestOrderController(TestMixin):
             }
         }
 
-    def test_get_orders_filtered_by_favors(self, a_client, a_favor_order, an_order_factory):
+    def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):
+        response = a_client.get('api/v1/orders/favors')
+        assert_401(response)
+
+    def test_get_orders_filtered_by_favors(self, a_client, a_favor_order,
+                                           an_order_factory, a_client_user):
         an_order_factory()
-        response = self.get_favor_orders(a_client)
+        response = self.get_favor_orders(a_client, a_client_user)
 
         assert_200(response)
 

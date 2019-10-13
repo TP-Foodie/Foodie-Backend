@@ -41,6 +41,7 @@ def order_details(order_id):
 
 
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
+@authenticate
 def list_favor_orders():
     data = ListOrderSchema(many=True).dump(order_repository.get_favor_orders())
     return jsonify(data)
