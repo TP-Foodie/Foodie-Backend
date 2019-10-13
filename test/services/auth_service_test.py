@@ -4,17 +4,12 @@ from mongoengine import DoesNotExist
 
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 
+
 def function():
     pass
 
 
 USER_DATA = {
-    'email': 'user@email.com',
-    'password': 'password'
-}
-
-USER_DATA_GOOGLE_AUDIENCE = {
-    'aud': '218514362361-nchqu6j59rcskl1vmadfp6gl6ud8a0oo.apps.googleusercontent.com',
     'email': 'user@email.com',
     'password': 'password'
 }
@@ -42,8 +37,7 @@ class TestAuthService(TestCase):
     @mock.patch('services.auth_service.user_service')
     def test_authenticate_without_valid_user(self, user_service, request):
         from services import jwt_service
-        request.headers = {
-            'Authorization': 'Bearer ' + jwt_service.encode_data_to_jwt(USER_DATA_GOOGLE_AUDIENCE)}
+        request.headers = {'Authorization': 'Bearer ' + jwt_service.encode_data_to_jwt(USER_DATA)}
         user_service.is_valid.return_value = False
         from services import auth_service
 
