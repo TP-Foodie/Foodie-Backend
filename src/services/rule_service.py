@@ -2,10 +2,7 @@ from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_repository import RuleRepository
 from schemas.rule_schema import CreateRuleSchema
 
-
-class RuleConditionService:
-    def apply(self, *conditions):
-        return False
+from src.services.rule_engine.condition_service import RuleConditionService
 
 
 class RuleService:
