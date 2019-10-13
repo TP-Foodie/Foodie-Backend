@@ -5,8 +5,8 @@ from src.services.rule_engine.condition_service import RuleConditionService
 class TestRuleConditionService:
     condition_service = RuleConditionService()
 
-    def test_apply_to_empty_array_returns_true(self, an_order):
-        assert not self.condition_service.apply(an_order, [])
+    def test_apply_to_no_conditions_returns_true(self, an_order):
+        assert not self.condition_service.apply(an_order)
 
     def test_apply_with_user_reputation(self, an_order):
         condition = RuleCondition(
