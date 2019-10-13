@@ -119,6 +119,20 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
         )
         assert_400(response)
 
+    def test_post_rule_should_return_400_if_missing_variable(self, a_client, a_client_user,
+                                                             a_consequence_data):
+        response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'conditions': [{'condition_value': 1}],
+                'consequence': a_consequence_data,
+                'name': 'a rule'
+            }
+        )
+
+        assert_400(response)
+
     def test_post_rule_should_return_400_if_arguments_are_wrong(self, a_client,
                                                                 a_client_user):
         response = self.create_rule(
@@ -248,3 +262,26 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
         variables = json.loads(response.data)
 
         assert variables == list(RuleConsequence.CONSEQUENCE_TYPES)
+
+    def test_create_and_get_rule(self, a_client, a_client_user, a_condition_data, a_consequence_data):
+        create_response = self.create_rule(
+            a_client,
+            a_client_user,
+            {
+                'conditions': [a_condition_data],
+                'consequence': a_consequence_data,
+                'name': 'a rule'
+            }
+        )
+
+        assert_201(create_response)
+
+        rule = json.loads(create_response.data)
+
+        get_response = self.get_rule(a_client, a_client_user, Rule.objects.get(id=rule["id"]))
+
+        assert_200(get_response)
+
+        rule_returned = json.loads(get_response.data)
+
+        assert rule_returned == rule
