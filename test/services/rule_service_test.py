@@ -49,3 +49,10 @@ class TestRuleService:
     def test_delete_rule_removes_it(self, a_rule):
         self.rule_service.delete(a_rule.id)
         assert not Rule.objects.count()
+
+
+class TestPriceQuote:
+    rule_service = RuleService()
+
+    def test_should_return_zero_if_no_conditions(self):
+        assert self.rule_service.quote_price() == 0

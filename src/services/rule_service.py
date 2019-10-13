@@ -34,3 +34,6 @@ class RuleService:
 
     def delete(self, rule_id):
         return self.rule_repository.delete(rule_id)
+
+    def quote_price(self):
+        return 0
