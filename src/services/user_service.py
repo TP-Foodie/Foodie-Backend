@@ -41,12 +41,14 @@ def update_user(_id, user_data):
     return user.save()
 
 
-def is_valid(email=None, password=None, google_id=None):
+def is_valid(email=None, password=None, google_id=None, user=None):
+
     if google_id is not None:
         user = get_user_by_google_id(google_id)
         return user is not None
 
-    user = get_user_by_email(email)
+    if email is not None:
+        user = get_user_by_email(email)
 
     if user is None:
         return False

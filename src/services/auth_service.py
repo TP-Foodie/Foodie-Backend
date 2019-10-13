@@ -33,16 +33,19 @@ def authenticate(function):
         auth_data = jwt_service.decode_jwt_data(token)
 
         if 'sub' in auth_data:
-            user_is_valid = user_service.is_valid(google_id=auth_data['sub'])
+            user = user_service.get_user_by_google_id(google_id=auth_data['sub'])
+            user_is_valid = user_service.is_valid(user=user)
         else:
-            user_is_valid = user_service.is_valid(
-                email=auth_data['email'],
-                password=auth_data['password'])
+            user = user_service.get_user_by_email(email=auth_data['email'])
+            user_is_valid = user_service.is_valid(user=user, password=auth_data['password'])
 
         if not user_is_valid:
             raise UnauthorizedUserException
 
-        return function(*args, **kwargs)
+        try:
+            return function(user, *args, **kwargs)
+        except TypeError:
+            return function(*args, **kwargs)
 
     return wrapper
 

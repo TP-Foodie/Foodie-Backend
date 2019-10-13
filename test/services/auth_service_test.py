@@ -99,8 +99,7 @@ class TestAuthService(TestCase):
         auth_service.generate_and_send_token({"email": "foo@foo.foo"})
 
         self.assertTrue(send_email_service_mock.send_token.called)
-        self.assertTrue(user_service_mock.set_recovery_token.called)\
-
+        self.assertTrue(user_service_mock.set_recovery_token.called)
 
     @mock.patch('services.auth_service.user_service')
     def test_update_password(self, user_service_mock):

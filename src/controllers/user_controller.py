@@ -9,6 +9,12 @@ from services.auth_service import authenticate
 USERS_BLUEPRINT = Blueprint('users', __name__)
 
 
+@USERS_BLUEPRINT.route('/me', methods=['GET'])
+@authenticate
+def get_me(user):
+    return jsonify(user), 200
+
+
 @USERS_BLUEPRINT.route('/<_id>', methods=['GET'])
 def get_user(_id):
     return jsonify(user_service.get_user(_id)), 200
@@ -26,6 +32,12 @@ def get_users():
             "users": user_service.get_users(page, limit)
         }
     ), 200
+
+
+@USERS_BLUEPRINT.route('/me', methods=['PATCH'])
+@authenticate
+def patch_me(user):
+    return patch(user.id)
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['PATCH'])
