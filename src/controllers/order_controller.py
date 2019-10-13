@@ -34,6 +34,7 @@ def create_order():
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['GET'])
+@authenticate
 def order_details(order_id):
     data = DetailsOrderSchema().dump(order_repository.get_order(order_id))
     return jsonify(data)

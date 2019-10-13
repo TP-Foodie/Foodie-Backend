@@ -29,8 +29,9 @@ class TestOrderController(TestMixin):
         self.login(client, user.email, user.password)
         return self.get(client, self.build_url('/orders/'))
 
-    def get_order(self, client, order_id):
-        return client.get(self.build_url('/orders/{}'.format(str(order_id))))
+    def get_order(self, client, order_id, a_client_user):
+        self.login(client, a_client_user.email, a_client_user.password)
+        return self.get(client, self.build_url('/orders/{}'.format(str(order_id))))
 
     def test_orders_endpoint_exists(self, a_client, a_client_user):
         response = self.get_orders(a_client, a_client_user)
@@ -51,8 +52,12 @@ class TestOrderController(TestMixin):
             'type': an_order.type,
         }
 
-    def test_get_order_details(self, a_client, an_order):
-        response = self.get_order(a_client, an_order.id)
+    def test_get_orders_details_for_unauthenticated(self, a_client, an_order):
+        response = a_client.get('api/v1/orders/{}'.format(str(an_order.id)))
+        assert_401(response)
+
+    def test_get_order_details(self, a_client, an_order, a_client_user):
+        response = self.get_order(a_client, an_order.id, a_client_user)
 
         assert_200(response)
 
