@@ -53,3 +53,10 @@ class TestMixin:
             json=data,
             headers={'Authorization': 'Bearer {}'.format(self.token)}
         )
+
+    def patch(self, client, url, data):
+        return client.patch(
+            url,
+            json=data,
+            headers={'Authorization': 'Bearer {}'.format(self.token)}
+        )

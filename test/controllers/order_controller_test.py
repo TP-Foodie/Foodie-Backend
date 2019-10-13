@@ -9,8 +9,13 @@ class TestOrderController(TestMixin):
     def build_url(self, url):
         return f'/api/v1{url}'
 
-    def patch_order(self, client, order, data):
-        return client.patch(self.build_url('/orders/{}'.format(str(order.id))), json=data)
+    def patch_order(self, client, order, user, data):
+        self.login(client, user.email, user.password)
+        return self.patch(
+            client,
+            self.build_url('/orders/{}'.format(str(order.id))),
+            data
+        )
 
     def get_favor_orders(self, client, user):
         self.login(client, user.email, user.password)
@@ -134,9 +139,16 @@ class TestOrderController(TestMixin):
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
         assert_400(response)
 
-    def test_update_should_change_order_status(self, a_client, an_order, a_delivery_user):
+    def test_update_for_unauthenticated(self, a_client, an_order):
+        response = a_client.patch('api/v1/orders/{}'.format(str(an_order.id)), json={})
+        assert_401(response)
+
+    def test_update_should_change_order_status(self, a_client, an_order,
+                                               a_delivery_user, a_client_user):
         response = self.patch_order(
-            a_client, an_order,
+            a_client,
+            an_order,
+            a_client_user,
             {'status': Order.TAKEN_STATUS, 'delivery': str(a_delivery_user.id)}
         )
 
@@ -144,19 +156,23 @@ class TestOrderController(TestMixin):
 
         assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS
 
-    def test_should_return_400_if_delivery_does_not_exists(self, a_client, an_object_id, an_order):
+    def test_should_return_400_if_delivery_does_not_exists(self, a_client, an_object_id,
+                                                           an_order, a_client_user):
         response = self.patch_order(
             a_client, an_order,
+            a_client_user,
             {'status': Order.TAKEN_STATUS, 'delivery': str(an_object_id)}
         )
 
         assert_400(response)
 
-    def test_should_return_404_if_order_does_not_exists(
-            self, a_client, an_object_id, a_delivery_user):
-        response = a_client.patch(
+    def test_should_return_404_if_order_does_not_exists(self, a_client, an_object_id,
+                                                        a_delivery_user, a_client_user):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.patch(
+            a_client,
             'orders/{}'.format(str(an_object_id)),
-            json={'status': Order.TAKEN_STATUS, 'delivery': str(a_delivery_user.id)}
+            {'status': Order.TAKEN_STATUS, 'delivery': str(a_delivery_user.id)},
         )
 
         assert_404(response)

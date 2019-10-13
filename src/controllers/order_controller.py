@@ -50,6 +50,7 @@ def list_favor_orders():
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
+@authenticate
 def update_order(order_id):
     try:
         order = order_service.take(order_id, parse_take_order_request(request.json))
