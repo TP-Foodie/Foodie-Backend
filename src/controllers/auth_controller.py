@@ -43,7 +43,7 @@ def post_recovery_token():
 
     auth_service.generate_and_send_token(recovery_data)
 
-    return "Ok", HTTP_202_ACCEPTED
+    return "", HTTP_202_ACCEPTED
 
 
 @AUTH_BLUEPRINT.route('/password', methods=['POST'])
@@ -54,4 +54,4 @@ def post_update_password():
 
     auth_service.update_password(update_password_data)
 
-    return "Ok", HTTP_200_OK
+    return "", HTTP_200_OK
