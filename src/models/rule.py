@@ -64,8 +64,9 @@ class RuleCondition(EmbeddedDocument):
 class RuleConsequence(EmbeddedDocument):
     PERCENTAGE = 'P'
     VALUE = 'V'
+    PER_UNIT_VALUE = 'PV'
 
-    CONSEQUENCE_TYPES = (PERCENTAGE, VALUE)
+    CONSEQUENCE_TYPES = (PERCENTAGE, VALUE, PER_UNIT_VALUE)
 
     consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES, default=VALUE)
     value = fields.IntField(max_length=100, default=0)
