@@ -7,14 +7,16 @@ from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
 from services.exceptions.invalid_usage_exception import InvalidUsage
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.exceptions.order_exceptions import NonExistingPlaceException, \
     NonExistingOrderException
-from services.exceptions.user_exceptions import NonExistingDeliveryException
+from services.auth_service import authenticate
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['GET'])
+@authenticate
 def list_orders():
     data = ListOrderSchema(many=True).dump(order_repository.list_all())
     return jsonify(data)

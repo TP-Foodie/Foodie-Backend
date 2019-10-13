@@ -1,11 +1,11 @@
 import json
 
-from test.support.utils import assert_200, assert_201, assert_400, assert_404
+from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
 from models.order import Order
 from repositories import order_repository
 
 
-class TestOrderController:
+class TestOrderController(TestMixin):
     def build_url(self, url):
         return f'/api/v1{url}'
 
@@ -25,18 +25,23 @@ class TestOrderController:
                                    'place': product.place.id
                                }})
 
-    def get_orders(self, client):
-        return client.get(self.build_url('/orders/'))
+    def get_orders(self, client, user):
+        self.login(client, user.email, user.password)
+        return self.get(client, self.build_url('/orders/'))
 
     def get_order(self, client, order_id):
         return client.get(self.build_url('/orders/{}'.format(str(order_id))))
 
-    def test_orders_endpoint_exists(self, a_client):
-        response = self.get_orders(a_client)
+    def test_orders_endpoint_exists(self, a_client, a_client_user):
+        response = self.get_orders(a_client, a_client_user)
         assert_200(response)
 
-    def test_list_orders(self, a_client, an_order):
-        response = self.get_orders(a_client)
+    def test_list_orders_for_unauthenticated(self, a_client):
+        response = a_client.get(self.build_url('/orders/'))
+        assert_401(response)
+
+    def test_list_orders(self, a_client, an_order, a_client_user):
+        response = self.get_orders(a_client, a_client_user)
         order = json.loads(response.data)[0]
 
         assert order == {
