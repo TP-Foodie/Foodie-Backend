@@ -5,7 +5,7 @@ from models.order import Order
 from repositories import order_repository
 
 
-class TestOrderController(TestMixin):
+class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
     def build_url(self, url):
         return f'/api/v1{url}'
 

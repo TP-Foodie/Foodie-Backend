@@ -30,7 +30,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
             headers={'Authorization': 'Bearer {}'.format(token)}
         )
 
-    def get(self, data_name, client, client_user):
+    def get_data(self, data_name, client, client_user):
         token = self.login(client, client_user.email, client_user.password)
         return client.get(
             'api/v1/rules/{}/'.format(data_name),
@@ -228,7 +228,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_401(response)
 
     def test_get_variables_should_list_all(self, a_client, a_client_user):
-        response = self.get('variables', a_client, a_client_user)
+        response = self.get_data('variables', a_client, a_client_user)
 
         assert_200(response)
 
@@ -241,7 +241,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_401(response)
 
     def test_get_operators_should_list_all(self, a_client, a_client_user):
-        response = self.get('operators', a_client, a_client_user)
+        response = self.get_data('operators', a_client, a_client_user)
 
         assert_200(response)
 
@@ -254,7 +254,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_401(response)
 
     def test_consequence_types_should_list_all(self, a_client, a_client_user):
-        response = self.get('consequence_types', a_client, a_client_user)
+        response = self.get_data('consequence_types', a_client, a_client_user)
 
         assert_200(response)
 
