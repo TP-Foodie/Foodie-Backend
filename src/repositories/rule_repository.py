@@ -15,6 +15,9 @@ class RuleRepository:
     def get(self, rule_id):
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))
 
+    def conditions(self, rule_id):
+        return Rule.objects.get(id=rule_id).conditions
+
     def update(self, rule_id, new_data):
         return Rule(**new_data, id=rule_id).save()
 

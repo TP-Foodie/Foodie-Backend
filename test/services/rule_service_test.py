@@ -2,7 +2,7 @@ import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
-from models.rule import Rule
+from models.rule import Rule, RuleConsequence
 from services.rule_service import RuleService
 
 
@@ -54,5 +54,18 @@ class TestRuleService:
 class TestPriceQuote:
     rule_service = RuleService()
 
-    def test_should_return_zero_if_no_conditions(self):
-        assert self.rule_service.quote_price() == 0
+    def test_should_return_zero_if_no_conditions(self, a_consequence):
+        rule = Rule(
+            name='new rule',
+            conditions=[],
+            consequence=a_consequence
+        )
+        assert self.rule_service.quote_price(rule.id) == 0
+
+    def test_should_apply_consequence_if_no_condition(self):
+        rule = Rule(
+            name='new rule',
+            conditions=[],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=5)
+        )
+        assert self.rule_service.quote_price(rule.id) == 5

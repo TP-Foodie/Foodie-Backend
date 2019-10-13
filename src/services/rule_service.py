@@ -3,9 +3,15 @@ from repositories.rule_repository import RuleRepository
 from schemas.rule_schema import CreateRuleSchema
 
 
+class RuleConditionService:
+    def apply(self, *conditions):
+        return False
+
+
 class RuleService:
     rule_repository = RuleRepository()
     create_schema = CreateRuleSchema()
+    condition_service = RuleConditionService()
 
     @property
     def variables(self):
@@ -35,5 +41,5 @@ class RuleService:
     def delete(self, rule_id):
         return self.rule_repository.delete(rule_id)
 
-    def quote_price(self):
+    def quote_price(self, rule_id):
         return 0
