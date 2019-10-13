@@ -297,8 +297,8 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
         response = a_client.delete('api/v1/rules/{}'.format(str(a_rule.id)))
         assert_401(response)
 
-    def test_delete_should_delete_rule(self, a_client, a_client_user, a_rule):
-        response = self.delete_rule(a_client, a_client_user, a_rule)
+    def test_delete_should_delete_rule(self, a_client, an_admin_user, a_rule):
+        response = self.delete_rule(a_client, an_admin_user, a_rule)
         assert_200(response)
 
         assert not Rule.objects.count()

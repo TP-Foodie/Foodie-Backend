@@ -134,6 +134,12 @@ def a_client_user(cfaker):
 
 
 @pytest.fixture
+def an_admin_user(a_client_user):
+    a_client_user.type = "BACK_OFFICE"
+    return a_client_user
+
+
+@pytest.fixture
 def an_object_id():
     return ObjectId()
 
