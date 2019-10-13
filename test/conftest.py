@@ -7,8 +7,8 @@ from mongomock import ObjectId
 from app import APP
 from models import User, Place, Coordinates
 from models.order import Order, Product
-from services import user_service
 from models.rule import RuleCondition, RuleConsequence, Rule
+from services import user_service
 
 
 # pylint: disable=redefined-outer-name, function-redefined

@@ -12,11 +12,11 @@ from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLUEPRINT
 from controllers.order_controller import ORDERS_BLUEPRINT
+from controllers.rule_controller import RULES_BLUEPRINT
 from error_handlers import ERRORS_BLUEPRINT
 
 
 # initialize Flask app
-from controllers.rule_controller import RULES_BLUEPRINT
 
 APP = Flask(__name__)
 CORS(APP)

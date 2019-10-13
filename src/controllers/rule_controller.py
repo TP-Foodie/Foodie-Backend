@@ -64,5 +64,3 @@ def get_consequence_types():
 def delete_rule(rule_id):
     rule_service.delete(rule_id)
     return NO_CONTENT, HTTP_200_OK
-
-

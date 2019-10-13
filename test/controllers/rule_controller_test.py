@@ -270,7 +270,8 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
 
         assert variables == list(RuleConsequence.CONSEQUENCE_TYPES)
 
-    def test_create_and_get_rule(self, a_client, a_client_user, a_condition_data, a_consequence_data):
+    def test_create_and_get_rule(self, a_client, a_client_user, a_condition_data,
+                                 a_consequence_data):
         create_response = self.create_rule(
             a_client,
             a_client_user,
