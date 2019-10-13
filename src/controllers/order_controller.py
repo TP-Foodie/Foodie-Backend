@@ -23,9 +23,11 @@ def list_orders():
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['POST'])
-def create_order():
+@authenticate
+def create_order(user):
     try:
-        order = order_service.create(*parse_order_request(request.json).values())
+        parsed_data = parse_order_request({**request.json, 'user': user})
+        order = order_service.create(**parsed_data)
         data = DetailsOrderSchema().dump(order)
     except NonExistingPlaceException:
         raise InvalidUsage("Place does not exists", status_code=HTTP_400_BAD_REQUEST)

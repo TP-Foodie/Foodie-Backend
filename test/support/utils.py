@@ -48,7 +48,7 @@ class TestMixin:
         )
 
     def post(self, client, url, data):
-        return client.get(
+        return client.post(
             url,
             json=data,
             headers={'Authorization': 'Bearer {}'.format(self.token)}
