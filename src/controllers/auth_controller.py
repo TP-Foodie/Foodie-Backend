@@ -4,7 +4,7 @@ from controllers.utils import HTTP_200_OK, HTTP_202_ACCEPTED
 from schemas.authorization_schema import AuthorizationSchema, GoogleAuthorizationSchema, \
     RecoveryTokenSchema, UpdatePasswordSchema
 
-from services import auth_service, user_service, jwt_service
+from services import auth_service, jwt_service
 
 AUTH_BLUEPRINT = Blueprint('auth', __name__)
 
@@ -18,8 +18,7 @@ def post():
     data = auth_service.validate_user(auth_data)
 
     return jsonify({
-        'token': jwt_service.encode_data_to_jwt(data),
-        'id': user_service.get_user_by_email(auth_data['email']).id
+        'token': jwt_service.encode_data_to_jwt(data)
     }), HTTP_200_OK
 
 
@@ -30,11 +29,9 @@ def google_post():
     auth_data = schema.load(content)
 
     data = auth_service.validate_google_user(auth_data)
-    email = data['email']
 
     return jsonify({
-        'token': jwt_service.encode_data_to_jwt(data),
-        'id': user_service.get_user_by_email(email).id
+        'token': jwt_service.encode_data_to_jwt(data)
     }), HTTP_200_OK
 
 
