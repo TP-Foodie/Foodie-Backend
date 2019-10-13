@@ -285,3 +285,7 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
         rule_returned = json.loads(get_response.data)
 
         assert rule_returned == rule
+
+    def test_delete_for_unauthenticated(self, a_client, a_rule):
+        response = a_client.delete('api/v1/rules/{}'.format(str(a_rule.id)))
+        assert_401(response)

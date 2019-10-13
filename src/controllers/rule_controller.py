@@ -55,3 +55,11 @@ def get_operators():
 @authenticate
 def get_consequence_types():
     return jsonify(rule_service.consequence_types), HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/<rule_id>', methods=['DELETE'])
+@authenticate
+def delete_rule(rule_id):
+    return ''
+
+
