@@ -17,3 +17,6 @@ class RuleRepository:
 
     def update(self, rule_id, new_data):
         return Rule(**new_data, id=rule_id).save()
+
+    def delete(self, rule_id):
+        return Rule.objects.get(id=rule_id).delete()

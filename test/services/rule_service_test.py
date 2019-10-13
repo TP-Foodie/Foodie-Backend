@@ -45,3 +45,7 @@ class TestRuleService:
     def test_update_with_invalid_field_throws_error(self, a_rule):
         with pytest.raises(MongoEngineValidationError):
             self.rule_service.update(a_rule.id, {'conditions': [{'variable': 'DOES NOT EXISTS'}]})
+
+    def test_delete_rule_removes_it(self, a_rule):
+        self.rule_service.delete(a_rule.id)
+        assert not Rule.objects.count()

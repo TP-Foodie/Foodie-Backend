@@ -31,3 +31,6 @@ class RuleService:
 
     def update(self, rule_id, new_fields):
         return self.rule_repository.update(rule_id, new_fields)
+
+    def delete(self, rule_id):
+        return self.rule_repository.delete(rule_id)

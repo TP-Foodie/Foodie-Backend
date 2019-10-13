@@ -45,6 +45,13 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
             headers={'Authorization': 'Bearer {}'.format(token)}
         )
 
+    def delete_rule(self, client, user, rule):
+        token = self.login(client, user.email, user.password)
+        return client.delete(
+            'api/v1/rules/{}'.format(str(rule.id)),
+            headers={'Authorization': 'Bearer {}'.format(token)}
+        )
+
     def test_list_rules_fail_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/rules/')
         assert_401(response)
@@ -289,3 +296,9 @@ class TestRuleController:  # pylint: disable=too-many-public-methods
     def test_delete_for_unauthenticated(self, a_client, a_rule):
         response = a_client.delete('api/v1/rules/{}'.format(str(a_rule.id)))
         assert_401(response)
+
+    def test_delete_should_delete_rule(self, a_client, a_client_user, a_rule):
+        response = self.delete_rule(a_client, a_client_user, a_rule)
+        assert_200(response)
+
+        assert not Rule.objects.count()

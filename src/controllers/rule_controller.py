@@ -4,6 +4,8 @@ from controllers.utils import HTTP_200_OK, HTTP_201_CREATED
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
+from src.controllers.utils import NO_CONTENT
+
 RULES_BLUEPRINT = Blueprint('rules', __name__)
 
 MISSING_ARGS_ERROR_MESSAGE = "missing arguments"
@@ -60,6 +62,7 @@ def get_consequence_types():
 @RULES_BLUEPRINT.route('/<rule_id>', methods=['DELETE'])
 @authenticate
 def delete_rule(rule_id):
-    return ''
+    rule_service.delete(rule_id)
+    return NO_CONTENT, HTTP_200_OK
 
 
