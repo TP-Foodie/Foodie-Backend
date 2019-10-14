@@ -1,5 +1,5 @@
-from src.services.rule_engine.operator_service import ConditionOperatorService
-from src.services.rule_engine.variable_service import ConditionVariableService
+from services.rule_engine.operator_service import ConditionOperatorService
+from services.rule_engine.variable_service import ConditionVariableService
 
 
 class RuleConditionService:
@@ -12,4 +12,4 @@ class RuleConditionService:
             result = self.operator_service.apply(condition.operator, value, condition.condition_value)
             if not result:
                 return False
-            return True
+        return True

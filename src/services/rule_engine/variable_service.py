@@ -1,4 +1,4 @@
-from src.models.rule import RuleCondition
+from models.rule import RuleCondition
 
 
 class Variable:

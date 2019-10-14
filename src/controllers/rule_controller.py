@@ -4,7 +4,7 @@ from controllers.utils import HTTP_200_OK, HTTP_201_CREATED
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
-from src.controllers.utils import NO_CONTENT
+from controllers.utils import NO_CONTENT
 
 RULES_BLUEPRINT = Blueprint('rules', __name__)
 

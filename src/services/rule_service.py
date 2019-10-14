@@ -1,8 +1,8 @@
 from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_repository import RuleRepository
 from schemas.rule_schema import CreateRuleSchema
-
-from src.services.rule_engine.condition_service import RuleConditionService
+from repositories import order_repository
+from services.rule_engine.condition_service import RuleConditionService
 
 
 class RuleService:
@@ -38,5 +38,11 @@ class RuleService:
     def delete(self, rule_id):
         return self.rule_repository.delete(rule_id)
 
-    def quote_price(self, rule_id):
-        return 0
+    def quote_price(self, order_id):
+        order = order_repository.get_order(order_id)
+        total = 0
+        for rule in self.rule_repository.all():
+            result = self.condition_service.apply(order, *rule.conditions)
+            if result:
+                total += rule.consequence.value
+        return total

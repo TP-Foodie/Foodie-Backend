@@ -51,21 +51,22 @@ class TestRuleService:
         assert not Rule.objects.count()
 
 
+@pytest.mark.usefixtures('a_client')
 class TestPriceQuote:
     rule_service = RuleService()
 
-    def test_should_return_zero_if_no_conditions(self, a_consequence):
-        rule = Rule(
+    def test_should_return_zero_if_no_conditions(self, a_consequence, an_order):
+        Rule(
             name='new rule',
             conditions=[],
             consequence=a_consequence
-        )
-        assert self.rule_service.quote_price(rule.id) == 0
+        ).save()
+        assert self.rule_service.quote_price(an_order.id) == 0
 
-    def test_should_apply_consequence_if_no_condition(self):
-        rule = Rule(
+    def test_should_apply_consequence_if_no_condition(self, an_order):
+        Rule(
             name='new rule',
             conditions=[],
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=5)
-        )
-        assert self.rule_service.quote_price(rule.id) == 5
+        ).save()
+        assert self.rule_service.quote_price(an_order.id) == 5

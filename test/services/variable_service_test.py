@@ -1,7 +1,9 @@
-from src.models.rule import RuleCondition
-from src.services.rule_engine.variable_service import ConditionVariableService
+import pytest
+from models.rule import RuleCondition
+from services.rule_engine.variable_service import ConditionVariableService
 
 
+@pytest.mark.usefixtures('a_client')
 class TestVariableService:
     variable_service = ConditionVariableService()
 

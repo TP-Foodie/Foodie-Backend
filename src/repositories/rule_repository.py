@@ -12,6 +12,9 @@ class RuleRepository:
     def list(self):
         return self.rules_schema.dump(Rule.objects.all())
 
+    def all(self):
+        return Rule.objects.all()
+
     def get(self, rule_id):
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))
 

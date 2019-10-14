@@ -1,5 +1,5 @@
-from src.models.rule import RuleCondition
-from src.services.rule_engine.operator_service import ConditionOperatorService
+from models.rule import RuleCondition
+from services.rule_engine.operator_service import ConditionOperatorService
 
 
 class TestOperatorService:
