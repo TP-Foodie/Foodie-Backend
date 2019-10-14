@@ -3,6 +3,7 @@ from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
 from models.rule import Rule, RuleConsequence
+from models.rule import RuleCondition
 from services.rule_service import RuleService
 
 
@@ -69,4 +70,22 @@ class TestPriceQuote:
             conditions=[],
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=5)
         ).save()
+        assert self.rule_service.quote_price(an_order.id) == 5
+
+    def test_apply_consequence_with_one_rule(self, an_order):
+        Rule(
+            name='new rule',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.LESS_THAN,
+                    condition_value='2'
+                )
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=5)
+        ).save()
+
+        an_order.owner.reputation = 1
+        an_order.owner.save()
+
         assert self.rule_service.quote_price(an_order.id) == 5

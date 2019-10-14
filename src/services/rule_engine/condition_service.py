@@ -9,7 +9,7 @@ class RuleConditionService:
     def apply(self, order, *conditions):
         for condition in conditions:
             value = self.variable_service.get_value(order, condition.variable)
-            result = self.operator_service.apply(condition.operator, value, condition.condition_value)
+            result = self.operator_service.apply(condition.operator, value, int(condition.condition_value))
             if not result:
                 return False
         return True
