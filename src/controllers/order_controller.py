@@ -12,7 +12,6 @@ from services.exceptions.order_exceptions import NonExistingPlaceException, \
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
-NO_CONTENT = ''
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['GET'])

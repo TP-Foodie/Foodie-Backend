@@ -88,27 +88,27 @@ class TestOrderController:
         assert len(orders) == 1
         assert orders[0]['id'] == str(a_favor_order.id)
 
-    def test_user_should_be_able_to_create_order(self, a_client, a_client_user, a_product):
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_user_should_be_able_to_create_order(self, a_client, a_customer_user, a_product):
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_customer_user, a_product)
         assert_201(response)
 
-    def test_create_orders_should_create_one_on_db(self, a_client, a_client_user, a_product):
-        self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_create_orders_should_create_one_on_db(self, a_client, a_customer_user, a_product):
+        self.create_order(a_client, Order.NORMAL_TYPE, a_customer_user, a_product)
 
         assert len(order_repository.list_all()) == 1
 
-    def test_create_should_return_created_http_code(self, a_client, a_client_user, a_product):
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_create_should_return_created_http_code(self, a_client, a_customer_user, a_product):
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_customer_user, a_product)
         assert_201(response)
 
-    def test_create_with_wrong_type_should_return_400(self, a_client, a_client_user, a_product):
-        response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, a_product)
+    def test_create_with_wrong_type_should_return_400(self, a_client, a_customer_user, a_product):
+        response = self.create_order(a_client, "NONEXISTINGTYPE", a_customer_user, a_product)
         assert_400(response)
 
     def test_create_with_invalid_place_id_should_return_400(
-            self, a_client, a_client_user, a_product):
+            self, a_client, a_customer_user, a_product):
         a_product.place.id = '1'
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+        response = self.create_order(a_client, Order.NORMAL_TYPE, a_customer_user, a_product)
         assert_400(response)
 
     def test_update_should_change_order_status(self, a_client, an_order, a_delivery_user):

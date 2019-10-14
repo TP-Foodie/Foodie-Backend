@@ -7,10 +7,13 @@ from mongomock import ObjectId
 from app import APP
 from models import User, Place, Coordinates
 from models.order import Order, Product
+from models.rule import RuleCondition, RuleConsequence, Rule
+from services import user_service
 
 
 # pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
+
 
 @pytest.fixture
 def cfaker():
@@ -21,7 +24,7 @@ def cfaker():
 
 
 @pytest.fixture
-def a_client_user(cfaker):
+def a_customer_user(cfaker):
     return User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
@@ -78,11 +81,11 @@ def a_favor_order(an_order_factory):
 
 
 @pytest.fixture
-def an_order_factory(cfaker, a_client_user, a_product):
+def an_order_factory(cfaker, a_customer_user, a_product):
     def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
             number=cfaker.pydecimal(),
-            owner=a_client_user.id,
+            owner=a_customer_user.id,
             type=order_type,
             product=a_product.id
         ).save()
@@ -112,5 +115,63 @@ def a_client():
 
 
 @pytest.fixture
+def a_client_user(cfaker):
+    password = 'password123123'
+
+    user = user_service.create_user({
+        'name': cfaker.name(),
+        'last_name': cfaker.last_name(),
+        'email': cfaker.email(),
+        'password': password,
+        'profile_image': cfaker.image_url(),
+        'phone': cfaker.phone_number(),
+        'type': "CUSTOMER"
+    })
+
+    user.password = password
+
+    return user
+
+
+@pytest.fixture
+def an_admin_user(a_client_user):
+    a_client_user.type = "BACK_OFFICE"
+    return a_client_user
+
+
+@pytest.fixture
 def an_object_id():
     return ObjectId()
+
+
+@pytest.fixture
+def a_condition():
+    return RuleCondition(
+        variable=RuleCondition.USER_REPUTATION,
+        operator=RuleCondition.GREATER_THAN,
+        condition_value='1'
+    )
+
+
+@pytest.fixture
+def a_condition_data(a_condition):
+    return a_condition.to_mongo()
+
+
+@pytest.fixture
+def a_consequence_data(a_consequence):
+    return a_consequence.to_mongo()
+
+
+@pytest.fixture
+def a_consequence():
+    return RuleConsequence(consequence_type=RuleConsequence.VALUE, value=0)
+
+
+@pytest.fixture
+def a_rule(cfaker, a_condition, a_consequence):
+    return Rule(
+        name=cfaker.name(),
+        conditions=[a_condition],
+        consequence=a_consequence
+    ).save()

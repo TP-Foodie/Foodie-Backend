@@ -12,10 +12,12 @@ from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
 from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLUEPRINT
 from controllers.order_controller import ORDERS_BLUEPRINT
+from controllers.rule_controller import RULES_BLUEPRINT
 from error_handlers import ERRORS_BLUEPRINT
 
 
 # initialize Flask app
+
 APP = Flask(__name__)
 CORS(APP)
 
@@ -36,6 +38,7 @@ APP.register_blueprint(AVAILABLE_DELIVERIES_BLUEPRINT, url_prefix=f'{PREFIX}/')
 APP.register_blueprint(ORDERS_BLUEPRINT, url_prefix=f'{PREFIX}/orders')
 APP.register_blueprint(PLACES_BLUEPRINT, url_prefix=f'{PREFIX}/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix=f'{PREFIX}/users')
+APP.register_blueprint(RULES_BLUEPRINT, url_prefix=f'{PREFIX}/rules')
 
 APP.register_blueprint(ERRORS_BLUEPRINT)
 
