@@ -21,12 +21,18 @@ class LessThanEqualOperator:
         return first_value <= second_value
 
 
+class IsEqualOperator:
+    def apply(self, first_value, second_value):
+        return first_value == second_value
+
+
 class ConditionOperatorService:
     OPERATORS_MAPPING = {
         RuleCondition.GREATER_THAN: GreaterThanOperator,
         RuleCondition.GREATER_THAN_EQUAL: GreaterThanEqualOperator,
         RuleCondition.LESS_THAN: LessThanOperator,
         RuleCondition.LESS_THAN_EQUAL: LessThanEqualOperator,
+        RuleCondition.IS: IsEqualOperator,
     }
 
     def apply(self, operator, first_value, second_value):

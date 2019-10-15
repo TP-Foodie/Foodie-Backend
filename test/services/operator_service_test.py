@@ -28,3 +28,9 @@ class TestOperatorService:
 
     def test_apply_less_than_equals_returns_false_if_its_bigger(self):
         assert not self.operator_service.apply(RuleCondition.LESS_THAN_EQUAL, 2, 1)
+
+    def test_apply_is_equal_returns_false_if_are_not_equal(self):
+        assert not self.operator_service.apply(RuleCondition.IS, 1, 2)
+
+    def test_apply_is_equal_returns_true_if_are_equal(self):
+        assert self.operator_service.apply(RuleCondition.IS, 1, 1)
