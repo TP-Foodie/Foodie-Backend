@@ -26,3 +26,6 @@ class RuleRepository:
 
     def delete(self, rule_id):
         return Rule.objects.get(id=rule_id).delete()
+
+    def sorted_by_value(self):
+        pass # TODO: check how to sort on mongoengine

@@ -46,6 +46,5 @@ class RuleService:
         for rule in self.rule_repository.all():
             result = self.condition_service.apply(order, *rule.conditions)
             if result:
-
                 total = self.consequence_service.apply(rule.consequence, total)
         return total

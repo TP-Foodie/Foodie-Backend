@@ -116,3 +116,30 @@ class TestPriceQuote:
         ).save()
 
         assert self.rule_service.quote_price(an_order.id) == 9
+
+    def test_percentage_consequence_should_apply_last(self, an_order):
+        Rule(
+            name='new rule',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.LESS_THAN,
+                    condition_value='2'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.PERCENTAGE, value=-10)
+        ).save()
+
+        Rule(
+            name='new rule',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.LESS_THAN,
+                    condition_value='2'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10)
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 9
