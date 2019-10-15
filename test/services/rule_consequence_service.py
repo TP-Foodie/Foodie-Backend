@@ -16,3 +16,7 @@ class TestRuleConsequenceService:
     def test_apply_with_percentage_should_add_right_value(self):
         result = self.consequence_service.apply(RuleConsequence.PERCENTAGE, 10, 10)
         assert result == 11.0
+
+    def test_apply_with_percentage_and_negative_value_should_reduce(self):
+        result = self.consequence_service.apply(RuleConsequence.PERCENTAGE, 10, -10)
+        assert result == 9.0
