@@ -1,4 +1,4 @@
-from src.models.rule import RuleConsequence
+from models.rule import RuleConsequence
 
 
 class ValueConsequenceType:
@@ -20,5 +20,5 @@ class RuleConsequenceService:
         RuleConsequence.PERCENTAGE: PercentageConsequenceType
     }
 
-    def apply(self, consequence, value, value_to_apply):
-        return self.CONSEQUENCE_TYPE_MAPPING[consequence]().apply(value, value_to_apply)
+    def apply(self, consequence, value):
+        return self.CONSEQUENCE_TYPE_MAPPING[consequence.consequence_type]().apply(value, consequence.value)

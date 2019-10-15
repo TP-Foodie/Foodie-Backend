@@ -3,12 +3,14 @@ from repositories.rule_repository import RuleRepository
 from schemas.rule_schema import CreateRuleSchema
 from repositories import order_repository
 from services.rule_engine.condition_service import RuleConditionService
+from services.rule_engine.consequence_service import RuleConsequenceService
 
 
 class RuleService:
     rule_repository = RuleRepository()
     create_schema = CreateRuleSchema()
     condition_service = RuleConditionService()
+    consequence_service = RuleConsequenceService()
 
     @property
     def variables(self):
@@ -44,5 +46,6 @@ class RuleService:
         for rule in self.rule_repository.all():
             result = self.condition_service.apply(order, *rule.conditions)
             if result:
-                total += rule.consequence.value
+
+                total = self.consequence_service.apply(rule.consequence, total)
         return total
