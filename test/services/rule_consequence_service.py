@@ -7,4 +7,8 @@ class TestRuleConsequenceService:
 
     def test_apply_with_positive_value_adds_it(self):
         result = self.consequence_service.apply(RuleConsequence.VALUE, 10, 1)
+        assert result == 11
+
+    def test_apply_with_negative_value_should_reduce_it(self):
+        result = self.consequence_service.apply(RuleConsequence.VALUE, 10, -1)
         assert result == 9
