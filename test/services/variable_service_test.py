@@ -11,3 +11,8 @@ class TestVariableService:
         value = self.variable_service.get_value(an_order, RuleCondition.USER_REPUTATION)
 
         assert value == an_order.owner.reputation
+
+    def test_get_value_for_delivery_reputation(self, an_order):
+        value = self.variable_service.get_value(an_order, RuleCondition.DELIVERY_REPUTATION)
+
+        assert value == an_order.delivery.reputation

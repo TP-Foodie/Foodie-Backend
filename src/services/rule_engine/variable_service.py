@@ -6,6 +6,12 @@ class Variable:
         self.order = order
 
 
+class DeliveryReputationVariable(Variable):
+    @property
+    def value(self):
+        return self.order.delivery.reputation
+
+
 class UserReputationVariable(Variable):
     @property
     def value(self):
@@ -14,7 +20,8 @@ class UserReputationVariable(Variable):
 
 class ConditionVariableService:
     variable_mapping = {
-        RuleCondition.USER_REPUTATION: UserReputationVariable
+        RuleCondition.USER_REPUTATION: UserReputationVariable,
+        RuleCondition.DELIVERY_REPUTATION: DeliveryReputationVariable
     }
 
     def get_value(self, order, variable):
