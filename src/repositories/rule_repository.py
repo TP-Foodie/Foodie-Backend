@@ -28,4 +28,4 @@ class RuleRepository:
         return Rule.objects.get(id=rule_id).delete()
 
     def sorted_by_value(self):
-        pass # TODO: check how to sort on mongoengine
+        return Rule.objects.all().order_by('-consequence__consequence_type')

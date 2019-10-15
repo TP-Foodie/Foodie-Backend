@@ -43,7 +43,7 @@ class RuleService:
     def quote_price(self, order_id):
         order = order_repository.get_order(order_id)
         total = 0
-        for rule in self.rule_repository.all():
+        for rule in self.rule_repository.sorted_by_value():
             result = self.condition_service.apply(order, *rule.conditions)
             if result:
                 total = self.consequence_service.apply(rule.consequence, total)
