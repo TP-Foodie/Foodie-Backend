@@ -34,3 +34,6 @@ class TestOperatorService:
 
     def test_apply_is_equal_returns_true_if_are_equal(self):
         assert self.operator_service.apply(RuleCondition.IS, 1, 1)
+
+    # TODO: test with dates...
+    # TODO: search for -> "monday" < "tuesday" ???
