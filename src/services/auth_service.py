@@ -65,7 +65,7 @@ def validate_google_user(auth_data):
     except DoesNotExist:
         user_service.create_user_from_google_data(id_info)
 
-    del id_info['aud']
+    id_info.pop('aud', None)
     return id_info
 
 
