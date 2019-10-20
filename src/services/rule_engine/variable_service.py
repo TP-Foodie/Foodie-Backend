@@ -1,5 +1,7 @@
 from models.rule import RuleCondition
 
+from services import user_service
+
 
 class Variable:
     def __init__(self, order):
@@ -18,10 +20,17 @@ class UserReputationVariable(Variable):
         return self.order.owner.reputation
 
 
+class UserDailyTravelsVariable(Variable):
+    @property
+    def value(self):
+        return user_service.daily_travels(self.order.owner)
+
+
 class ConditionVariableService:
     variable_mapping = {
         RuleCondition.USER_REPUTATION: UserReputationVariable,
-        RuleCondition.DELIVERY_REPUTATION: DeliveryReputationVariable
+        RuleCondition.DELIVERY_REPUTATION: DeliveryReputationVariable,
+        RuleCondition.USER_DAILY_TRAVELS: DeliveryReputationVariable
     }
 
     def get_value(self, order, variable):
