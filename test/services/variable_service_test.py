@@ -42,3 +42,9 @@ class TestVariableService:
         value = self.variable_service.get_value(an_order, RuleCondition.USER_ANTIQUITY)
 
         assert value == user_service.antiquity(an_order.owner)
+
+    def test_get_value_for_user_balance(self, an_order):
+        an_order.owner.balance = 3
+        value = self.variable_service.get_value(an_order, RuleCondition.USER_BALANCE)
+
+        assert value == 3
