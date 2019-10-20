@@ -3,7 +3,9 @@ from datetime import timedelta, datetime
 from unittest import mock, TestCase
 from unittest.mock import Mock, MagicMock
 
+import pytest
 from services.exceptions.unauthorized_user import UnauthorizedUserException
+from services import user_service
 
 MOCK_OBJECT = Mock()
 
@@ -119,3 +121,34 @@ class TestUserService(TestCase):
         })
 
         assert current_user.password == hashlib.md5('asd'.encode('utf-8')).hexdigest()
+
+
+@pytest.mark.usefixtures('a_client')
+class TestUserVariables:
+    def test_user_daily_travels_returns_user_order_count(self, a_delivery_user, an_order):
+        an_order.delivery = a_delivery_user
+        an_order.save()
+
+        assert user_service.daily_travels(a_delivery_user) == 1
+
+    def test_user_daily_travels_returns_zero_if_today_did_not_travel(self, a_delivery_user, an_order):
+        an_order.delivery = a_delivery_user
+        an_order.date = datetime.today() - timedelta(days=1)  # yesterday
+        an_order.save()
+
+        assert user_service.daily_travels(a_delivery_user) == 0
+
+    def test_user_daily_travels_returns_right_amount(self, a_delivery_user, an_order_factory):
+        an_order = an_order_factory()
+        another_order = an_order_factory()
+
+        an_order.delivery = a_delivery_user
+        an_order.date = datetime.today() - timedelta(days=1)  # yesterday
+        an_order.save()
+
+        another_order.delivery_user = a_delivery_user
+        another_order.date = datetime.today()
+        another_order.save()
+
+        assert user_service.daily_travels(a_delivery_user) == 1
+

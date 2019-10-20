@@ -1,3 +1,4 @@
+from datetime import datetime
 from models.order import Order
 from services.exceptions.order_exceptions import NonExistingOrderException
 
@@ -31,3 +32,11 @@ def update(order_id, field, value):
     order[field] = value
     order.save()
     return order
+
+
+def for_delivery(user_id):
+    return Order.objects.filter(delivery=user_id)
+
+
+def today_count(orders):
+    return orders.filter(date=datetime.today()).count()
