@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 from models.rule import RuleCondition
 from services.rule_engine.variable_service import ConditionVariableService
 from services import user_service
@@ -59,3 +60,9 @@ class TestVariableService:
         value = self.variable_service.get_value(an_order, 'NON_EXISTING')
 
         assert value == 0
+
+    def test_get_value_for_order_date(self, an_order):
+        an_order.date = datetime.now().date()
+        value = self.variable_service.get_value(an_order, RuleCondition.ORDER_DATE)
+
+        assert value == datetime.now().date()
