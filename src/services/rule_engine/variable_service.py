@@ -26,11 +26,18 @@ class UserDailyTravelsVariable(Variable):
         return user_service.daily_travels(self.order.owner)
 
 
+class DeliveryDailyTravelsVariable(Variable):
+    @property
+    def value(self):
+        return user_service.daily_travels(self.order.delivery)
+
+
 class ConditionVariableService:
     variable_mapping = {
         RuleCondition.USER_REPUTATION: UserReputationVariable,
         RuleCondition.DELIVERY_REPUTATION: DeliveryReputationVariable,
-        RuleCondition.USER_DAILY_TRAVELS: DeliveryReputationVariable
+        RuleCondition.USER_DAILY_TRAVELS: DeliveryReputationVariable,
+        RuleCondition.DELIVERY_DAILY_TRAVELS: DeliveryDailyTravelsVariable,
     }
 
     def get_value(self, order, variable):
