@@ -34,14 +34,14 @@ class RuleCondition(EmbeddedDocument):
         DELIVERY_ANTIQUITY,
         USER_BALANCE,
         PAYMENT_METHOD,
-        ORDER_DURATION,
-        ORDER_DISTANCE,
-        ORDER_POSITION,
+        ORDER_DURATION,  # TODO
+        ORDER_DISTANCE,  # TODO
+        ORDER_POSITION,  # TODO
         ORDER_DATE,
         ORDER_TIME,
-        ORDER_QUANTITY,
-        TRAVEL_DAY,
-        TRAVEL_TIME
+        ORDER_QUANTITY,  # TODO
+        TRAVEL_DAY,  # TODO
+        TRAVEL_TIME  # TODO
     )
 
     GREATER_THAN_EQUAL = 'GTE'
