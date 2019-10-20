@@ -56,6 +56,11 @@ class RuleCondition(EmbeddedDocument):
         IS
     )
 
+    PAYMENT_METHODS = (
+        CASH_PAYMENT_METHOD,
+        CREDIT_PAYMENT_METHOD
+    )
+
     variable = fields.StringField(max_length=10, choices=VARIABLES)
     operator = fields.StringField(max_length=10, choices=OPERATORS)
     condition_value = fields.StringField(max_length=100)

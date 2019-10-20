@@ -2,6 +2,7 @@ from datetime import datetime
 from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, NULLIFY, DateField
 
 from models import User, Place
+from models.rule import RuleCondition
 
 
 class Product(Document):
@@ -25,3 +26,4 @@ class Order(Document):
     product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
     delivery = ReferenceField(User, reverse_delete_rule=NULLIFY)
     date = DateField(default=datetime.now().date())
+    payment_method = StringField(choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD)
