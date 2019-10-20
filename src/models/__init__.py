@@ -40,6 +40,7 @@ class User(Document):
     recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
     created = DateField(default=datetime.now().date())
+    balance = FloatField(default=0)
 
 
 class Transaction(Document):
