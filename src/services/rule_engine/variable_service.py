@@ -71,7 +71,13 @@ class PaymentMethodVariable(Variable):
 class OrderDateVariable(Variable):
     @property
     def value(self):
-        return self.order.date
+        return self.order.date.date()
+
+
+class OrderTimeVariable(Variable):
+    @property
+    def value(self):
+        return self.order.date.time()
 
 
 class DefaultVariable(Variable):
@@ -93,6 +99,7 @@ class ConditionVariableService:
         RuleCondition.USER_BALANCE: UserBalanceVariable,
         RuleCondition.PAYMENT_METHOD: PaymentMethodVariable,
         RuleCondition.ORDER_DATE: OrderDateVariable,
+        RuleCondition.ORDER_TIME: OrderTimeVariable,
     }
 
     def get_value(self, order, variable):

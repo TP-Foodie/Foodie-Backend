@@ -25,5 +25,5 @@ class Order(Document):
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
     product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
     delivery = ReferenceField(User, reverse_delete_rule=NULLIFY)
-    date = DateTimeField(default=datetime.now().date())
+    date = DateTimeField(default=datetime.now())
     payment_method = StringField(choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD)

@@ -62,7 +62,14 @@ class TestVariableService:
         assert value == 0
 
     def test_get_value_for_order_date(self, an_order):
-        an_order.date = datetime.now().date()
+        an_order.date = datetime.now()
         value = self.variable_service.get_value(an_order, RuleCondition.ORDER_DATE)
 
         assert value == datetime.now().date()
+
+    def test_get_value_for_order_time(self, an_order):
+        now = datetime.now()
+        an_order.date = now
+        value = self.variable_service.get_value(an_order, RuleCondition.ORDER_TIME)
+
+        assert value == now.time()
