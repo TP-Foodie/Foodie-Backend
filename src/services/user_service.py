@@ -116,3 +116,7 @@ def delivery_orders(user):
 
 def daily_travels(user):
     return order_repository.today_count(delivery_orders(user))
+
+
+def monthly_travels(user):
+    return order_repository.month_count(delivery_orders(user))

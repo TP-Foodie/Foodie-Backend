@@ -1,5 +1,7 @@
+import calendar
 from datetime import datetime
 from models.order import Order
+from mongoengine import Q
 from services.exceptions.order_exceptions import NonExistingOrderException
 
 
@@ -40,3 +42,14 @@ def for_delivery(user_id):
 
 def today_count(orders):
     return orders.filter(date=datetime.today()).count()
+
+
+def month_count(orders):
+    today = datetime.today().date()
+
+    first_day, last_day = calendar.monthrange(today.year, today.month)
+
+    begin_month = datetime(today.year, today.month, first_day).date()
+    end_month = datetime(today.year, today.month, last_day).date()
+
+    return orders.filter(Q(date__gte=begin_month) & Q(date__lte=end_month)).count()

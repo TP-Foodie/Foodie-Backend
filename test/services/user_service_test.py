@@ -152,3 +152,18 @@ class TestUserVariables:
 
         assert user_service.daily_travels(a_delivery_user) == 1
 
+    def test_user_monthly_travels_returns_travels_made_in_month(self, an_order, a_delivery_user):
+        an_order.delivery = a_delivery_user
+        an_order.save()
+
+        assert user_service.monthly_travels(a_delivery_user) == 1
+
+    def test_user_monthly_travels_returns_zero_if_no_travels(self, a_delivery_user):
+        assert user_service.monthly_travels(a_delivery_user) == 0
+
+    def test_user_monthly_travels_returns_zero_if_travel_was_on_past_month(self, an_order, a_delivery_user):
+        an_order.delivery = a_delivery_user
+        an_order.date = datetime.today().date() - timedelta(days=30)
+        an_order.save()
+
+        assert user_service.monthly_travels(a_delivery_user) == 0
