@@ -20,6 +20,7 @@ class RuleCondition(EmbeddedDocument):
     ORDER_TIME = 'OT'
     ORDER_QUANTITY = 'OC'
     TRAVEL_DAY = 'TD'
+    TRAVEL_TIME = 'TT'
     PAYMENT_METHOD = 'PM'
 
     VARIABLES = (
@@ -40,6 +41,7 @@ class RuleCondition(EmbeddedDocument):
         ORDER_TIME,
         ORDER_QUANTITY,
         TRAVEL_DAY,
+        TRAVEL_TIME
     )
 
     GREATER_THAN_EQUAL = 'GTE'
