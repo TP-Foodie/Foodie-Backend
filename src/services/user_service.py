@@ -120,3 +120,7 @@ def daily_travels(user):
 
 def monthly_travels(user):
     return order_repository.month_count(delivery_orders(user))
+
+
+def antiquity(user):
+    return (datetime.now().date() - user.created).days

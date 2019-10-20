@@ -167,3 +167,13 @@ class TestUserVariables:
         an_order.save()
 
         assert user_service.monthly_travels(a_delivery_user) == 0
+
+    def test_user_antiquity_returns_zero_if_created_today(self, a_customer_user):
+        a_customer_user.created = datetime.now().date()
+
+        assert user_service.antiquity(a_customer_user) == 0
+
+    def test_user_antiquity_returns_antiquity_in_days(self, a_customer_user):
+        a_customer_user.created = datetime.now().date() - timedelta(days=1)
+
+        assert user_service.antiquity(a_customer_user) == 1
