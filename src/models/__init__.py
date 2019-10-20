@@ -41,6 +41,7 @@ class User(Document):
     reputation = IntField(default=0)
     created = DateField(default=datetime.now().date())
     balance = FloatField(default=0)
+    location = EmbeddedDocumentField(Coordinates)
 
 
 class Transaction(Document):
