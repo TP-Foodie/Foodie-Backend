@@ -37,3 +37,8 @@ class TestVariableService:
         value = self.variable_service.get_value(an_order, RuleCondition.USER_MONTHLY_TRAVELS)
 
         assert value == user_service.monthly_travels(an_order.owner)
+
+    def test_get_value_for_user_antiquity(self, an_order):
+        value = self.variable_service.get_value(an_order, RuleCondition.USER_ANTIQUITY)
+
+        assert value == user_service.antiquity(an_order.owner)

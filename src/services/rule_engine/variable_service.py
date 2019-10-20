@@ -44,6 +44,18 @@ class UserMonthlyTravelsVariable(Variable):
         return user_service.monthly_travels(self.order.owner)
 
 
+class UserAntiquityVariable(Variable):
+    @property
+    def value(self):
+        return user_service.antiquity(self.order.owner)
+
+
+class DeliveryAntiquityVariable(Variable):
+    @property
+    def value(self):
+        return user_service.antiquity(self.order.delivery)
+
+
 class ConditionVariableService:
     variable_mapping = {
         RuleCondition.USER_REPUTATION: UserReputationVariable,
@@ -52,6 +64,8 @@ class ConditionVariableService:
         RuleCondition.DELIVERY_DAILY_TRAVELS: DeliveryDailyTravelsVariable,
         RuleCondition.DELIVERY_MONTHLY_TRAVELS: DeliveryMonthlyTravelsVariable,
         RuleCondition.USER_MONTHLY_TRAVELS: UserMonthlyTravelsVariable,
+        RuleCondition.USER_ANTIQUITY: UserAntiquityVariable,
+        RuleCondition.DELIVERY_ANTIQUITY: DeliveryAntiquityVariable,
     }
 
     def get_value(self, order, variable):
