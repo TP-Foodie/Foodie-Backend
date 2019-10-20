@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
@@ -143,3 +144,34 @@ class TestPriceQuote:
         ).save()
 
         assert self.rule_service.quote_price(an_order.id) == 9
+
+    def test_quote_price_with_datetime_rules(self, an_order):
+        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.save()
+
+        Rule(
+            name='5% discount today',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DATE,
+                    operator=RuleCondition.IS,
+                    condition_value='Sat, 30 Nov 2019 18:30:00 GMT'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.PERCENTAGE, value=-5)
+        ).save()
+        Rule(
+            name='base price',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DISTANCE,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=20)
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 19
+
+
