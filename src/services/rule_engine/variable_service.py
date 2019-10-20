@@ -68,6 +68,12 @@ class PaymentMethodVariable(Variable):
         return self.order.payment_method
 
 
+class DefaultVariable(Variable):
+    @property
+    def value(self):
+        return 0
+
+
 class ConditionVariableService:
     variable_mapping = {
         RuleCondition.USER_REPUTATION: UserReputationVariable,
@@ -83,4 +89,4 @@ class ConditionVariableService:
     }
 
     def get_value(self, order, variable):
-        return self.variable_mapping[variable](order).value
+        return self.variable_mapping.get(variable, DefaultVariable)(order).value

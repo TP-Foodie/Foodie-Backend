@@ -54,3 +54,8 @@ class TestVariableService:
         value = self.variable_service.get_value(an_order, RuleCondition.PAYMENT_METHOD)
 
         assert value == RuleCondition.CREDIT_PAYMENT_METHOD
+
+    def test_get_value_for_non_existing_variable_returns_zero(self, an_order):
+        value = self.variable_service.get_value(an_order, 'NON_EXISTING')
+
+        assert value == 0
