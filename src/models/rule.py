@@ -39,7 +39,7 @@ class RuleCondition(EmbeddedDocument):
         ORDER_POSITION,  # TODO
         ORDER_DATE,
         ORDER_TIME,
-        ORDER_QUANTITY,  # TODO
+        ORDER_QUANTITY,
         TRAVEL_DAY,
         TRAVEL_TIME
     )
