@@ -101,3 +101,9 @@ class TestOrderService:
             order_service.distance(an_order)
 
         assert mocked_distance.called_with(an_order.owner.location, an_order.product.place.coordinates)
+
+    def test_count_for_user_return_zero_when_there_are_no_orders_for_user(self, an_order, a_delivery_user):
+        assert order_service.count_for_user(a_delivery_user.id) == 0
+
+    def test_count_for_user_returns_user_count(self, an_order):
+        assert order_service.count_for_user(an_order.owner.id) == 1

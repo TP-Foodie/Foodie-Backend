@@ -34,3 +34,7 @@ def distance(order):
         (owner_longitude, owner_latitude),
         (product_longitude, product_latitude)
     ).km
+
+
+def count_for_user(user_id):
+    return order_repository.count_for_user(user_id)

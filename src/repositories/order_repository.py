@@ -57,3 +57,7 @@ def month_count(orders):
     end_month = datetime(today.year, today.month, last_day).date()
 
     return orders.filter(Q(date__gte=begin_month) & Q(date__lte=end_month)).count()
+
+
+def count_for_user(user_id):
+    return Order.objects.filter(owner=user_id).count()
