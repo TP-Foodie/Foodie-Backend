@@ -87,3 +87,9 @@ class TestOrderService:
             order_service.take(
                 an_order.id, {
                     'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
+
+    def test_distance_returns_zero_if_user_location_is_equal_to_place_location(self, an_order):
+        an_order.owner.location = an_order.product.place.coordinates
+        an_order.save()
+
+        assert order_service.distance(an_order) == 0
