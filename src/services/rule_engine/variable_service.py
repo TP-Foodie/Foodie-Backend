@@ -1,6 +1,6 @@
 from models.rule import RuleCondition
 
-from services import user_service
+from services import user_service, order_service
 
 
 class Variable:
@@ -80,6 +80,12 @@ class OrderTimeVariable(Variable):
         return self.order.date.time()
 
 
+class OrderDistanceVariable(Variable):
+    @property
+    def value(self):
+        return order_service.distance(self.order)
+
+
 class DefaultVariable(Variable):
     @property
     def value(self):
@@ -100,6 +106,7 @@ class ConditionVariableService:
         RuleCondition.PAYMENT_METHOD: PaymentMethodVariable,
         RuleCondition.ORDER_DATE: OrderDateVariable,
         RuleCondition.ORDER_TIME: OrderTimeVariable,
+        RuleCondition.ORDER_DISTANCE: OrderDistanceVariable,
     }
 
     def get_value(self, order, variable):

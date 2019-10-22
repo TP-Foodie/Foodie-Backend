@@ -1,8 +1,10 @@
+from unittest.mock import patch
+
 import pytest
 from datetime import datetime
 from models.rule import RuleCondition
 from services.rule_engine.variable_service import ConditionVariableService
-from services import user_service
+from services import user_service, order_service
 
 
 @pytest.mark.usefixtures('a_client')
@@ -73,3 +75,10 @@ class TestVariableService:
         value = self.variable_service.get_value(an_order, RuleCondition.ORDER_TIME)
 
         assert value == now.time()
+
+    def test_get_value_for_order_distance(self, an_order):
+        with patch('services.order_service.distance') as mocked_distance:
+            mocked_distance.return_value = 2
+            value = self.variable_service.get_value(an_order, RuleCondition.ORDER_DISTANCE)
+
+        assert value == 2
