@@ -13,6 +13,8 @@ class PercentageConsequenceType:
     def apply(self, value, value_to_apply):
         return value + self.to_percentage(value * value_to_apply)
 
+# TODO: add logic for value per unit consequence type
+
 
 class RuleConsequenceService:
     CONSEQUENCE_TYPE_MAPPING = {
