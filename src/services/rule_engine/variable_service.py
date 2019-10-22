@@ -86,6 +86,12 @@ class OrderDistanceVariable(Variable):
         return order_service.distance(self.order)
 
 
+class OrderQuantityVariable(Variable):
+    @property
+    def value(self):
+        return order_service.count_for_user(self.order.owner.id)
+
+
 class DefaultVariable(Variable):
     @property
     def value(self):
@@ -107,6 +113,7 @@ class ConditionVariableService:
         RuleCondition.ORDER_DATE: OrderDateVariable,
         RuleCondition.ORDER_TIME: OrderTimeVariable,
         RuleCondition.ORDER_DISTANCE: OrderDistanceVariable,
+        RuleCondition.ORDER_QUANTITY: OrderQuantityVariable,
     }
 
     def get_value(self, order, variable):

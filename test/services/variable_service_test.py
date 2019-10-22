@@ -82,3 +82,11 @@ class TestVariableService:
             value = self.variable_service.get_value(an_order, RuleCondition.ORDER_DISTANCE)
 
         assert value == 2
+
+    def test_get_value_for_order_count(self, an_order_factory):
+        an_order = an_order_factory()
+        an_order_factory()
+
+        value = self.variable_service.get_value(an_order, RuleCondition.ORDER_QUANTITY)
+
+        assert value == 2
