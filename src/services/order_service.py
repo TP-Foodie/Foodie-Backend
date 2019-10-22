@@ -33,4 +33,4 @@ def distance(order):
     return geodesic(
         (owner_longitude, owner_latitude),
         (product_longitude, product_latitude)
-    )
+    ).km

@@ -52,7 +52,7 @@ def a_delivery_user(cfaker):
 
 @pytest.fixture
 def a_location(cfaker):
-    return Coordinates(80, cfaker.longitude())
+    return Coordinates(latitude=cfaker.latitude(), longitude=cfaker.longitude())
 
 
 @pytest.fixture
