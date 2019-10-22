@@ -1,3 +1,4 @@
+from geopy.distance import geodesic
 from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services.exceptions.user_exceptions import NonExistingDeliveryException
@@ -23,4 +24,13 @@ def take(order_id, new_data):
 
 
 def distance(order):
-    return 0
+    owner_latitude = order.owner.location.latitude
+    owner_longitude = order.owner.location.longitude
+
+    product_latitude = order.product.place.coordinates.latitude
+    product_longitude = order.product.place.coordinates.longitude
+
+    return geodesic(
+        (owner_longitude, owner_latitude),
+        (product_longitude, product_latitude)
+    )

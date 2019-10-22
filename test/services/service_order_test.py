@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from bson import ObjectId
 
@@ -93,3 +95,9 @@ class TestOrderService:
         an_order.save()
 
         assert order_service.distance(an_order) == 0
+
+    def test_distance_uses_geodesic_distance(self, an_order):
+        with patch('services.order_service.geodesic') as mocked_distance:
+            order_service.distance(an_order)
+
+        assert mocked_distance.called_with(an_order.owner.location, an_order.product.place.coordinates)
