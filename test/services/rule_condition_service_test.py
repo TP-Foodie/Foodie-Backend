@@ -41,3 +41,13 @@ class TestRuleConditionService:
         assert result.year == 2019
         assert result.month == 11
         assert result.day == 30
+
+    def test_parse_value_when_variable_is_travel_time_type(self):
+        result = self.condition_service.parse_value(RuleCondition.TRAVEL_TIME, 'Sat, 30 Nov 2019 18:30:00 GMT')
+
+        with pytest.raises(AttributeError):
+            assert result.year
+
+        assert result.hour == 18
+        assert result.minute == 30
+        assert result.second == 0

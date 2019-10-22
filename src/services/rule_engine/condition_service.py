@@ -7,7 +7,7 @@ from models.rule import RuleCondition
 class RuleConditionService:
     DEFAULT_DATE_FORMAT = "%a, %d %b %Y %H:%M:%S %Z"
     DATE_VARIABLES = [RuleCondition.ORDER_DATE]
-    TIME_VARIABLES = [RuleCondition.ORDER_TIME]
+    TIME_VARIABLES = [RuleCondition.ORDER_TIME, RuleCondition.TRAVEL_TIME]
 
     variable_service = ConditionVariableService()
     operator_service = ConditionOperatorService()
