@@ -1,4 +1,4 @@
-from geopy.distance import geodesic
+import requests
 from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services.exceptions.user_exceptions import NonExistingDeliveryException
@@ -30,10 +30,7 @@ def distance(order):
     product_latitude = order.product.place.coordinates.latitude
     product_longitude = order.product.place.coordinates.longitude
 
-    return geodesic(
-        (owner_longitude, owner_latitude),
-        (product_longitude, product_latitude)
-    ).km
+    return requests.get('')
 
 
 def count_for_user(user_id):

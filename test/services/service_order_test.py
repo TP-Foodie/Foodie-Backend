@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import pytest
 from bson import ObjectId
@@ -90,20 +90,16 @@ class TestOrderService:
                 an_order.id, {
                     'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
 
-    def test_distance_returns_zero_if_user_location_is_equal_to_place_location(self, an_order):
-        an_order.owner.location = an_order.product.place.coordinates
-        an_order.save()
-
-        assert order_service.distance(an_order) == 0
-
-    def test_distance_uses_geodesic_distance(self, an_order):
-        with patch('services.order_service.geodesic') as mocked_distance:
-            order_service.distance(an_order)
-
-        assert mocked_distance.called_with(an_order.owner.location, an_order.product.place.coordinates)
-
     def test_count_for_user_return_zero_when_there_are_no_orders_for_user(self, an_order, a_delivery_user):
         assert order_service.count_for_user(a_delivery_user.id) == 0
 
     def test_count_for_user_returns_user_count(self, an_order):
         assert order_service.count_for_user(an_order.owner.id) == 1
+
+
+@pytest.mark.usefixtures('a_client')
+class TestDistance:
+    @patch('services.order_service.requests')
+    def test_should_make_a_request(self, mocked_requests, an_order):
+        order_service.distance(an_order)
+        assert mocked_requests.get.called
