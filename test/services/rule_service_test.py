@@ -186,7 +186,7 @@ class TestPriceQuote:
         an_order.product.place.save()
 
         Rule(
-            name='$200 if distance if greater than 50km',
+            name='$200 if distance is greater than 50km',
             conditions=[
                 RuleCondition(
                     variable=RuleCondition.ORDER_DISTANCE,
