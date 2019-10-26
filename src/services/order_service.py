@@ -1,7 +1,10 @@
+import json
+
 import requests
 from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services.exceptions.user_exceptions import NonExistingDeliveryException
+from settings import Config
 
 
 def create(order_type, owner, product):
@@ -30,7 +33,22 @@ def distance(order):
     product_latitude = order.product.place.coordinates.latitude
     product_longitude = order.product.place.coordinates.longitude
 
-    return requests.get('')
+    key = Config.MAP_QUEST_API_KEY
+    from_location = json.dumps({'latLng': {
+        'lat': product_latitude,
+        'lng': product_longitude
+    }})
+    to_location = json.dumps({'latLng': {
+        'lat': owner_latitude,
+        'lng': owner_longitude
+    }})
+
+    url = 'http://www.mapquestapi.com/directions/v2/route?key={}&from={}&to={}&unit=k'.format(
+        key, from_location, to_location
+    )
+    response = requests.get(url)
+
+    return float(json.loads(response.content)['route']['distance'])
 
 
 def count_for_user(user_id):

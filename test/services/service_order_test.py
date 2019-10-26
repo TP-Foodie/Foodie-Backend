@@ -96,9 +96,6 @@ class TestOrderService:
     def test_count_for_user_returns_user_count(self, an_order):
         assert order_service.count_for_user(an_order.owner.id) == 1
 
-
-@pytest.mark.usefixtures('a_client')
-class TestDistance:
     @patch('services.order_service.requests')
     def test_should_make_a_request(self, mocked_requests, an_order):
         order_service.distance(an_order)

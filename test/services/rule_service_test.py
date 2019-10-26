@@ -164,7 +164,7 @@ class TestPriceQuote:
             name='base price',
             conditions=[
                 RuleCondition(
-                    variable=RuleCondition.ORDER_DISTANCE,
+                    variable=RuleCondition.USER_REPUTATION,
                     operator=RuleCondition.GREATER_THAN_EQUAL,
                     condition_value='0'
                 ),
@@ -174,4 +174,28 @@ class TestPriceQuote:
 
         assert self.rule_service.quote_price(an_order.id) == 19
 
+    def test_quote_price_with_distance_rule(self, an_order):
+        # to Escobar
+        an_order.owner.location.latitude = -34.3467
+        an_order.owner.location.longitude = -58.8186
+        an_order.owner.save()
 
+        # from Buenos Aires
+        an_order.product.place.coordinates.latitude = -34.603722
+        an_order.product.place.coordinates.longitude = -58.381592
+        an_order.product.place.save()
+
+        Rule(
+            name='$200 if distance if greater than 50km',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DISTANCE,
+                    operator=RuleCondition.GREATER_THAN,
+                    condition_value='50'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=200)
+        ).save()
+
+        # rule should apply cause the distance is ~54 > 50
+        assert self.rule_service.quote_price(an_order.id) == 200
