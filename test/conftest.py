@@ -1,6 +1,9 @@
+import json
+
 import pytest
 from faker import Faker
-from faker.providers import person, internet, phone_number, geo
+from faker.providers import person, internet, phone_number, geo, address
+from flask import Response
 from mongoengine import connect, disconnect
 from mongomock import ObjectId
 
@@ -18,7 +21,7 @@ from services import user_service
 @pytest.fixture
 def cfaker():
     cfaker = Faker()
-    for provider in [person, internet, phone_number, geo]:
+    for provider in [person, internet, phone_number, geo, address]:
         cfaker.add_provider(provider)
     return cfaker
 
@@ -177,3 +180,26 @@ def a_rule(cfaker, a_condition, a_consequence):
         conditions=[a_condition],
         consequence=a_consequence
     ).save()
+
+
+@pytest.fixture
+def a_city(cfaker):
+    return cfaker.city()
+
+
+class MockedResponse:
+    def __init__(self, content):
+        self.content = content
+
+
+@pytest.fixture
+def a_geocode_response(a_city):
+    return MockedResponse(json.dumps({
+        'results': [
+            {
+                'locations': [
+                    {'adminArea5': a_city}
+                ]
+            }
+        ]
+    }))

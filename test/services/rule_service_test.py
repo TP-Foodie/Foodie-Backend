@@ -199,3 +199,47 @@ class TestPriceQuote:
 
         # rule should apply cause the distance is ~54 > 50
         assert self.rule_service.quote_price(an_order.id) == 200
+
+    def test_quote_price_with_location_rule(self, an_order):
+        # Ing Maschwitz
+        an_order.owner.location.latitude = -34.3814
+        an_order.owner.location.longitude = -58.7569
+        an_order.owner.save()
+
+        Rule(
+            name='$200 if order is in Escobar',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_POSITION,
+                    operator=RuleCondition.IS,
+                    condition_value='Ingeniero Maschwitz'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=200)
+        ).save()
+
+        # rule should apply cause Maschwitz is in Escobar
+        assert self.rule_service.quote_price(an_order.id) == 200
+
+    def test_quote_price_with_location_rule_should_work_lower_case(self, an_order):
+        # Ing Maschwitz
+        an_order.owner.location.latitude = -34.3814
+        an_order.owner.location.longitude = -58.7569
+        an_order.owner.save()
+
+        Rule(
+            name='$200 if order is in Escobar',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_POSITION,
+                    operator=RuleCondition.IS,
+                    condition_value='ingeniero maschwitz'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=200)
+        ).save()
+
+        # rule should apply cause Maschwitz is in Escobar
+        assert self.rule_service.quote_price(an_order.id) == 200
+
+

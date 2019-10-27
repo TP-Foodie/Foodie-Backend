@@ -97,6 +97,9 @@ class TestOrderService:
         assert order_service.count_for_user(an_order.owner.id) == 1
 
     @patch('services.order_service.requests')
-    def test_should_make_a_request(self, mocked_requests, an_order):
-        order_service.distance(an_order)
-        assert mocked_requests.get.called
+    def test_order_position_returns_order_city(self, mocked_requests, an_order, a_geocode_response, a_city):
+        mocked_requests.get.return_value = a_geocode_response
+
+        result = order_service.order_position(an_order)
+
+        assert result == a_city.lower()

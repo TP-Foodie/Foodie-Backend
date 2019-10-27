@@ -36,7 +36,7 @@ class RuleCondition(EmbeddedDocument):
         PAYMENT_METHOD,
         ORDER_DURATION,
         ORDER_DISTANCE,
-        ORDER_POSITION,  # TODO
+        ORDER_POSITION,
         ORDER_DATE,
         ORDER_TIME,
         ORDER_QUANTITY,

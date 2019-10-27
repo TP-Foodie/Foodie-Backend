@@ -53,3 +53,17 @@ def distance(order):
 
 def count_for_user(user_id):
     return order_repository.count_for_user(user_id)
+
+
+def order_position(order):
+    owner_latitude = order.owner.location.latitude
+    owner_longitude = order.owner.location.longitude
+
+    key = Config.MAP_QUEST_API_KEY
+    url = 'http://open.mapquestapi.com/geocoding/v1/reverse?key={}&location={},{}'.format(
+        key, owner_latitude, owner_longitude
+    )
+
+    response = requests.get(url)
+
+    return json.loads(response.content)['results'][0]['locations'][0]['adminArea5'].lower()

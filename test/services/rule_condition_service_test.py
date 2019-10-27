@@ -51,3 +51,8 @@ class TestRuleConditionService:
         assert result.hour == 18
         assert result.minute == 30
         assert result.second == 0
+
+    def test_parse_value_when_variable_is_order_position_should_return_city_lowered(self):
+        result = self.condition_service.parse_value(RuleCondition.ORDER_POSITION, 'Escobar')
+
+        assert result == 'escobar'
