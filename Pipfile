@@ -29,6 +29,8 @@ google-api-python-client = "*"
 requests = "*"
 sendgrid = "*"
 geopy = "*"
+coveralls = "*"
+python-coveralls = "*"
 
 [requires]
 python_version = "3.6"
