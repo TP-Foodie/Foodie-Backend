@@ -286,6 +286,27 @@ class TestPriceQuote:
 
         assert self.rule_service.quote_price(an_order.id) == 20 * 54
 
+    def test_should_not_apply_rule_if_its_not_active(self, an_order):
+        rule = Rule(
+            name='$20 base',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.VALUE,
+                value=20,
+            )
+        ).save()
+
+        rule.active = False
+        rule.save()
+
+        assert self.rule_service.quote_price(an_order.id) == 0
+
 
 # noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')

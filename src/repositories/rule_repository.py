@@ -27,5 +27,5 @@ class RuleRepository:
     def delete(self, rule_id):
         return Rule.objects.get(id=rule_id).delete()
 
-    def sorted_by_value(self):
-        return Rule.objects.all().order_by('-consequence__consequence_type')
+    def active_sorted_by_value(self):
+        return Rule.objects.filter(active=True).order_by('-consequence__consequence_type')
