@@ -8,7 +8,7 @@ class ConditionSchema(Schema):
 
 class ConsequenceSchema(Schema):
     class Meta:
-        fields = ('consequence_type', 'value', 'unit_value')
+        fields = ('consequence_type', 'value', 'variable')
 
 
 class ListRuleSchema(Schema):
