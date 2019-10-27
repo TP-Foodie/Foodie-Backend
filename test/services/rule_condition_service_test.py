@@ -23,7 +23,7 @@ class TestRuleConditionService:
         assert self.condition_service.apply(an_order, condition)
 
     def test_parse_value_when_variable_is_time_type(self):
-        result = self.condition_service.parse_value(RuleCondition.ORDER_TIME, 'Sat, 30 Nov 2019 18:30:00 GMT')
+        result = self.condition_service.parse_value(RuleCondition.ORDER_TIME, '18:30:00')
 
         with pytest.raises(AttributeError):
             assert result.year
@@ -43,7 +43,7 @@ class TestRuleConditionService:
         assert result.day == 30
 
     def test_parse_value_when_variable_is_travel_time_type(self):
-        result = self.condition_service.parse_value(RuleCondition.TRAVEL_TIME, 'Sat, 30 Nov 2019 18:30:00 GMT')
+        result = self.condition_service.parse_value(RuleCondition.TRAVEL_TIME, '18:30:00')
 
         with pytest.raises(AttributeError):
             assert result.year

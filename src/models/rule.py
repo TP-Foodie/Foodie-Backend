@@ -22,6 +22,7 @@ class RuleCondition(EmbeddedDocument):
     TRAVEL_DAY = 'TD'
     TRAVEL_TIME = 'TT'
     PAYMENT_METHOD = 'PM'
+    ORDER_DAY = 'ORD'
 
     VARIABLES = (
         USER_REPUTATION,
@@ -39,6 +40,7 @@ class RuleCondition(EmbeddedDocument):
         ORDER_POSITION,
         ORDER_DATE,
         ORDER_TIME,
+        ORDER_DAY,
         ORDER_QUANTITY,
         TRAVEL_DAY,
         TRAVEL_TIME

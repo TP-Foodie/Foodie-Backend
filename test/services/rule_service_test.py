@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from datetime import datetime
 from marshmallow import ValidationError
@@ -174,7 +176,10 @@ class TestPriceQuote:
 
         assert self.rule_service.quote_price(an_order.id) == 19
 
-    def test_quote_price_with_distance_rule(self, an_order):
+    @patch('services.order_service.requests.get')
+    def test_quote_price_with_distance_rule(self, mocked_get, an_order, a_distance_response):
+        mocked_get.return_value = a_distance_response(54)
+
         # to Escobar
         an_order.owner.location.latitude = -34.3467
         an_order.owner.location.longitude = -58.8186
@@ -200,14 +205,16 @@ class TestPriceQuote:
         # rule should apply cause the distance is ~54 > 50
         assert self.rule_service.quote_price(an_order.id) == 200
 
-    def test_quote_price_with_location_rule(self, an_order):
+    @patch('services.order_service.requests.get')
+    def test_quote_price_with_location_rule(self, mocked_get, an_order, a_geocode_response):
+        mocked_get.return_value = a_geocode_response('Ingeniero Maschwitz')
         # Ing Maschwitz
         an_order.owner.location.latitude = -34.3814
         an_order.owner.location.longitude = -58.7569
         an_order.owner.save()
 
         Rule(
-            name='$200 if order is in Escobar',
+            name='$200 if order is in Ingeniero Maschwitz',
             conditions=[
                 RuleCondition(
                     variable=RuleCondition.ORDER_POSITION,
@@ -218,17 +225,19 @@ class TestPriceQuote:
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=200)
         ).save()
 
-        # rule should apply cause Maschwitz is in Escobar
         assert self.rule_service.quote_price(an_order.id) == 200
 
-    def test_quote_price_with_location_rule_should_work_lower_case(self, an_order):
+    @patch('services.order_service.requests.get')
+    def test_quote_price_with_location_rule_should_work_lower_case(self, mocked_get, an_order, a_geocode_response):
+        mocked_get.return_value = a_geocode_response('Ingeniero Maschwitz')
+
         # Ing Maschwitz
         an_order.owner.location.latitude = -34.3814
         an_order.owner.location.longitude = -58.7569
         an_order.owner.save()
 
         Rule(
-            name='$200 if order is in Escobar',
+            name='$200 if order is in ingeniero maschwitz',
             conditions=[
                 RuleCondition(
                     variable=RuleCondition.ORDER_POSITION,
@@ -239,10 +248,12 @@ class TestPriceQuote:
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=200)
         ).save()
 
-        # rule should apply cause Maschwitz is in Escobar
         assert self.rule_service.quote_price(an_order.id) == 200
 
-    def test_quote_price_with_value_per_unit_consequence(self, an_order):
+    @patch('services.order_service.requests.get')
+    def test_quote_price_with_value_per_unit_consequence(self, mocked_get, an_order, a_distance_response):
+        mocked_get.return_value = a_distance_response(54)
+
         # to Escobar
         an_order.owner.location.latitude = -34.3467
         an_order.owner.location.longitude = -58.8186
@@ -269,7 +280,7 @@ class TestPriceQuote:
             )
         ).save()
 
-        assert self.rule_service.quote_price(an_order.id) == 20 * 54.972
+        assert self.rule_service.quote_price(an_order.id) == 20 * 54
 
 
 @pytest.mark.usefixtures('a_client')
@@ -279,7 +290,10 @@ class TestExampleRules:
     def assert_price(self, order, expected):
         assert self.rule_service.quote_price(order.id) == expected
 
-    def test_minimum_delivery_cost(self, an_order):
+    @patch('services.order_service.requests.get')
+    def test_minimum_delivery_cost(self, mocked_get, an_order, a_distance_response):
+        mocked_get.return_value = a_distance_response(1)
+
         Rule(
             name='Minimum delivery cost of $20',
             conditions=[
@@ -294,7 +308,10 @@ class TestExampleRules:
 
         self.assert_price(an_order, 20)
 
-    def test_price_per_extra_km(self, an_order):
+    @patch('services.order_service.requests.get')
+    def test_price_per_extra_km(self, mocked_get, an_order, a_distance_response):
+        mocked_get.return_value = a_distance_response(54)
+
         # to Escobar
         an_order.owner.location.latitude = -34.3467
         an_order.owner.location.longitude = -58.8186
@@ -336,4 +353,47 @@ class TestExampleRules:
             )
         ).save()
 
-        self.assert_price(an_order, 52.972 * 15)
+        self.assert_price(an_order, 52 * 15)
+
+    def test_five_percent_discount_wednesdays_from_three_pm_to_four_pm(self, an_order):
+        an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.save()
+
+        Rule(
+            name='Minimum delivery cost of $20',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=20)
+        ).save()
+
+        Rule(
+            name='5% discount on wednesdays from 3pm to 4pm',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DAY,
+                    operator=RuleCondition.IS,
+                    condition_value='3'
+                ),
+                RuleCondition(
+                    variable=RuleCondition.ORDER_TIME,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='15:00:00'
+                ),
+                RuleCondition(
+                    variable=RuleCondition.ORDER_TIME,
+                    operator=RuleCondition.LESS_THAN_EQUAL,
+                    condition_value='16:00:00'
+                )
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.PERCENTAGE,
+                value=-5,
+            )
+        ).save()
+
+        self.assert_price(an_order, 19.0)

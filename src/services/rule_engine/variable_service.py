@@ -98,6 +98,12 @@ class OrderPositionVariable(Variable):
         return order_service.order_position(self.order)
 
 
+class OrderDayVariable(Variable):
+    @property
+    def value(self):
+        return int(self.order.date.strftime('%w'))
+
+
 class DefaultVariable(Variable):
     @property
     def value(self):
@@ -121,6 +127,7 @@ class ConditionVariableService:
         RuleCondition.ORDER_DISTANCE: OrderDistanceVariable,
         RuleCondition.ORDER_QUANTITY: OrderQuantityVariable,
         RuleCondition.ORDER_POSITION: OrderPositionVariable,
+        RuleCondition.ORDER_DAY: OrderDayVariable,
     }
 
     def get_value(self, order, variable):

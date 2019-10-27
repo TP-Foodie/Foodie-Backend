@@ -97,3 +97,11 @@ class TestVariableService:
             value = self.variable_service.get_value(an_order, RuleCondition.ORDER_POSITION)
 
         assert value == "Escobar"
+
+    def test_get_value_for_order_day_returns_day_number(self, an_order):
+        an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.save()
+
+        value = self.variable_service.get_value(an_order, RuleCondition.ORDER_DAY)
+
+        assert value == 3

@@ -194,12 +194,25 @@ class MockedResponse:
 
 @pytest.fixture
 def a_geocode_response(a_city):
-    return MockedResponse(json.dumps({
-        'results': [
-            {
-                'locations': [
-                    {'adminArea5': a_city}
-                ]
+    def build_response(city=a_city):
+        return MockedResponse(json.dumps({
+            'results': [
+                {
+                    'locations': [
+                        {'adminArea5': city}
+                    ]
+                }
+            ]
+        }))
+    return build_response
+
+
+@pytest.fixture
+def a_distance_response():
+    def build_response(distance=0):
+        return MockedResponse(json.dumps({
+            'route': {
+                'distance': distance
             }
-        ]
-    }))
+        }))
+    return build_response

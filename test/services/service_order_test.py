@@ -98,7 +98,7 @@ class TestOrderService:
 
     @patch('services.order_service.requests')
     def test_order_position_returns_order_city(self, mocked_requests, an_order, a_geocode_response, a_city):
-        mocked_requests.get.return_value = a_geocode_response
+        mocked_requests.get.return_value = a_geocode_response(a_city)
 
         result = order_service.order_position(an_order)
 

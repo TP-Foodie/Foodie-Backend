@@ -6,6 +6,8 @@ from models.rule import RuleCondition
 
 class RuleConditionService:
     DEFAULT_DATE_FORMAT = "%a, %d %b %Y %H:%M:%S %Z"
+    DEFAULT_TIME_FORMAT = "%H:%M:%S"
+
     DATE_VARIABLES = [RuleCondition.ORDER_DATE]
     TIME_VARIABLES = [RuleCondition.ORDER_TIME, RuleCondition.TRAVEL_TIME]
     POSITION_VARIABLES = [RuleCondition.ORDER_POSITION]
@@ -27,7 +29,7 @@ class RuleConditionService:
             return datetime.strptime(value, self.DEFAULT_DATE_FORMAT).date()
 
         if variable in self.TIME_VARIABLES:
-            return datetime.strptime(value, self.DEFAULT_DATE_FORMAT).time()
+            return datetime.strptime(value, self.DEFAULT_TIME_FORMAT).time()
 
         if variable in self.POSITION_VARIABLES:
             return value.lower()
