@@ -55,6 +55,7 @@ class TestRuleService:
         assert not Rule.objects.count()
 
 
+# noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')
 class TestPriceQuote:
     rule_service = RuleService()
@@ -283,6 +284,7 @@ class TestPriceQuote:
         assert self.rule_service.quote_price(an_order.id) == 20 * 54
 
 
+# noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')
 class TestExampleRules:
     rule_service = RuleService()
@@ -355,9 +357,14 @@ class TestExampleRules:
 
         self.assert_price(an_order, 52 * 15)
 
-    def test_five_percent_discount_wednesdays_from_three_pm_to_four_pm(self, an_order):
+    def test_five_percent_discount_wednesdays_from_three_pm_to_four_pm(self, an_order_factory):
+        an_order = an_order_factory()
         an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
         an_order.save()
+
+        another_order = an_order_factory()
+        another_order .date = datetime.strptime('Wed, 27 Nov 2019 16:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        another_order.save()
 
         Rule(
             name='Minimum delivery cost of $20',
@@ -397,3 +404,95 @@ class TestExampleRules:
         ).save()
 
         self.assert_price(an_order, 19.0)
+        self.assert_price(another_order, 20)
+
+    def test_100_discount_on_first_order(self, an_order_factory):
+        an_order = an_order_factory()
+
+        Rule(
+            name='$100 discount on first order',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_QUANTITY,
+                    operator=RuleCondition.IS,
+                    condition_value='1'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=-100)
+        ).save()
+
+        self.assert_price(an_order, -100)
+
+        an_order_factory()
+
+        self.assert_price(an_order, 0)
+
+    def test_recharge_of_10_from_monday_to_friday_from_5_pm_to_7_pm(self, an_order_factory):
+        an_order = an_order_factory()
+        an_order.date = datetime.strptime('Wed, 27 Nov 2019 17:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.save()
+
+        another_order = an_order_factory()
+        another_order.date = datetime.strptime('Sat, 30 Nov 2019 17:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        another_order.save()
+
+        Rule(
+            name='$10 recharge from monday to friday from 5pm to 7pm',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DAY,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='1'
+                ),
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DAY,
+                    operator=RuleCondition.LESS_THAN_EQUAL,
+                    condition_value='5'
+                ),
+                RuleCondition(
+                    variable=RuleCondition.ORDER_TIME,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='17:00:00'
+                ),
+                RuleCondition(
+                    variable=RuleCondition.ORDER_TIME,
+                    operator=RuleCondition.LESS_THAN_EQUAL,
+                    condition_value='19:00:00'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10)
+        ).save()
+
+        self.assert_price(an_order, 10)
+        self.assert_price(another_order, 0)
+
+    def test_20_percent_discount_from_fifth_order(self, an_order_factory):
+        an_order = an_order_factory()
+        for i in range(1, 5):
+            an_order_factory()
+
+        Rule(
+            name='Minimum delivery cost of $20',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=20)
+        ).save()
+
+        Rule(
+            name='%20 discount from 5th order',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_QUANTITY,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='5'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.PERCENTAGE, value=-20)
+        ).save()
+
+        self.assert_price(an_order, 16)
