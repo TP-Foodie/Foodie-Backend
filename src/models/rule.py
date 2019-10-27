@@ -77,6 +77,7 @@ class RuleConsequence(EmbeddedDocument):
 
     consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES, default=VALUE)
     value = fields.IntField(max_length=100, default=0)
+    variable = fields.StringField(max_length=10, choices=RuleCondition.VARIABLES)
 
 
 class Rule(Document):

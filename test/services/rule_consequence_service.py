@@ -1,4 +1,6 @@
-from models.rule import RuleConsequence
+from unittest.mock import patch
+
+from models.rule import RuleConsequence, RuleCondition
 from services.rule_engine.consequence_service import RuleConsequenceService
 
 
@@ -28,3 +30,15 @@ class TestRuleConsequenceService:
         result = self.consequence_service.apply(consequence, 10)
 
         assert result == 9.0
+
+    @patch('services.rule_engine.consequence_service.ConditionVariableService.get_value')
+    def test_apply_with_value_per_unit_should_multiple_value_by_condition_variable(self, mocked_distance, a_client,
+                                                                                   an_order):
+        mocked_distance.return_value = 10
+        consequence = RuleConsequence(consequence_type=RuleConsequence.PER_UNIT_VALUE,
+                                      value=-10,
+                                      variable=RuleCondition.ORDER_DISTANCE)
+        result = self.consequence_service.apply(consequence, 200, an_order)
+
+        assert result == 100
+

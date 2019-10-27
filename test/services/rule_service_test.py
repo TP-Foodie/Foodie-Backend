@@ -242,4 +242,31 @@ class TestPriceQuote:
         # rule should apply cause Maschwitz is in Escobar
         assert self.rule_service.quote_price(an_order.id) == 200
 
+    def test_quote_price_with_value_per_unit_consequence(self, an_order):
+        # to Escobar
+        an_order.owner.location.latitude = -34.3467
+        an_order.owner.location.longitude = -58.8186
+        an_order.owner.save()
 
+        # from Buenos Aires
+        an_order.product.place.coordinates.latitude = -34.603722
+        an_order.product.place.coordinates.longitude = -58.381592
+        an_order.product.place.save()
+
+        Rule(
+            name='$20 per km',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DISTANCE,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='20'
+                ),
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.PER_UNIT_VALUE,
+                value=20,
+                variable=RuleCondition.ORDER_DISTANCE
+            )
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 20 * 54.972

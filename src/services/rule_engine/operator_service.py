@@ -8,7 +8,7 @@ class GreaterThanOperator:
 
 class GreaterThanEqualOperator:
     def apply(self, first_value, second_value):
-        return first_value <= second_value
+        return first_value >= second_value
 
 
 class LessThanOperator:
