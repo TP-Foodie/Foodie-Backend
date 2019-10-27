@@ -32,8 +32,11 @@ class TestRuleConsequenceService:
         assert result == 9.0
 
     @patch('services.rule_engine.consequence_service.ConditionVariableService.get_value')
-    def test_apply_with_value_per_unit_should_multiple_value_by_condition_variable(self, mocked_distance, a_client,
+    def test_apply_with_value_per_unit_should_multiple_value_by_condition_variable(self,
+                                                                                   mocked_distance,
+                                                                                   a_client,
                                                                                    an_order):
+        # pylint: disable=unused-argument
         mocked_distance.return_value = 10
         consequence = RuleConsequence(consequence_type=RuleConsequence.PER_UNIT_VALUE,
                                       value=-10,
@@ -41,4 +44,3 @@ class TestRuleConsequenceService:
         result = self.consequence_service.apply(consequence, 200, an_order)
 
         assert result == 100
-

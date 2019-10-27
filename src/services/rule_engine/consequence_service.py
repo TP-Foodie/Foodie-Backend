@@ -24,7 +24,8 @@ class PerUnitConsequenceType(ConsequenceType):
     variable_service = ConditionVariableService()
 
     def apply(self, value, consequence, order):
-        return value + consequence.value * self.variable_service.get_value(order, self.consequence.variable)
+        return value + \
+               consequence.value * self.variable_service.get_value(order, self.consequence.variable)
 
 
 class RuleConsequenceService:
@@ -35,4 +36,5 @@ class RuleConsequenceService:
     }
 
     def apply(self, consequence, value, order=None):
-        return self.CONSEQUENCE_TYPE_MAPPING[consequence.consequence_type](consequence).apply(value, consequence, order)
+        return self.CONSEQUENCE_TYPE_MAPPING[consequence.consequence_type](consequence)\
+            .apply(value, consequence, order)

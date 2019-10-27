@@ -1,4 +1,4 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import pytest
 from bson import ObjectId
@@ -90,14 +90,18 @@ class TestOrderService:
                 an_order.id, {
                     'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
 
-    def test_count_for_user_return_zero_when_there_are_no_orders_for_user(self, an_order, a_delivery_user):
+    def test_count_for_user_return_zero_when_there_are_no_orders_for_user(self,
+                                                                          an_order,
+                                                                          a_delivery_user):
+        # pylint: disable=unused-argument
         assert order_service.count_for_user(a_delivery_user.id) == 0
 
     def test_count_for_user_returns_user_count(self, an_order):
         assert order_service.count_for_user(an_order.owner.id) == 1
 
     @patch('services.order_service.requests')
-    def test_order_position_returns_order_city(self, mocked_requests, an_order, a_geocode_response, a_city):
+    def test_order_position_returns_order_city(self, mocked_requests, an_order,
+                                               a_geocode_response, a_city):
         mocked_requests.get.return_value = a_geocode_response(a_city)
 
         result = order_service.order_position(an_order)

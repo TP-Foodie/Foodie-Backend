@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-import pytest
 from datetime import datetime
+import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
@@ -149,7 +149,8 @@ class TestPriceQuote:
         assert self.rule_service.quote_price(an_order.id) == 9
 
     def test_quote_price_with_datetime_rules(self, an_order):
-        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 GMT',
+                                          "%a, %d %b %Y %H:%M:%S %Z")
         an_order.save()
 
         Rule(
@@ -229,7 +230,8 @@ class TestPriceQuote:
         assert self.rule_service.quote_price(an_order.id) == 200
 
     @patch('services.order_service.requests.get')
-    def test_quote_price_with_location_rule_should_work_lower_case(self, mocked_get, an_order, a_geocode_response):
+    def test_quote_price_with_location_rule_should_work_lower_case(self, mocked_get,
+                                                                   an_order, a_geocode_response):
         mocked_get.return_value = a_geocode_response('Ingeniero Maschwitz')
 
         # Ing Maschwitz
@@ -252,7 +254,8 @@ class TestPriceQuote:
         assert self.rule_service.quote_price(an_order.id) == 200
 
     @patch('services.order_service.requests.get')
-    def test_quote_price_with_value_per_unit_consequence(self, mocked_get, an_order, a_distance_response):
+    def test_quote_price_with_value_per_unit_consequence(self, mocked_get,
+                                                         an_order, a_distance_response):
         mocked_get.return_value = a_distance_response(54)
 
         # to Escobar
@@ -359,11 +362,13 @@ class TestExampleRules:
 
     def test_five_percent_discount_wednesdays_from_three_pm_to_four_pm(self, an_order_factory):
         an_order = an_order_factory()
-        an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT',
+                                          "%a, %d %b %Y %H:%M:%S %Z")
         an_order.save()
 
         another_order = an_order_factory()
-        another_order .date = datetime.strptime('Wed, 27 Nov 2019 16:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        another_order .date = datetime.strptime('Wed, 27 Nov 2019 16:30:00 GMT',
+                                                "%a, %d %b %Y %H:%M:%S %Z")
         another_order.save()
 
         Rule(
@@ -429,11 +434,13 @@ class TestExampleRules:
 
     def test_recharge_of_10_from_monday_to_friday_from_5_pm_to_7_pm(self, an_order_factory):
         an_order = an_order_factory()
-        an_order.date = datetime.strptime('Wed, 27 Nov 2019 17:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.date = datetime.strptime('Wed, 27 Nov 2019 17:30:00 GMT',
+                                          "%a, %d %b %Y %H:%M:%S %Z")
         an_order.save()
 
         another_order = an_order_factory()
-        another_order.date = datetime.strptime('Sat, 30 Nov 2019 17:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        another_order.date = datetime.strptime('Sat, 30 Nov 2019 17:30:00 GMT',
+                                               "%a, %d %b %Y %H:%M:%S %Z")
         another_order.save()
 
         Rule(
@@ -468,8 +475,10 @@ class TestExampleRules:
 
     def test_20_percent_discount_from_fifth_order(self, an_order_factory):
         an_order = an_order_factory()
-        for i in range(1, 5):
-            an_order_factory()
+        an_order_factory()
+        an_order_factory()
+        an_order_factory()
+        an_order_factory()
 
         Rule(
             name='Minimum delivery cost of $20',

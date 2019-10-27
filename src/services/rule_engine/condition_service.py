@@ -19,7 +19,9 @@ class RuleConditionService:
         for condition in conditions:
             variable_value = self.variable_service.get_value(order, condition.variable)
             condition_value = self.parse_value(condition.variable, condition.condition_value)
-            result = self.operator_service.apply(condition.operator, variable_value, condition_value)
+            result = self.operator_service.apply(
+                condition.operator, variable_value, condition_value
+            )
             if not result:
                 return False
         return True

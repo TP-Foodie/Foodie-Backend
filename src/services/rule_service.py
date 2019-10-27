@@ -1,7 +1,7 @@
 from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_repository import RuleRepository
-from schemas.rule_schema import CreateRuleSchema
 from repositories import order_repository
+from schemas.rule_schema import CreateRuleSchema
 from services.rule_engine.condition_service import RuleConditionService
 from services.rule_engine.consequence_service import RuleConsequenceService
 

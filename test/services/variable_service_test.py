@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
-import pytest
 from datetime import datetime
+import pytest
 from models.rule import RuleCondition
 from services.rule_engine.variable_service import ConditionVariableService
-from services import user_service, order_service
+from services import user_service
 
 
 @pytest.mark.usefixtures('a_client')
@@ -99,7 +99,8 @@ class TestVariableService:
         assert value == "Escobar"
 
     def test_get_value_for_order_day_returns_day_number(self, an_order):
-        an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT', "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.date = datetime.strptime('Wed, 27 Nov 2019 15:30:00 GMT',
+                                          "%a, %d %b %Y %H:%M:%S %Z")
         an_order.save()
 
         value = self.variable_service.get_value(an_order, RuleCondition.ORDER_DAY)

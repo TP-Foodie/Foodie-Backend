@@ -3,7 +3,6 @@ import json
 import pytest
 from faker import Faker
 from faker.providers import person, internet, phone_number, geo, address
-from flask import Response
 from mongoengine import connect, disconnect
 from mongomock import ObjectId
 

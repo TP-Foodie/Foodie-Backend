@@ -1,7 +1,7 @@
 import calendar
 from datetime import datetime, timedelta
-from models.order import Order
 from mongoengine import Q
+from models.order import Order
 from services.exceptions.order_exceptions import NonExistingOrderException
 
 

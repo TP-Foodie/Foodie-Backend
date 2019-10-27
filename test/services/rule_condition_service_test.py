@@ -33,7 +33,8 @@ class TestRuleConditionService:
         assert result.second == 0
 
     def test_parse_value_when_variable_is_date_type(self):
-        result = self.condition_service.parse_value(RuleCondition.ORDER_DATE, 'Sat, 30 Nov 2019 18:30:00 GMT')
+        result = self.condition_service.parse_value(RuleCondition.ORDER_DATE,
+                                                    'Sat, 30 Nov 2019 18:30:00 GMT')
 
         with pytest.raises(AttributeError):
             assert result.hour
