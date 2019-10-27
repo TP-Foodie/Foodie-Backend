@@ -270,3 +270,70 @@ class TestPriceQuote:
         ).save()
 
         assert self.rule_service.quote_price(an_order.id) == 20 * 54.972
+
+
+@pytest.mark.usefixtures('a_client')
+class TestExampleRules:
+    rule_service = RuleService()
+
+    def assert_price(self, order, expected):
+        assert self.rule_service.quote_price(order.id) == expected
+
+    def test_minimum_delivery_cost(self, an_order):
+        Rule(
+            name='Minimum delivery cost of $20',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DISTANCE,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=20)
+        ).save()
+
+        self.assert_price(an_order, 20)
+
+    def test_price_per_extra_km(self, an_order):
+        # to Escobar
+        an_order.owner.location.latitude = -34.3467
+        an_order.owner.location.longitude = -58.8186
+        an_order.owner.save()
+
+        # from Buenos Aires
+        an_order.product.place.coordinates.latitude = -34.603722
+        an_order.product.place.coordinates.longitude = -58.381592
+        an_order.product.place.save()
+
+        Rule(
+            name='$15 per extra kilometer above 2',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DISTANCE,
+                    operator=RuleCondition.GREATER_THAN,
+                    condition_value='2'
+                ),
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.PER_UNIT_VALUE,
+                value=15,
+                variable=RuleCondition.ORDER_DISTANCE
+            )
+        ).save()
+
+        Rule(
+            name='discount first 2km',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.ORDER_DISTANCE,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='2'
+                ),
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.VALUE,
+                value=-30,
+            )
+        ).save()
+
+        self.assert_price(an_order, 52.972 * 15)
