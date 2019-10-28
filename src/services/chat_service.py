@@ -4,7 +4,7 @@ def create_chat(chat_data):
     chat = Chat()
 
     for key in chat_data.keys():
-        chat[key] = _get_property(chat_data, key)
+        chat[key] = chat_data[key]
 
     return chat.save()
 
