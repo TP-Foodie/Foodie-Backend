@@ -22,5 +22,5 @@ def create_chat_message(id_chat, message_data):
     return chat_message.save()
 
 def get_chat_messages(id_chat, page, limit):
-    return [chat_message for chat_message in ChatMessage.objects(id_chat=id_chat).skip(
-        page * limit).limit(limit)]  # pylint: disable=E1101
+    return [chat_message for chat_message in ChatMessage.objects(id_chat=id_chat)
+            .order_by('-timestamp').skip(page * limit).limit(limit)]  # pylint: disable=E1101

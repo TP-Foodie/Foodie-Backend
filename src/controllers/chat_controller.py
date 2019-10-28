@@ -31,7 +31,7 @@ def create_chat_message(_id):
     # notify chat members
     socketio.emit('new_message', jsonify(message), room=_id, namespace='/chat')
 
-    return message, HTTP_200_OK
+    return jsonify(message), HTTP_200_OK
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['GET'])
 def get_chat_messages(_id):
