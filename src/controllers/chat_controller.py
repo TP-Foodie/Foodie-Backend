@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_socketio import emit, join_room, leave_room
+from flask_socketio import join_room, leave_room
 from app import socketio
 
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED
@@ -53,7 +53,7 @@ def joined(data):
     join_room(room)
 
 @socketio.on('left', namespace='/chat')
-def left(message):
+def left(data):
     """Sent by clients when they leave a room."""
     room = data['id_chat']
     leave_room(room)
