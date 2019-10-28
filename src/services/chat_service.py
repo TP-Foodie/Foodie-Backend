@@ -1,4 +1,4 @@
-from models.chat import Chat
+from models.chat import Chat, ChatMessage
 
 def create_chat(chat_data):
     chat = Chat()
@@ -10,3 +10,13 @@ def create_chat(chat_data):
 
 def get_chat(_id):
     return Chat.objects.get(id=_id)  # pylint: disable=E1101
+
+def create_chat_message(id_chat, message_data):
+    chat_message = ChatMessage()
+
+    print("OK4")
+    for key in message_data.keys():
+        chat_message[key] = message_data[key]
+    chat_message.id_chat = id_chat
+    print("OK5")
+    return chat_message.save()
