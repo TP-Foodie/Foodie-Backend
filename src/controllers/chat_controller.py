@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_socketio import emit, join_room, leave_room
+from app import socketio
 
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED
 from schemas.chat_schema import CreateChatSchema, CreateChatMessageSchema
@@ -24,7 +26,12 @@ def create_chat_message(_id):
     schema = CreateChatMessageSchema()
     message_data = schema.load(content)
 
-    return jsonify(chat_service.create_chat_message(_id, message_data)), HTTP_200_OK
+    message = chat_service.create_chat_message(_id, message_data)
+
+    # notify chat members
+    socketio.emit('new_message', jsonify(message), room=_id, namespace='/chat')
+
+    return message, HTTP_200_OK
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['GET'])
 def get_chat_messages(_id):
@@ -38,3 +45,15 @@ def get_chat_messages(_id):
             "messages": chat_service.get_chat_messages(_id, page, limit)
         }
     ), HTTP_200_OK
+
+@socketio.on('joined', namespace='/chat')
+def joined(data):
+    """Sent by clients when they enter a room."""
+    room = data['id_chat']
+    join_room(room)
+
+@socketio.on('left', namespace='/chat')
+def left(message):
+    """Sent by clients when they leave a room."""
+    room = data['id_chat']
+    leave_room(room)
