@@ -29,7 +29,11 @@ def create_chat_message(_id):
     message = chat_service.create_chat_message(_id, message_data)
 
     # notify chat members
-    socketio.emit('new_message', jsonify(message), room=_id, namespace='/chat')
+    socketio.emit(
+        'new_message',
+        {"uid_sender": message["uid_sender"], "message": message["message"],
+         "timestamp": message["timestamp"], "id_chat": message["id_chat"],
+         "id": str(message["id"])}, room=_id, namespace='/chat')
 
     return jsonify(message), HTTP_200_OK
 

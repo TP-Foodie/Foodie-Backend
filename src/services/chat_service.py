@@ -14,11 +14,10 @@ def get_chat(_id):
 def create_chat_message(id_chat, message_data):
     chat_message = ChatMessage()
 
-    print("OK4")
     for key in message_data.keys():
         chat_message[key] = message_data[key]
     chat_message.id_chat = id_chat
-    print("OK5")
+
     return chat_message.save()
 
 def get_chat_messages(id_chat, page, limit):
