@@ -20,3 +20,7 @@ def create_chat_message(id_chat, message_data):
     chat_message.id_chat = id_chat
     print("OK5")
     return chat_message.save()
+
+def get_chat_messages(id_chat, page, limit):
+    return [chat_message for chat_message in ChatMessage.objects(id_chat=id_chat).skip(
+        page * limit).limit(limit)]  # pylint: disable=E1101

@@ -19,9 +19,22 @@ def get_chat(_id):
     return jsonify(chat_service.get_chat(_id)), HTTP_200_OK
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['POST'])
-def create_message(_id):
+def create_chat_message(_id):
     content = request.get_json()
     schema = CreateChatMessageSchema()
     message_data = schema.load(content)
 
     return jsonify(chat_service.create_chat_message(_id, message_data)), HTTP_200_OK
+
+@CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['GET'])
+def get_chat_messages(_id):
+    page = int(request.args.get("page", 0))
+    limit = int(request.args.get("limit", 50))
+
+    return jsonify(
+        {
+            "page": page,
+            "limit": limit,
+            "messages": chat_service.get_chat_messages(_id, page, limit)
+        }
+    ), HTTP_200_OK
