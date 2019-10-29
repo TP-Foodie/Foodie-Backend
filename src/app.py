@@ -4,9 +4,12 @@ from flask import Flask
 from flask_cors import CORS
 from mongoengine import connect
 from flask_swagger_ui import get_swaggerui_blueprint
+from flask_socketio import SocketIO
+import firebase_admin
+from firebase_admin import credentials
+
 from encoders import CustomJSONEncoder
 from settings import Config
-from flask_socketio import SocketIO
 
 from controllers.auth_controller import AUTH_BLUEPRINT
 from controllers.place_controller import PLACES_BLUEPRINT
@@ -21,7 +24,11 @@ from error_handlers import ERRORS_BLUEPRINT
 
 APP = Flask(__name__)
 CORS(APP)
+
 socketio = SocketIO(APP)
+
+cred = credentials.Certificate("/home/santiagoaj/Downloads/service-account-file.json")
+firebase_admin.initialize_app(cred)
 
 SWAGGER_UI_BLUEPRINT = get_swaggerui_blueprint(
     "/swagger",

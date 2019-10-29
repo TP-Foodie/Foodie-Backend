@@ -29,6 +29,7 @@ google-api-python-client = "*"
 requests = "*"
 sendgrid = "*"
 flask-socketio = "*"
+firebase-admin = "*"
 
 [requires]
 python_version = "3.6"
