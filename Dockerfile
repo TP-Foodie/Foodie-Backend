@@ -9,4 +9,4 @@ WORKDIR /usr/app/src
 
 COPY . .
 
-CMD ["gunicorn", "--workers=5","-b", "0.0.0.0:5000", "app:APP"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:APP"]
