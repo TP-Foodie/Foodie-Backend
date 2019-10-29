@@ -1,6 +1,7 @@
 from firebase_admin import messaging
 import logger
 
+
 # This registration token comes from the client FCM SDKs.
 def send_message_to_device(message, registration_token):
     fcm_message = messaging.Message(
