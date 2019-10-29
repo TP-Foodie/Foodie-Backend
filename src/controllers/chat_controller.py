@@ -59,13 +59,13 @@ def create_chat_message(_id):
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['GET'])
 def get_chat_messages(_id):
-    page = int(request.args.get("page", 0)) # pylint: disable=R0801
-    limit = int(request.args.get("limit", 50)) # pylint: disable=R0801
+    page = int(request.args.get("page", 0))
+    limit = int(request.args.get("limit", 50))
 
-    return jsonify( # pylint: disable=R0801
-        { # pylint: disable=R0801
-            "page": page, # pylint: disable=R0801
-            "limit": limit, # pylint: disable=R0801
+    return jsonify(
+        {
+            "page": page,
+            "limit": limit,
             "messages": chat_service.get_chat_messages(_id, page, limit)
         }
     ), HTTP_200_OK
