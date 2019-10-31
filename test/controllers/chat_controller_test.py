@@ -1,6 +1,6 @@
 import json
 
-from test.support.utils import TestMixin, assert_200, assert_401, assert_201
+from test.support.utils import TestMixin, assert_200, assert_401, assert_201, assert_404
 from repositories import chat_repository
 
 
@@ -19,9 +19,29 @@ class TestChatController(TestMixin):  # pylint: disable=too-many-public-methods
                 'id_order': id_order
             })
 
+    def create_chat_message(self, client, user, id_chat, uid_sender, message, timestamp):
+        self.login(client, user.email, user.password)
+        return self.post(
+            client,
+            self.build_url('/chats/{}/messages/'.format(id_chat)),
+            {
+                'uid_sender': uid_sender,
+                'message': message,
+                'timestamp': timestamp
+            })
+
     def get_chat(self, client, a_chat, a_client_user):
         self.login(client, a_client_user.email, a_client_user.password)
         return self.get(client, self.build_url('/chats/{}'.format(str(a_chat.id))))
+
+    def get_chat_messages(self, client, a_client_user, id_chat, page, limit):
+        self.login(client, a_client_user.email, a_client_user.password)
+        return self.get_paging(
+            client,
+            self.build_url('/chats/{}/messages/'.format(id_chat)),
+            page,
+            limit
+        )
 
     def test_chats_endpoint_exists(self, a_client, a_chat, a_client_user):
         response = self.get_chat(a_client, a_chat, a_client_user)
@@ -44,7 +64,10 @@ class TestChatController(TestMixin):  # pylint: disable=too-many-public-methods
         }
 
     def test_create_chat_for_unauthenticated(self, a_client):
-        response = a_client.post('api/v1/chats/', json={"uid_1": "a", "uid_2": "a", "id_order": "a"})
+        response = a_client.post(
+            'api/v1/chats/',
+            json={"uid_1": "a", "uid_2": "a", "id_order": "a"}
+        )
         assert_401(response)
 
     def test_user_should_be_able_to_create_chat(self, a_client, a_client_user):
@@ -53,5 +76,70 @@ class TestChatController(TestMixin):  # pylint: disable=too-many-public-methods
 
     def test_create_chat_should_create_one_on_db(self, a_client, a_client_user):
         self.create_chat(a_client, a_client_user, "a", "b", "c")
+        assert len(chat_repository.list_all()) == 1
 
-        assert chat_repository.count() == 1
+    def test_chat_messages_endpoint_exists(self, a_client, a_chat, a_client_user):
+        response = self.get_chat_messages(a_client, a_client_user, str(a_chat.id), 0, 50)
+        assert_200(response)
+
+    def test_create_chat_message_for_unauthenticated(self, a_client, a_chat):
+        response = a_client.post(
+            'api/v1/chats/{}/messages/'.format(str(a_chat.id)),
+            json={"uid_sender": "id", "message": "a", "timestamp": 0.0}
+        )
+        assert_401(response)
+
+    def test_get_chat_messages_for_unauthenticated(self, a_client, a_chat):
+        response = a_client.get('api/v1/chats/{}/messages/'.format(str(a_chat.id)))
+        assert_401(response)
+
+    def test_create_chat_message_should_create_one_on_db(self, a_client, a_client_user, a_chat):
+        self.create_chat_message(a_client, a_client_user, str(a_chat.id), "a", "b", 0.0)
+        assert chat_repository.count_chat_messages(str(a_chat.id)) == 1
+
+    def test_list_chat_messages(self, a_client, a_client_user, a_chat_message_from_uid_1):
+        response = self.get_chat_messages(
+            a_client, a_client_user, a_chat_message_from_uid_1.id_chat, 0, 50
+        )
+        chat_message = json.loads(response.data)["messages"][0]
+
+        assert chat_message == {
+            'id': str(a_chat_message_from_uid_1.id),
+            'uid_sender': a_chat_message_from_uid_1.uid_sender,
+            'message': a_chat_message_from_uid_1.message,
+            'timestamp': a_chat_message_from_uid_1.timestamp,
+            'id_chat': a_chat_message_from_uid_1.id_chat
+        }
+
+    def test_list_chat_messages_paging(self, a_client, a_client_user):
+        self.create_chat_message(a_client, a_client_user, "id_chat", "a", "1", 1.0)
+        self.create_chat_message(a_client, a_client_user, "id_chat", "a", "2", 2.0)
+
+        assert chat_repository.count_chat_messages("id_chat") == 2
+
+        response = self.get_chat_messages(
+            a_client, a_client_user, "id_chat", 1, 1
+        )
+        chat_message = json.loads(response.data)["messages"][0]
+
+        assert chat_message["message"] == "2"
+
+    def test_list_chat_messages_are_sorted_by_timestamp(self, a_client, a_client_user):
+        self.create_chat_message(a_client, a_client_user, "id_chat", "a", "1", 1.0)
+        self.create_chat_message(a_client, a_client_user, "id_chat", "a", "2", 2.0)
+
+        response = self.get_chat_messages(
+            a_client, a_client_user, "id_chat", 0, 50
+        )
+        chat_message_1 = json.loads(response.data)["messages"][0]
+        chat_message_2 = json.loads(response.data)["messages"][1]
+
+        assert chat_message_1["timestamp"] > chat_message_2["timestamp"]
+
+    def test_should_return_400_if_chat_does_not_exists(self, a_client, a_client_user, an_object_id):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(
+            a_client,
+            'chats/{}'.format(str(an_object_id))
+        )
+        assert_404(response)

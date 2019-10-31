@@ -188,9 +188,19 @@ def a_chat(a_customer_user, a_delivery_user, an_order):
 
 
 @pytest.fixture
-def a_chat_message(a_chat, cfaker):
+def a_chat_message_from_uid_1(a_chat, cfaker):
     return ChatMessage(
         uid_sender=a_chat.uid_1,
+        message=cfaker.text(),
+        timestamp=cfaker.pyfloat(),
+        id_chat=str(a_chat.id)
+    ).save()
+
+
+@pytest.fixture
+def a_chat_message_from_uid_2(a_chat, cfaker):
+    return ChatMessage(
+        uid_sender=a_chat.uid_2,
         message=cfaker.text(),
         timestamp=cfaker.pyfloat(),
         id_chat=str(a_chat.id)

@@ -5,12 +5,20 @@ def list_all():
     return Chat.objects
 
 
+def list_all_chat_messages(id_chat):
+    return ChatMessage.objects(id_chat=id_chat)
+
+
 def get_chat(chat_id):
     return Chat.objects.get(id=chat_id)
 
 
 def count():
     return Chat.objects.count()
+
+
+def count_chat_messages(id_chat):
+    return ChatMessage.objects(id_chat=id_chat).count()
 
 
 def create(uid_1, uid_2, id_order):

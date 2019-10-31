@@ -9,6 +9,7 @@ CHATS_BLUEPRINT = Blueprint('chats', __name__)
 
 
 @CHATS_BLUEPRINT.route('/', methods=['POST'])
+@authenticate
 def post():
     content = request.get_json()
     schema = CreateChatSchema()
@@ -24,6 +25,7 @@ def get_chat(_id):
 
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['POST'])
+@authenticate
 def create_chat_message(_id):
     content = request.get_json()
     schema = CreateChatMessageSchema()
@@ -37,14 +39,16 @@ def create_chat_message(_id):
 
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['GET'])
+@authenticate
 def get_chat_messages(_id):
     page = int(request.args.get("page", 0))
     limit = int(request.args.get("limit", 50))
+    list_messages = chat_service.get_chat_messages(_id, page, limit)
 
     return jsonify(
         {
             "page": page,
             "limit": limit,
-            "messages": chat_service.get_chat_messages(_id, page, limit)
+            "messages": list_messages
         }
     ), HTTP_200_OK
