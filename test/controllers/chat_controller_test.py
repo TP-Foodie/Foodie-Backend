@@ -1,10 +1,11 @@
+#pylint: disable-msg=too-many-arguments
 import json
 
 from test.support.utils import TestMixin, assert_200, assert_401, assert_201, assert_404
 from repositories import chat_repository
 
 
-class TestChatController(TestMixin):  # pylint: disable=too-many-public-methods
+class TestChatController(TestMixin):
     def build_url(self, url):
         return f'/api/v1{url}'
 
@@ -123,18 +124,6 @@ class TestChatController(TestMixin):  # pylint: disable=too-many-public-methods
         chat_message = json.loads(response.data)["messages"][0]
 
         assert chat_message["message"] == "2"
-
-    def test_list_chat_messages_are_sorted_by_timestamp(self, a_client, a_client_user):
-        self.create_chat_message(a_client, a_client_user, "id_chat", "a", "1", 1.0)
-        self.create_chat_message(a_client, a_client_user, "id_chat", "a", "2", 2.0)
-
-        response = self.get_chat_messages(
-            a_client, a_client_user, "id_chat", 0, 50
-        )
-        chat_message_1 = json.loads(response.data)["messages"][0]
-        chat_message_2 = json.loads(response.data)["messages"][1]
-
-        assert chat_message_1["timestamp"] > chat_message_2["timestamp"]
 
     def test_should_return_400_if_chat_does_not_exists(self, a_client, a_client_user, an_object_id):
         self.login(a_client, a_client_user.email, a_client_user.password)
