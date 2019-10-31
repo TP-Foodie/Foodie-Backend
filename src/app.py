@@ -58,6 +58,7 @@ connect(db=Config.DATABASE_NAME,
         password=Config.DATABASE_PASSWORD,
         ssl=Config.DATABASE_SSL)
 
+
 APP.json_encoder = CustomJSONEncoder
 
 if __name__ == '__main__':
