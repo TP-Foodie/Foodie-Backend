@@ -4,7 +4,7 @@ from marshmallow.validate import OneOf
 
 class UserSchema(Schema):
     class Meta:
-        fields = ('name', 'last_name', 'email', 'profile_image', 'phone')
+        fields = ('id', 'name', 'last_name', 'email', 'profile_image', 'phone')
 
 
 TYPE_VALIDATION = OneOf(choices=("CUSTOMER", "DELIVERY"))
