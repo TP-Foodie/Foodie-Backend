@@ -10,10 +10,15 @@ def parse_available_deliveries_request(values):
 
 
 def parse_order_request(values):
-    values.update({'product': {
-        'name': values['product']['name'],
-        'place': ObjectId(values['product']['place'])
-    }})
+    values.update(
+        {
+            'product': {
+                'name': values['product']['name'],
+                'place': ObjectId(values['product']['place']),
+            },
+            'owner': ObjectId(values['user'].id)
+        })
+    del values['user']
     return values
 
 

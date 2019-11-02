@@ -34,7 +34,7 @@ def authenticate(function):
 
         if 'sub' in auth_data:
             user = user_service.get_user_by_google_id(google_id=auth_data['sub'])
-            user_is_valid = user_service.is_valid(user=user)
+            user_is_valid = True
         else:
             user = user_service.get_user_by_email(email=auth_data['email'])
             user_is_valid = user_service.is_valid(user=user, password=auth_data['password'])
@@ -65,6 +65,7 @@ def validate_google_user(auth_data):
     except DoesNotExist:
         user_service.create_user_from_google_data(id_info)
 
+    id_info.pop('aud', None)
     return id_info
 
 

@@ -7,23 +7,27 @@ from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
 from services.exceptions.invalid_usage_exception import InvalidUsage
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.exceptions.order_exceptions import NonExistingPlaceException, \
     NonExistingOrderException
-from services.exceptions.user_exceptions import NonExistingDeliveryException
+from services.auth_service import authenticate
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['GET'])
+@authenticate
 def list_orders():
     data = ListOrderSchema(many=True).dump(order_repository.list_all())
     return jsonify(data)
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['POST'])
-def create_order():
+@authenticate
+def create_order(user):
     try:
-        order = order_service.create(*parse_order_request(request.json).values())
+        parsed_data = parse_order_request({**request.json, 'user': user})
+        order = order_service.create(**parsed_data)
         data = DetailsOrderSchema().dump(order)
     except NonExistingPlaceException:
         raise InvalidUsage("Place does not exists", status_code=HTTP_400_BAD_REQUEST)
@@ -32,18 +36,21 @@ def create_order():
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['GET'])
+@authenticate
 def order_details(order_id):
     data = DetailsOrderSchema().dump(order_repository.get_order(order_id))
     return jsonify(data)
 
 
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
+@authenticate
 def list_favor_orders():
     data = ListOrderSchema(many=True).dump(order_repository.get_favor_orders())
     return jsonify(data)
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
+@authenticate
 def update_order(order_id):
     try:
         order = order_service.take(order_id, parse_take_order_request(request.json))
