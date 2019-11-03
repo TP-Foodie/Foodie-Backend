@@ -2,7 +2,7 @@ import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
-from models.rule import Rule
+from models.rule import Rule, RuleHistory
 from services.rule_service import RuleService
 
 
@@ -49,3 +49,8 @@ class TestRuleService:
     def test_delete_rule_removes_it(self, a_rule):
         self.rule_service.delete(a_rule.id)
         assert not Rule.objects.count()
+
+    def test_update_rule_should_create_history(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        assert RuleHistory.objects.count() == 1

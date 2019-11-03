@@ -1,10 +1,12 @@
 from models.rule import RuleCondition, RuleConsequence
+from repositories.rule_history_repository import RuleHistoryRepository
 from repositories.rule_repository import RuleRepository
 from schemas.rule_schema import CreateRuleSchema
 
 
 class RuleService:
     rule_repository = RuleRepository()
+    rule_history_repository = RuleHistoryRepository()
     create_schema = CreateRuleSchema()
 
     @property
@@ -30,6 +32,7 @@ class RuleService:
         return self.rule_repository.get(rule_id)
 
     def update(self, rule_id, new_fields):
+        self.rule_history_repository.create({})
         return self.rule_repository.update(rule_id, new_fields)
 
     def delete(self, rule_id):
