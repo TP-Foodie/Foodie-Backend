@@ -33,5 +33,5 @@ def update(order_id, field, value):
     return order
 
 
-def filter(params):
+def filter_by(params):
     return Order.objects.filter(**params)

@@ -25,7 +25,7 @@ def take(order_id, new_data):
 
 
 def placed_by(user_id, start_date=None, end_date=None):
-    user_orders = order_repository.filter({'owner': user_id})
+    user_orders = order_repository.filter_by({'owner': user_id})
 
     return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date))\
         if start_date and end_date else user_orders

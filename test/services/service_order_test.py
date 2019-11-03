@@ -1,6 +1,6 @@
+from datetime import datetime, timedelta
 import pytest
 from bson import ObjectId
-from datetime import datetime, timedelta
 
 from models.order import Order
 from repositories import order_repository, product_repository
@@ -111,7 +111,8 @@ class TestOrderService:
         assert len(orders) == 1
         assert orders[0] == an_order
 
-    def test_placed_by_with_dates_return_placed_orders_between_dates(self, an_order, a_customer_user):
+    def test_placed_by_with_dates_return_placed_orders_between_dates(self, an_order,
+                                                                     a_customer_user):
         today = datetime.today()
         yesterday = today - timedelta(days=1)
         tomorrow = today + timedelta(days=1)
@@ -122,4 +123,4 @@ class TestOrderService:
 
         orders = order_service.placed_by(a_customer_user.id, yesterday, today)
 
-        assert len(orders) == 0
+        assert not orders

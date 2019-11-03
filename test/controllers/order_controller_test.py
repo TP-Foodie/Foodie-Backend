@@ -199,7 +199,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert len(orders) == 1
         assert orders[0]['id'] == str(an_order.id)
 
-    def test_orders_placed_returns_users_only(self, a_client, a_client_user, an_order_factory, a_customer_user):
+    def test_orders_placed_returns_users_only(self, a_client, a_client_user,
+                                              an_order_factory, a_customer_user):
         an_order = an_order_factory()
         another_order = an_order_factory()
 
@@ -219,8 +220,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert len(orders) == 1
         assert orders[0]['id'] == str(an_order.id)
 
-    def test_orders_placed_between_yesterday_and_today_does_not_return_tomorrows_orders(self, a_client,
-                                                                                        a_client_user, an_order):
+    def test_orders_placed_between_dates_does_not_return_out_of_range_orders(self, a_client,
+                                                                             a_client_user,
+                                                                             an_order):
         today = datetime.today()
         yesterday = today - timedelta(days=1)
         tomorrow = today + timedelta(days=1)
@@ -239,4 +241,4 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         orders = json.loads(response.data)
 
-        assert len(orders) == 0
+        assert not orders

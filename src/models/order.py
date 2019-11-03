@@ -1,5 +1,6 @@
 from datetime import datetime
-from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, NULLIFY, DateTimeField
+from mongoengine import Document, IntField, ReferenceField, \
+    CASCADE, StringField, NULLIFY, DateTimeField
 
 from models import User, Place
 
