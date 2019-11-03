@@ -1,5 +1,5 @@
-from models import User
 from test.support.utils import assert_401, TestMixin, assert_200
+from models import User
 
 
 class TestUserController(TestMixin):
