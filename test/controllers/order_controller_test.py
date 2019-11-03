@@ -1,4 +1,7 @@
 import json
+import urllib
+
+from datetime import datetime, timedelta
 
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
 from models.order import Order
@@ -215,3 +218,25 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert len(orders) == 1
         assert orders[0]['id'] == str(an_order.id)
+
+    def test_orders_placed_between_yesterday_and_today_does_not_return_tomorrows_orders(self, a_client,
+                                                                                        a_client_user, an_order):
+        today = datetime.today()
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        an_order.owner = a_client_user
+        an_order.created = tomorrow
+        an_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        params = {'start_date': yesterday, 'end_date': today}
+        url = 'api/v1/orders/placed?' + urllib.parse.urlencode(params)
+        response = self.get(a_client, url)
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 0

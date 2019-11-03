@@ -1,3 +1,5 @@
+from mongoengine import Q
+
 from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services.exceptions.user_exceptions import NonExistingDeliveryException
@@ -22,5 +24,8 @@ def take(order_id, new_data):
     return order_repository.update(order_id, 'delivery', delivery)
 
 
-def placed_by(user_id):
-    return order_repository.filter({'owner': user_id})
+def placed_by(user_id, start_date=None, end_date=None):
+    user_orders = order_repository.filter({'owner': user_id})
+
+    return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date))\
+        if start_date and end_date else user_orders

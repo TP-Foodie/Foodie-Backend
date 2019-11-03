@@ -1,4 +1,5 @@
-from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, NULLIFY
+from datetime import datetime
+from mongoengine import Document, IntField, ReferenceField, CASCADE, StringField, NULLIFY, DateTimeField
 
 from models import User, Place
 
@@ -23,3 +24,4 @@ class Order(Document):
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
     product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
     delivery = ReferenceField(User, reverse_delete_rule=NULLIFY)
+    created = DateTimeField(default=datetime.now())
