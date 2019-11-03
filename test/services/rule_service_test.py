@@ -54,3 +54,18 @@ class TestRuleService:
         self.rule_service.update(a_rule.id, {'name': 'new name'})
 
         assert RuleHistory.objects.count() == 1
+
+    def test_duplicate_rule_duplicates_all_fields_but_id(self, a_rule):
+        duplicated = self.rule_service.duplicate(a_rule.id)
+
+        assert len(self.rule_service.list()) == 2
+        assert duplicated.name == a_rule.name
+        assert duplicated.conditions == a_rule.conditions
+        assert duplicated.consequence == a_rule.consequence
+        assert duplicated.active == a_rule.active
+
+    def test_update_rule_adds_previous_version_to_history(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        assert RuleHistory.objects.first().versions == a_rule
+

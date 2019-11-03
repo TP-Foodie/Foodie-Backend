@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_history_repository import RuleHistoryRepository
 from repositories.rule_repository import RuleRepository
@@ -32,8 +34,13 @@ class RuleService:
         return self.rule_repository.get(rule_id)
 
     def update(self, rule_id, new_fields):
-        self.rule_history_repository.create({})
+        self.rule_history_repository.create(rule_id)
         return self.rule_repository.update(rule_id, new_fields)
 
     def delete(self, rule_id):
         return self.rule_repository.delete(rule_id)
+
+    def duplicate(self, rule_id):
+        duplicated = deepcopy(self.get(rule_id))
+        duplicated['id'] = None
+        return self.rule_repository.create(duplicated)

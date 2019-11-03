@@ -77,7 +77,8 @@ class Rule(Document):
     consequence = fields.EmbeddedDocumentField(RuleConsequence)
     conditions = fields.ListField(fields.EmbeddedDocumentField(RuleCondition))
     active = fields.BooleanField(default=True)
+    history = fields.ReferenceField('RuleHistory')
 
 
 class RuleHistory(Document):
-    rules = fields.ListField(fields.ReferenceField(Rule))
+    versions = fields.ListField(fields.ReferenceField(Rule))
