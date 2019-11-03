@@ -18,3 +18,14 @@ class TestUserController(TestMixin):
 
         assert_200(response)
         assert User.objects.get(id=a_client_user.id).location == a_location
+
+    def test_update_user_balance(self, a_client, a_client_user):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.patch(
+            a_client,
+            '/api/v1/users/{}'.format(a_client_user.id),
+            {'balance': 10}
+        )
+
+        assert_200(response)
+        assert User.objects.get(id=a_client_user.id).balance == 10

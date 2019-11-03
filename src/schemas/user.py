@@ -34,3 +34,4 @@ class UpdateUserSchema(Schema):
     phone = fields.Str(required=False)
     profile_image = fields.String(required=False)
     location = fields.Nested(CoordinatesSchema)
+    balance = fields.Float()
