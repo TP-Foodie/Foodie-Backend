@@ -80,3 +80,10 @@ class TestRuleService:
         updated = Rule.objects.get(id=a_rule.id)
 
         assert updated.id == a_rule.id
+
+    def test_history_returns_rule_history(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        history = self.rule_service.history(a_rule.id)
+
+        assert history.versions[0].name == a_rule.name

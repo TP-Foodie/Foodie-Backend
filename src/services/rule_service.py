@@ -54,3 +54,6 @@ class RuleService:
         else:
             history.versions.append(duplicated.id)
             history.save()
+
+    def history(self, rule_id):
+        return self.rule_history_repository.get_for(rule_id)
