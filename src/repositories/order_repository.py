@@ -51,7 +51,8 @@ def today_count(orders):
 def month_count(orders):
     today = datetime.today().date()
 
-    first_day, last_day = calendar.monthrange(today.year, today.month)
+    _, last_day = calendar.monthrange(today.year, today.month)
+    first_day = 1
 
     begin_month = datetime(today.year, today.month, first_day).date()
     end_month = datetime(today.year, today.month, last_day).date()
