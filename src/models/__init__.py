@@ -1,3 +1,4 @@
+from datetime import datetime
 from mongoengine import Document, \
     StringField, \
     EmbeddedDocumentField, \
@@ -40,6 +41,7 @@ class User(Document):
     reputation = IntField(default=0)
     location = EmbeddedDocumentField(Coordinates)
     balance = FloatField(default=0)
+    created = DateTimeField(default=datetime.now())
 
 
 class Transaction(Document):
