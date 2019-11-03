@@ -39,7 +39,7 @@ def update_user(_id, user_data):
     if 'password' in user_data:
         data['password'] = _get_property(user_data, 'password')
 
-    user.update(**data)
+    return user.update(**data)
 
 
 def is_valid(email=None, password=None, google_id=None, user=None):
