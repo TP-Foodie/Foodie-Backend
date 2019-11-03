@@ -34,7 +34,7 @@ class RuleService:
         return self.rule_repository.get(rule_id)
 
     def update(self, rule_id, new_fields):
-        self.rule_history_repository.create(rule_id)
+        self.add_to_history(rule_id)
         return self.rule_repository.update(rule_id, new_fields)
 
     def delete(self, rule_id):
@@ -44,3 +44,13 @@ class RuleService:
         duplicated = deepcopy(self.get(rule_id))
         duplicated['id'] = None
         return self.rule_repository.create(duplicated)
+
+    def add_to_history(self, rule_id):
+        history = self.rule_history_repository.get_for(rule_id)
+        duplicated = self.duplicate(rule_id)
+
+        if not history:
+            self.rule_history_repository.create(rule_id, duplicated.id)
+        else:
+            history.versions.append(duplicated.id)
+            history.save()

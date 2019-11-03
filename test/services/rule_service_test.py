@@ -37,11 +37,6 @@ class TestRuleService:
 
         assert Rule.objects.get(id=a_rule.id).name == 'new name'
 
-    def test_update_does_not_duplicate(self, a_rule):
-        self.rule_service.update(a_rule.id, {'name': 'new name'})
-
-        assert Rule.objects.count() == 1
-
     def test_update_with_invalid_field_throws_error(self, a_rule):
         with pytest.raises(MongoEngineValidationError):
             self.rule_service.update(a_rule.id, {'conditions': [{'variable': 'DOES NOT EXISTS'}]})
@@ -67,5 +62,21 @@ class TestRuleService:
     def test_update_rule_adds_previous_version_to_history(self, a_rule):
         self.rule_service.update(a_rule.id, {'name': 'new name'})
 
-        assert RuleHistory.objects.first().versions == a_rule
+        assert RuleHistory.objects.first().versions[0].name == a_rule.name
 
+    def test_rule_history_with_3_versions(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+        self.rule_service.update(a_rule.id, {'name': 'new name2'})
+
+        history = RuleHistory.objects.first()
+
+        assert len(history.versions) == 2
+        assert history.versions[0].name == a_rule.name
+        assert history.versions[1].name == 'new name'
+
+    def test_adding_to_rule_history_does_not_modify_actual_rule(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        updated = Rule.objects.get(id=a_rule.id)
+
+        assert updated.id == a_rule.id
