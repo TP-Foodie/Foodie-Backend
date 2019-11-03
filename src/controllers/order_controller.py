@@ -52,7 +52,10 @@ def list_favor_orders():
 @ORDERS_BLUEPRINT.route('/placed', methods=['GET'])
 @authenticate
 def list_placed_orders(user):
-    data = ListOrderSchema(many=True).dump(order_service.placed_by(user.id))
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    data = ListOrderSchema(many=True).dump(order_service.placed_by(user.id, start_date, end_date))
     return jsonify(data)
 
 
