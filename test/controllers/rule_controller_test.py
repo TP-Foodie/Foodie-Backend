@@ -300,3 +300,18 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         response = a_client.get('api/v1/rules/{}/history'.format(str(a_rule.id)))
 
         assert_401(response)
+
+    def test_rule_history_returns_all_rule_versions(self, a_client, a_client_user, a_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(a_client, 'api/v1/rules/{}'.format(str(a_rule.id)), {'name': 'new name'})
+        response = self.get(a_client, 'api/v1/rules/{}/history'.format(str(a_rule.id)))
+
+        assert_200(response)
+
+        rule_history = json.loads(response.data)
+
+        edited_rule = Rule.objects.get(id=a_rule.id)
+
+        assert len(rule_history) == 2
+        assert rule_history[0] == a_rule
+        assert rule_history[1] == edited_rule
