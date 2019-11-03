@@ -313,5 +313,30 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         edited_rule = Rule.objects.get(id=a_rule.id)
 
         assert len(rule_history) == 2
-        assert rule_history[0] == a_rule
-        assert rule_history[1] == edited_rule
+        assert rule_history['versions'][0] == {
+            'name': a_rule.name,
+            'conditions': [{
+                'variable': a_rule.conditions[0].variable,
+                'operator': a_rule.conditions[0].operator,
+                'condition_value': a_rule.conditions[0].condition_value
+            }],
+            'consequence': {
+                'consequence_type': a_rule.consequence.consequence_type,
+                'value': a_rule.consequence.value
+            },
+            'active': a_rule.active
+        }
+        assert rule_history['rule'] == {
+            'id': edited_rule.id,
+            'name': edited_rule.name,
+            'conditions': [{
+                'variable': edited_rule.conditions[0].variable,
+                'operator': edited_rule.conditions[0].operator,
+                'condition_value': edited_rule.conditions[0].condition_value
+            }],
+            'consequence': {
+                'consequence_type': edited_rule.consequence.consequence_type,
+                'value': edited_rule.consequence.value
+            },
+            'active': edited_rule.active
+        }
