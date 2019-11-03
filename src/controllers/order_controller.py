@@ -51,8 +51,8 @@ def list_favor_orders():
 
 @ORDERS_BLUEPRINT.route('/placed', methods=['GET'])
 @authenticate
-def list_placed_orders():
-    data = ListOrderSchema(many=True).dump(order_repository.list_all())
+def list_placed_orders(user):
+    data = ListOrderSchema(many=True).dump(order_service.placed_by(user.id))
     return jsonify(data)
 
 
