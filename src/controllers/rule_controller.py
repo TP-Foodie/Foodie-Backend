@@ -64,3 +64,10 @@ def get_consequence_types():
 def delete_rule(rule_id):
     rule_service.delete(rule_id)
     return NO_CONTENT, HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/<rule_id>/history', methods=['GET'])
+@authenticate
+def get_rule_history(rule_id):
+    return NO_CONTENT, HTTP_200_OK
+

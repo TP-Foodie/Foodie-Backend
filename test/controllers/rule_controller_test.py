@@ -295,3 +295,8 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_200(response)
 
         assert not Rule.objects.count()
+
+    def test_rule_history_for_unauthenticated(self, a_client, a_rule):
+        response = a_client.get('api/v1/rules/{}/history'.format(str(a_rule.id)))
+
+        assert_401(response)
