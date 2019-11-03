@@ -49,6 +49,13 @@ def list_favor_orders():
     return jsonify(data)
 
 
+@ORDERS_BLUEPRINT.route('/placed', methods=['GET'])
+@authenticate
+def list_placed_orders():
+    data = ListOrderSchema(many=True).dump(order_repository.list_all())
+    return jsonify(data)
+
+
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
 @authenticate
 def update_order(order_id):

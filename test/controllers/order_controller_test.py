@@ -176,3 +176,22 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert_404(response)
+
+    def test_orders_placed_for_unauthorized(self, a_client):
+        response = a_client.get('api/v1/orders/placed')
+
+        assert_401(response)
+
+    def test_orders_placed_returns_placed_orders_for_user(self, a_client, a_client_user, an_order):
+        an_order.owner = a_client_user
+        an_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/placed')
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1
+        assert orders[0]['id'] == str(an_order.id)
