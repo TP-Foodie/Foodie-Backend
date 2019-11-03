@@ -87,3 +87,25 @@ class TestOrderService:
             order_service.take(
                 an_order.id, {
                     'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
+
+    def test_placed_by_returns_orders_placed_by_user(self, an_order, a_customer_user):
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        orders = order_service.placed_by(a_customer_user.id)
+
+        assert orders[0] == an_order
+
+    def test_placed_by_returns_users_only(self, an_order_factory, a_customer_user, a_delivery_user):
+        an_order = an_order_factory()
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        another_order = an_order_factory()
+        another_order.owner = a_delivery_user
+        another_order.save()
+
+        orders = order_service.placed_by(a_customer_user.id)
+
+        assert len(orders) == 1
+        assert orders[0] == an_order

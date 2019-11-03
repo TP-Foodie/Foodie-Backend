@@ -195,3 +195,23 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert len(orders) == 1
         assert orders[0]['id'] == str(an_order.id)
+
+    def test_orders_placed_returns_users_only(self, a_client, a_client_user, an_order_factory, a_customer_user):
+        an_order = an_order_factory()
+        another_order = an_order_factory()
+
+        an_order.owner = a_client_user
+        an_order.save()
+
+        another_order.owner = a_customer_user
+        another_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/placed')
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1
+        assert orders[0]['id'] == str(an_order.id)

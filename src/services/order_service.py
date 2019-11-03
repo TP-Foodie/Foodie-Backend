@@ -20,3 +20,7 @@ def take(order_id, new_data):
 
     order_repository.update(order_id, 'status', new_data.get('status', Order.WAITING_STATUS))
     return order_repository.update(order_id, 'delivery', delivery)
+
+
+def placed_by(user_id):
+    return order_repository.filter({'owner': user_id})

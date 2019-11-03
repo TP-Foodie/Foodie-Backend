@@ -31,3 +31,7 @@ def update(order_id, field, value):
     order[field] = value
     order.save()
     return order
+
+
+def filter(params):
+    return Order.objects.filter(**params)
