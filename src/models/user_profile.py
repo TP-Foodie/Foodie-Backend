@@ -1,8 +1,7 @@
-#pylint: disable-msg=too-many-instance-attributes
+# pylint: disable-msg=too-many-instance-attributes
 class UserProfile():
 
-
-    #pylint: disable-msg=too-many-arguments
+    # pylint: disable-msg=too-many-arguments
     def __init__(
             self, name, last_name, email, profile_image,
             type_of_user, subscription, reputation, messages_sent
