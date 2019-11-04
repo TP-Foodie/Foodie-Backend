@@ -1,7 +1,7 @@
 import json
 
-from models.rule import RuleCondition, RuleConsequence, Rule
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
+from models.rule import RuleCondition, RuleConsequence, Rule
 from models.order import Order
 from repositories import order_repository
 
@@ -205,7 +205,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert json.loads(response.data) == 20
 
     # noinspection PyTypeChecker
-    def test_quote_order_returns_zero_if_rule_does_not_apply(self, a_client, a_client_user, an_order):
+    def test_quote_order_returns_zero_if_rule_does_not_apply(self, a_client,
+                                                             a_client_user, an_order):
         an_order.owner = a_client_user
         an_order.save()
 
