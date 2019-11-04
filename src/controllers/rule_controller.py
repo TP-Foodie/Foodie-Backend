@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from controllers.utils import HTTP_200_OK, HTTP_201_CREATED
-from controllers.utils import NO_CONTENT
+from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 

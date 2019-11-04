@@ -20,6 +20,7 @@ class CreateUserSchema(Schema):
     subscription = fields.Str(required=False, validate=SUBSCRIPTION_VALIDATION)
     phone = fields.Str(required=False)
     profile_image = fields.String(required=False)
+    fcmToken = fields.String(required=False)
 
 
 class UpdateUserSchema(Schema):
@@ -31,3 +32,4 @@ class UpdateUserSchema(Schema):
     subscription = fields.Str(required=False, validate=SUBSCRIPTION_VALIDATION)
     phone = fields.Str(required=False)
     profile_image = fields.String(required=False)
+    fcmToken = fields.String(required=False)
