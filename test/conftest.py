@@ -1,6 +1,8 @@
+import json
+
 import pytest
 from faker import Faker
-from faker.providers import person, internet, phone_number, geo
+from faker.providers import person, internet, phone_number, geo, address
 from mongoengine import connect, disconnect
 from mongomock import ObjectId
 
@@ -18,13 +20,13 @@ from services import user_service
 @pytest.fixture
 def cfaker():
     cfaker = Faker()
-    for provider in [person, internet, phone_number, geo]:
+    for provider in [person, internet, phone_number, geo, address]:
         cfaker.add_provider(provider)
     return cfaker
 
 
 @pytest.fixture
-def a_customer_user(cfaker):
+def a_customer_user(cfaker, a_location):
     return User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
@@ -32,7 +34,8 @@ def a_customer_user(cfaker):
         email=cfaker.email(),
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
-        type="CUSTOMER"
+        type="CUSTOMER",
+        location=a_location
     ).save()
 
 
@@ -51,7 +54,7 @@ def a_delivery_user(cfaker):
 
 @pytest.fixture
 def a_location(cfaker):
-    return Coordinates(cfaker.latitude(), cfaker.longitude())
+    return Coordinates(latitude=cfaker.latitude(), longitude=cfaker.longitude())
 
 
 @pytest.fixture
@@ -81,13 +84,14 @@ def a_favor_order(an_order_factory):
 
 
 @pytest.fixture
-def an_order_factory(cfaker, a_customer_user, a_product):
+def an_order_factory(cfaker, a_customer_user, a_product, a_delivery_user):
     def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
             number=cfaker.pydecimal(),
             owner=a_customer_user.id,
             type=order_type,
-            product=a_product.id
+            product=a_product.id,
+            delivery=a_delivery_user.id
         ).save()
     return create_order
 
@@ -175,3 +179,39 @@ def a_rule(cfaker, a_condition, a_consequence):
         conditions=[a_condition],
         consequence=a_consequence
     ).save()
+
+
+@pytest.fixture
+def a_city(cfaker):
+    return cfaker.city()
+
+
+class MockedResponse:
+    def __init__(self, content):
+        self.content = content
+
+
+@pytest.fixture
+def a_geocode_response(a_city):
+    def build_response(city=a_city):
+        return MockedResponse(json.dumps({
+            'results': [
+                {
+                    'locations': [
+                        {'adminArea5': city}
+                    ]
+                }
+            ]
+        }))
+    return build_response
+
+
+@pytest.fixture
+def a_distance_response():
+    def build_response(distance=0):
+        return MockedResponse(json.dumps({
+            'route': {
+                'distance': distance
+            }
+        }))
+    return build_response
