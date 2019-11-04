@@ -176,3 +176,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert_404(response)
+
+    def test_quote_order_for_unauthenticated(self, a_client, an_order):
+        response = a_client.get('api/v1/orders/{}/quotation'.format(str(an_order.id)))
+
+        assert_401(response)

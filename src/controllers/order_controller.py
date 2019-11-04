@@ -42,6 +42,12 @@ def order_details(order_id):
     return jsonify(data)
 
 
+@ORDERS_BLUEPRINT.route('/<order_id>/quotation', methods=['GET'])
+@authenticate
+def order_quotation(order_id):
+    return ''
+
+
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
 @authenticate
 def list_favor_orders():
