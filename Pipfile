@@ -29,6 +29,9 @@ google-api-python-client = "*"
 requests = "*"
 sendgrid = "*"
 firebase-admin = "*"
+geopy = "*"
+coveralls = "*"
+python-coveralls = "*"
 dnspython = "*"
 
 [requires]
