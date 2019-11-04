@@ -12,6 +12,9 @@ def get_chat(_id):
 
 
 def create_chat_message(id_chat, message_data):
+    # increment messages sent by user
+    user_repository.increment_messages_sent(message_data["uid_sender"])
+
     return chat_repository.create_chat_message(
         message_data["uid_sender"], message_data["message"], message_data["timestamp"], id_chat
     )

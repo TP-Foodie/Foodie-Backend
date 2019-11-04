@@ -104,7 +104,9 @@ class TestChatController(TestMixin):
     def test_create_chat_message_should_create_one_on_db(self, a_client, a_client_user):
         chat_response = self.create_chat(a_client, a_client_user, str(a_client_user.id), "b", "c")
         chat = json.loads(chat_response.data)
-        self.create_chat_message(a_client, a_client_user, str(chat["id"]), "a", "b", 0.0)
+        self.create_chat_message(
+            a_client, a_client_user, str(chat["id"]), str(a_client_user.id), "b", 0.0
+        )
         assert chat_repository.count_chat_messages(str(chat["id"])) == 1
 
     def test_list_chat_messages(self, a_client, a_client_user):

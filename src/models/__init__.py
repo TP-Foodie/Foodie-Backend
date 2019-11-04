@@ -39,6 +39,7 @@ class User(Document):
     recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
     fcmToken = StringField(required=False)
+    messages_sent = IntField(default=0)
 
 
 class Transaction(Document):
