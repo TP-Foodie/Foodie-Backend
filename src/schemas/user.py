@@ -1,6 +1,8 @@
 from marshmallow import Schema, fields
 from marshmallow.validate import OneOf
 
+from schemas.place import CoordinatesSchema
+
 
 class UserSchema(Schema):
     class Meta:
@@ -32,4 +34,6 @@ class UpdateUserSchema(Schema):
     subscription = fields.Str(required=False, validate=SUBSCRIPTION_VALIDATION)
     phone = fields.Str(required=False)
     profile_image = fields.String(required=False)
+    location = fields.Nested(CoordinatesSchema)
+    balance = fields.Float()
     fcmToken = fields.String(required=False)
