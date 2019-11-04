@@ -38,6 +38,7 @@ class User(Document):
     recovery_token = StringField(required=False)
     recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
+    messages_sent = IntField(default=0)
 
 
 class Transaction(Document):

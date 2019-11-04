@@ -5,6 +5,7 @@ from flask import request
 from schemas.user import CreateUserSchema, UpdateUserSchema
 from services import user_service
 from services.auth_service import authenticate
+from models.user_profile import UserProfile
 
 USERS_BLUEPRINT = Blueprint('users', __name__)
 
@@ -17,7 +18,12 @@ def get_me(user):
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['GET'])
 def get_user(_id):
-    return jsonify(user_service.get_user(_id)), 200
+    user = user_service.get_user(_id)
+    user_profile = UserProfile(
+        user.name, user.last_name, user.email, user.profile_image,
+        user.type, user.subscription, user.reputation, user.messages_sent
+    )
+    return jsonify(user_profile), 200
 
 
 @USERS_BLUEPRINT.route('/', methods=['GET'])
