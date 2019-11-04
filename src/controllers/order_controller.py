@@ -11,8 +11,12 @@ from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.exceptions.order_exceptions import NonExistingPlaceException, \
     NonExistingOrderException
 from services.auth_service import authenticate
+from services.rule_service import RuleService
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
+
+
+rule_service = RuleService()  # pylint: disable=invalid-name
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['GET'])
@@ -45,7 +49,7 @@ def order_details(order_id):
 @ORDERS_BLUEPRINT.route('/<order_id>/quotation', methods=['GET'])
 @authenticate
 def order_quotation(order_id):
-    return ''
+    return jsonify(rule_service.quote_price(order_id))
 
 
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
