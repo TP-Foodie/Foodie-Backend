@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import pytest
@@ -90,6 +91,41 @@ class TestOrderService:
                 an_order.id, {
                     'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
 
+    def test_placed_by_returns_orders_placed_by_user(self, an_order, a_customer_user):
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        orders = order_service.placed_by(a_customer_user.id)
+
+        assert orders[0] == an_order
+
+    def test_placed_by_returns_users_only(self, an_order_factory, a_customer_user, a_delivery_user):
+        an_order = an_order_factory()
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        another_order = an_order_factory()
+        another_order.owner = a_delivery_user
+        another_order.save()
+
+        orders = order_service.placed_by(a_customer_user.id)
+
+        assert len(orders) == 1
+        assert orders[0] == an_order
+
+    def test_placed_by_with_dates_return_placed_orders_between_dates(self, an_order,
+                                                                     a_customer_user):
+        today = datetime.today()
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        an_order.owner = a_customer_user
+        an_order.created = tomorrow
+        an_order.save()
+
+        orders = order_service.placed_by(a_customer_user.id, yesterday, today)
+
+        assert not orders
     def test_count_for_user_return_zero_when_there_are_no_orders_for_user(self,
                                                                           an_order,
                                                                           a_delivery_user):
