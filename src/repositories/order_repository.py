@@ -36,6 +36,10 @@ def update(order_id, field, value):
     return order
 
 
+def filter_by(params):
+    return Order.objects.filter(**params)
+
+
 def for_delivery(user_id):
     return Order.objects.filter(delivery=user_id)
 

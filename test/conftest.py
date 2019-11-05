@@ -10,6 +10,7 @@ from app import APP
 from models import User, Place, Coordinates
 from models.order import Order, Product
 from models.rule import RuleCondition, RuleConsequence, Rule
+from models.chat import Chat, ChatMessage
 from services import user_service
 
 
@@ -180,6 +181,34 @@ def a_rule(cfaker, a_condition, a_consequence):
         consequence=a_consequence
     ).save()
 
+
+@pytest.fixture
+def a_chat(a_customer_user, a_delivery_user, an_order):
+    return Chat(
+        uid_1=str(a_customer_user.id),
+        uid_2=str(a_delivery_user.id),
+        id_order=str(an_order.id)
+    ).save()
+
+
+@pytest.fixture
+def a_chat_message_from_uid_1(a_chat, cfaker):
+    return ChatMessage(
+        uid_sender=a_chat.uid_1,
+        message=cfaker.text(),
+        timestamp=cfaker.pyfloat(),
+        id_chat=str(a_chat.id)
+    ).save()
+
+
+@pytest.fixture
+def a_chat_message_from_uid_2(a_chat, cfaker):
+    return ChatMessage(
+        uid_sender=a_chat.uid_2,
+        message=cfaker.text(),
+        timestamp=cfaker.pyfloat(),
+        id_chat=str(a_chat.id)
+    ).save()
 
 @pytest.fixture
 def a_city(cfaker):
