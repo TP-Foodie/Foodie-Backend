@@ -1,8 +1,6 @@
-from mongoengine import Q
-
 import json
-
 import requests
+from mongoengine import Q
 from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services.exceptions.user_exceptions import NonExistingDeliveryException
