@@ -6,7 +6,7 @@ from schemas.place import CoordinatesSchema
 
 class UserSchema(Schema):
     class Meta:
-        fields = ('id', 'name', 'last_name', 'email', 'profile_image', 'phone')
+        fields = ('id', 'name', 'last_name', 'email', 'profile_image', 'phone', 'type')
 
 
 TYPE_VALIDATION = OneOf(choices=("CUSTOMER", "DELIVERY"))
