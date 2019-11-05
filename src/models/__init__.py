@@ -1,10 +1,11 @@
+from datetime import datetime
 from mongoengine import Document, \
     StringField, \
     EmbeddedDocumentField, \
     FloatField, \
     EmbeddedDocument, \
     EmailField, \
-    BooleanField, IntField, DateTimeField
+    BooleanField, IntField, DateTimeField, DateField
 
 
 class Coordinates(EmbeddedDocument):
@@ -38,6 +39,11 @@ class User(Document):
     recovery_token = StringField(required=False)
     recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
+    fcmToken = StringField(required=False)
+    messages_sent = IntField(default=0)
+    created = DateField(default=datetime.now().date())
+    balance = FloatField(default=0)
+    location = EmbeddedDocumentField(Coordinates)
 
 
 class Transaction(Document):

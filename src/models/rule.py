@@ -20,6 +20,9 @@ class RuleCondition(EmbeddedDocument):
     ORDER_TIME = 'OT'
     ORDER_QUANTITY = 'OC'
     TRAVEL_DAY = 'TD'
+    TRAVEL_TIME = 'TT'
+    PAYMENT_METHOD = 'PM'
+    ORDER_DAY = 'ORD'
 
     VARIABLES = (
         USER_REPUTATION,
@@ -31,15 +34,16 @@ class RuleCondition(EmbeddedDocument):
         DELIVERY_MONTHLY_TRAVELS,
         DELIVERY_ANTIQUITY,
         USER_BALANCE,
-        CASH_PAYMENT_METHOD,
-        CREDIT_PAYMENT_METHOD,
+        PAYMENT_METHOD,
         ORDER_DURATION,
         ORDER_DISTANCE,
         ORDER_POSITION,
         ORDER_DATE,
         ORDER_TIME,
+        ORDER_DAY,
         ORDER_QUANTITY,
         TRAVEL_DAY,
+        TRAVEL_TIME
     )
 
     GREATER_THAN_EQUAL = 'GTE'
@@ -56,6 +60,11 @@ class RuleCondition(EmbeddedDocument):
         IS
     )
 
+    PAYMENT_METHODS = (
+        CASH_PAYMENT_METHOD,
+        CREDIT_PAYMENT_METHOD
+    )
+
     variable = fields.StringField(max_length=10, choices=VARIABLES)
     operator = fields.StringField(max_length=10, choices=OPERATORS)
     condition_value = fields.StringField(max_length=100)
@@ -70,6 +79,7 @@ class RuleConsequence(EmbeddedDocument):
 
     consequence_type = fields.StringField(max_length=10, choices=CONSEQUENCE_TYPES, default=VALUE)
     value = fields.IntField(max_length=100, default=0)
+    variable = fields.StringField(max_length=10, choices=RuleCondition.VARIABLES)
 
 
 class Rule(Document):

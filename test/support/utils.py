@@ -47,6 +47,16 @@ class TestMixin:
             headers={'Authorization': 'Bearer {}'.format(self.token)}
         )
 
+    def get_paging(self, client, url, page, limit):
+        return client.get(
+            url,
+            headers={
+                'Authorization': 'Bearer {}'.format(self.token),
+                "page": page,
+                "limit": limit
+            }
+        )
+
     def post(self, client, url, data):
         return client.post(
             url,
