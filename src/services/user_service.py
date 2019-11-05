@@ -5,7 +5,7 @@ import hashlib
 from models import User
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 
-from src.repositories import order_repository
+from repositories import order_repository
 
 
 def get_users(page, limit):
