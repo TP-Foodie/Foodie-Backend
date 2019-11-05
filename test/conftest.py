@@ -139,9 +139,22 @@ def a_client_user(cfaker):
 
 
 @pytest.fixture
-def an_admin_user(a_client_user):
-    a_client_user.type = "BACK_OFFICE"
-    return a_client_user
+def an_admin_user(cfaker):
+    password = 'password123123'
+
+    user = user_service.create_user({
+        'name': cfaker.name(),
+        'last_name': cfaker.last_name(),
+        'email': cfaker.email(),
+        'password': password,
+        'profile_image': cfaker.image_url(),
+        'phone': cfaker.phone_number(),
+        'type': "BACK_OFFICE"
+    })
+
+    user.password = password
+
+    return user
 
 
 @pytest.fixture
