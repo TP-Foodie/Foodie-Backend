@@ -56,7 +56,11 @@ def get_users(user):
 @log_request_response
 @authenticate
 def patch_me(user):
-    return patch(user.id)
+    content = request.get_json()
+    schema = UpdateUserSchema()
+    user_data = schema.load(content)
+
+    return jsonify(user_service.update_user(user_data, user=user))
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['PATCH'])
@@ -67,7 +71,7 @@ def patch(_id):
     schema = UpdateUserSchema()
     user_data = schema.load(content)
 
-    return jsonify(user_service.update_user(_id, user_data))
+    return jsonify(user_service.update_user(user_data, _id=_id))
 
 
 @USERS_BLUEPRINT.route('/', methods=['POST'])
