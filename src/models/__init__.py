@@ -44,6 +44,7 @@ class User(Document):
     created = DateField(default=datetime.now().date())
     balance = FloatField(default=0)
     location = EmbeddedDocumentField(Coordinates)
+    available = BooleanField(default=True)
 
 
 class Transaction(Document):
