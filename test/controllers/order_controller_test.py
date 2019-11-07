@@ -35,7 +35,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'product': {
                     'name': product.name,
                     'place': product.place.id
-                }
+                },
+                'payment_method': 'CPM'
             })
 
     def get_orders(self, client, user):
