@@ -1,7 +1,6 @@
 import json
 import requests
 from mongoengine import Q
-from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 from settings import Config
@@ -22,7 +21,12 @@ def take(order_id, new_data):
     if not user_repository.delivery_exists(delivery):
         raise NonExistingDeliveryException()
 
-    order_repository.update(order_id, 'status', new_data.get('status', Order.WAITING_STATUS))
+    if new_data.get('status') is not None:
+        order_repository.update(order_id, 'status', new_data.get('status'))
+
+    if new_data.get('payment_method') is not None:
+        order_repository.update(order_id, 'status', new_data.get('payment_method'))
+
     return order_repository.update(order_id, 'delivery', delivery)
 
 
