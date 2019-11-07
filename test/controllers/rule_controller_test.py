@@ -224,6 +224,28 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert json.loads(response.data)
 
+    def test_patch_field_should_not_modify_other_fields(self, a_client, a_client_user, a_rule):
+        response = self.update_rule(
+            a_client,
+            a_client_user,
+            a_rule,
+            {'name': 'new name'}
+        )
+
+        rule = json.loads(response.data)
+
+        assert rule['active'] == a_rule.active
+        assert rule['conditions'][0] == {
+            'variable': a_rule.conditions[0].variable,
+            'operator': a_rule.conditions[0].operator,
+            'condition_value': a_rule.conditions[0].condition_value
+        }
+        assert rule['consequence'] == {
+            'consequence_type': a_rule.consequence.consequence_type,
+            'value': a_rule.consequence.value,
+            'variable': None
+        }
+
     def test_get_variables_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/rules/variables/')
         assert_401(response)
@@ -323,12 +345,13 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
             }],
             'consequence': {
                 'consequence_type': a_rule.consequence.consequence_type,
-                'value': a_rule.consequence.value
+                'value': a_rule.consequence.value,
+                'variable': None
             },
             'active': a_rule.active
         }
         assert rule_history['rule'] == {
-            'id': edited_rule.id,
+            'id': str(edited_rule.id),
             'name': edited_rule.name,
             'conditions': [{
                 'variable': edited_rule.conditions[0].variable,
@@ -337,7 +360,8 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
             }],
             'consequence': {
                 'consequence_type': edited_rule.consequence.consequence_type,
-                'value': edited_rule.consequence.value
+                'value': edited_rule.consequence.value,
+                'variable': None,
             },
             'active': edited_rule.active
         }

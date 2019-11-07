@@ -22,7 +22,8 @@ class RuleRepository:
         return Rule.objects.get(id=rule_id).conditions
 
     def update(self, rule_id, new_data):
-        return Rule(**new_data, id=rule_id).save()
+        Rule.objects.get(id=rule_id).update(**new_data)
+        return self.get(rule_id)
 
     def delete(self, rule_id):
         return Rule.objects.get(id=rule_id).delete()
