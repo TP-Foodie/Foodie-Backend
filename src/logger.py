@@ -28,14 +28,14 @@ def log_request_response(function):
     def wrapper(*args, **kwargs):
         try:
             info(request.url + " " + str(request.json))
-        except Exception:
-            error("Error logging request")
+        except Exception as ex:
+            error("Error " + str(ex) + " logging request " + str(request))
 
         response = function(*args, **kwargs)
         try:
             info(response.status + " " + str(response.json))
-        except Exception:
-            error("Error logging response")
+        except Exception as ex:
+            warn("Error " + str(ex) + " logging response " + str(response))
 
         return response
     return wrapper
