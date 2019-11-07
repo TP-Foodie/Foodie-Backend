@@ -35,7 +35,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'product': {
                     'name': product.name,
                     'place': product.place.id
-                }
+                },
+                'payment_method': 'CPM'
             })
 
     def get_orders(self, client, user):
@@ -63,6 +64,15 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
             'number': an_order.number,
             'status': an_order.status,
             'type': an_order.type,
+            'delivery': {
+                'id': str(an_order.delivery.id),
+                'name': an_order.delivery.name,
+                'last_name': an_order.delivery.last_name,
+                'email': an_order.delivery.email,
+                'profile_image': an_order.delivery.profile_image,
+                'phone': an_order.delivery.phone,
+                'type': an_order.delivery.type
+            }
         }
 
     def test_get_orders_details_for_unauthenticated(self, a_client, an_order):
@@ -82,11 +92,13 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
             'status': an_order.status,
             'type': an_order.type,
             'owner': {
+                'id': str(an_order.owner.id),
                 'name': an_order.owner.name,
                 'last_name': an_order.owner.last_name,
                 'email': an_order.owner.email,
                 'profile_image': an_order.owner.profile_image,
-                'phone': an_order.owner.phone
+                'phone': an_order.owner.phone,
+                'type': an_order.owner.type
             },
             'product': {
                 'name': an_order.product.name,
@@ -97,6 +109,15 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                         'longitude': an_order.product.place.coordinates.longitude
                     }
                 }
+            },
+            'delivery': {
+                'id': str(an_order.delivery.id),
+                'name': an_order.delivery.name,
+                'last_name': an_order.delivery.last_name,
+                'email': an_order.delivery.email,
+                'profile_image': an_order.delivery.profile_image,
+                'phone': an_order.delivery.phone,
+                'type': an_order.delivery.type
             }
         }
 

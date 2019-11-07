@@ -6,12 +6,13 @@ from services.exceptions.user_exceptions import NonExistingDeliveryException
 from settings import Config
 
 
-def create(order_type, owner, product):
+def create(order_type, product, payment_method, owner):
     created_product = product_repository.get_or_create(*product.values())
     return order_repository.create(
         order_type=order_type,
         owner=owner,
         product=created_product.id,
+        payment_method=payment_method,
         number=order_repository.count() + 1
     )
 
