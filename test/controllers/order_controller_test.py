@@ -1,4 +1,7 @@
 import json
+import urllib
+
+from datetime import datetime, timedelta
 
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
 from models.order import Order
@@ -176,3 +179,66 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert_404(response)
+
+    def test_orders_placed_for_unauthorized(self, a_client):
+        response = a_client.get('api/v1/orders/placed')
+
+        assert_401(response)
+
+    def test_orders_placed_returns_placed_orders_for_user(self, a_client, a_client_user, an_order):
+        an_order.owner = a_client_user
+        an_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/placed')
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1
+        assert orders[0]['id'] == str(an_order.id)
+
+    def test_orders_placed_returns_users_only(self, a_client, a_client_user,
+                                              an_order_factory, a_customer_user):
+        an_order = an_order_factory()
+        another_order = an_order_factory()
+
+        an_order.owner = a_client_user
+        an_order.save()
+
+        another_order.owner = a_customer_user
+        another_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/placed')
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1
+        assert orders[0]['id'] == str(an_order.id)
+
+    def test_orders_placed_between_dates_does_not_return_out_of_range_orders(self, a_client,
+                                                                             a_client_user,
+                                                                             an_order):
+        today = datetime.today()
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        an_order.owner = a_client_user
+        an_order.created = tomorrow
+        an_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        params = {'start_date': yesterday, 'end_date': today}
+        url = 'api/v1/orders/placed?' + urllib.parse.urlencode(params)
+        response = self.get(a_client, url)
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert not orders

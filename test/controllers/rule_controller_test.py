@@ -81,7 +81,8 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
             }],
             'consequence': {
                 'consequence_type': a_rule.consequence.consequence_type,
-                'value': a_rule.consequence.value
+                'value': a_rule.consequence.value,
+                'variable': None
             },
             'active': a_rule.active
         }

@@ -2,6 +2,7 @@ language: python
 python:
   - "3.6"
 script:
+  - echo $GOOGLE_CREDENTIALS > /home/travis/build/TP-Foodie/Foodie-Backend/src/google_credentials.json
   - pytest --cov=src --cov-fail-under=75 --cov-config=.coveragerc
   - pylint src/
   - pylint test/

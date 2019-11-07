@@ -3,13 +3,18 @@ from copy import deepcopy
 from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_history_repository import RuleHistoryRepository
 from repositories.rule_repository import RuleRepository
+from repositories import order_repository
 from schemas.rule_schema import CreateRuleSchema
+from services.rule_engine.condition_service import RuleConditionService
+from services.rule_engine.consequence_service import RuleConsequenceService
 
 
 class RuleService:
     rule_repository = RuleRepository()
     rule_history_repository = RuleHistoryRepository()
     create_schema = CreateRuleSchema()
+    condition_service = RuleConditionService()
+    consequence_service = RuleConsequenceService()
 
     @property
     def variables(self):
@@ -57,3 +62,12 @@ class RuleService:
 
     def history(self, rule_id):
         return self.rule_history_repository.get_for(rule_id)
+
+    def quote_price(self, order_id):
+        order = order_repository.get_order(order_id)
+        total = 0
+        for rule in self.rule_repository.active_sorted_by_value():
+            result = self.condition_service.apply(order, *rule.conditions)
+            if result:
+                total = self.consequence_service.apply(rule.consequence, total, order)
+        return total

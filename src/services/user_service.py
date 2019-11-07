@@ -5,6 +5,8 @@ import hashlib
 from models import User
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 
+from repositories import order_repository
+
 
 def get_users(page, limit):
     return [user for user in User.objects.skip(
@@ -35,10 +37,11 @@ def create_user(user_data):
 def update_user(_id, user_data):
     user = get_user(_id)
 
-    for key in user_data.keys():
-        user[key] = _get_property(user_data, key)
+    data = user_data
+    if 'password' in user_data:
+        data['password'] = _get_property(user_data, 'password')
 
-    return user.save()
+    return user.update(**data)
 
 
 def is_valid(email=None, password=None, google_id=None, user=None):
@@ -106,3 +109,19 @@ def update_user_password(update_password_data):
     user = get_user_by_email(update_password_data['email'])
     user.password = _hash_password(update_password_data['password'])
     user.save()
+
+
+def delivery_orders(user):
+    return order_repository.for_delivery(user.id)
+
+
+def daily_travels(user):
+    return order_repository.today_count(delivery_orders(user))
+
+
+def monthly_travels(user):
+    return order_repository.month_count(delivery_orders(user))
+
+
+def antiquity(user):
+    return (datetime.now().date() - user.created).days
