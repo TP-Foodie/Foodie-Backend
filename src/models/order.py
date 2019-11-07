@@ -4,6 +4,7 @@ from mongoengine import Document, IntField, ReferenceField, \
 
 from models import User, Place
 from models.rule import RuleCondition
+from models.chat import Chat
 
 
 class Product(Document):
@@ -32,3 +33,4 @@ class Order(Document):
     payment_method = StringField(
         choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD
     )
+    chat = ReferenceField(Chat, reverse_delete_rule=NULLIFY)
