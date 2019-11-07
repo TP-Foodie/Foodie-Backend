@@ -44,8 +44,10 @@ def update_user(user_data, _id=None, user=None):
 
     if 'type' in user_data.keys():
         user['type'] = user_data.pop('type')
+        user.save()
 
-    return user.update(**data)
+    user.update(**data)
+    return user
 
 
 def is_valid(email=None, password=None, google_id=None, user=None):
