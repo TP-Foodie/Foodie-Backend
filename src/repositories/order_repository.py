@@ -22,7 +22,7 @@ def count():
 
 
 def create(order_type, owner, product, payment_method, number):
-    return Order.objects.create(type=order_type, owner=owner, product=product, 
+    return Order.objects.create(type=order_type, owner=owner, product=product,
                                 payment_method=payment_method, number=number)
 
 

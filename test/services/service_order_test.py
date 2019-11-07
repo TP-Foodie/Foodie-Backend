@@ -24,7 +24,7 @@ class TestOrderService:
 
     def test_order_number_should_be_consecutive(self, a_customer_user, a_product):
         order_service.create(
-            Order.NORMAL_TYPE, { 'name': a_product.name, 'place': a_product.place.id}, 
+            Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
             'CPM', a_customer_user.id)
         order_service.create(
             Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
