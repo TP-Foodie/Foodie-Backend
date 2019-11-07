@@ -33,10 +33,10 @@ def log_request_response(function):
 
         response = function(*args, **kwargs)
         try:
-            if response is isinstance(response, tuple) and len(response) == 2:
-                info(str(response[1]) + " " + str(response[0]))
-            elif response is isinstance(response, tuple) and len(response) == 2:
-                info(str(response[0]))
+            if isinstance(response, tuple) and len(response) == 2:
+                info(str(response[1]) + " " + str(response[0].json))
+            elif isinstance(response, tuple) and len(response) <= 2:
+                info(str(response[0].json) + " " + str(response[0].status))
             else:
                 info(response.status + " " + str(response.json))
         except Exception as ex:
