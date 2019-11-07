@@ -2,6 +2,7 @@ from flask import jsonify
 from flask import Blueprint
 from flask import request
 
+from logger import log_request_response
 from schemas.user import CreateUserSchema, UpdateUserSchema
 from services import user_service
 from services.auth_service import authenticate
@@ -13,12 +14,14 @@ USERS_BLUEPRINT = Blueprint('users', __name__)
 
 
 @USERS_BLUEPRINT.route('/me', methods=['GET'])
+@log_request_response
 @authenticate
 def get_me(user):
     return jsonify(user), HTTP_200_OK
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['GET'])
+@log_request_response
 @authenticate
 def get_user(user, _id):
     if user.type == User.BACK_OFFICE_TYPE:
@@ -33,6 +36,7 @@ def get_user(user, _id):
 
 
 @USERS_BLUEPRINT.route('/', methods=['GET'])
+@log_request_response
 @authenticate
 def get_users(user):
     page = int(request.args.get("page", 0))
@@ -49,12 +53,14 @@ def get_users(user):
 
 
 @USERS_BLUEPRINT.route('/me', methods=['PATCH'])
+@log_request_response
 @authenticate
 def patch_me(user):
     return patch(user.id)
 
 
 @USERS_BLUEPRINT.route('/<_id>', methods=['PATCH'])
+@log_request_response
 @authenticate
 def patch(_id):
     content = request.get_json()
@@ -65,6 +71,7 @@ def patch(_id):
 
 
 @USERS_BLUEPRINT.route('/', methods=['POST'])
+@log_request_response
 def post():
     content = request.get_json()
     schema = CreateUserSchema()

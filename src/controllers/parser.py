@@ -25,7 +25,8 @@ def parse_order_request(values):
 def parse_take_order_request(values):
     values.update({
         'status': values['status'],
-        'delivery': ObjectId(values['delivery'])
+        'delivery': ObjectId(values['delivery']),
+        'payment_method': values.get('payment_method', None)
     })
     return values
 

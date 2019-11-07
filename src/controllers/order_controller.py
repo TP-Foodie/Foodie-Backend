@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from controllers.parser import parse_order_request, parse_take_order_request
 from controllers.utils import HTTP_201_CREATED, \
     HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
+from logger import log_request_response
 from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
@@ -20,6 +21,7 @@ rule_service = RuleService()  # pylint: disable=invalid-name
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['GET'])
+@log_request_response
 @authenticate
 def list_orders():
     data = ListOrderSchema(many=True).dump(order_repository.list_all())
@@ -27,6 +29,7 @@ def list_orders():
 
 
 @ORDERS_BLUEPRINT.route('/', methods=['POST'])
+@log_request_response
 @authenticate
 def create_order(user):
     try:
@@ -40,6 +43,7 @@ def create_order(user):
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['GET'])
+@log_request_response
 @authenticate
 def order_details(order_id):
     data = DetailsOrderSchema().dump(order_repository.get_order(order_id))
@@ -53,6 +57,7 @@ def order_quotation(order_id):
 
 
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
+@log_request_response
 @authenticate
 def list_favor_orders():
     data = ListOrderSchema(many=True).dump(order_repository.get_favor_orders())
@@ -60,6 +65,7 @@ def list_favor_orders():
 
 
 @ORDERS_BLUEPRINT.route('/placed', methods=['GET'])
+@log_request_response
 @authenticate
 def list_placed_orders(user):
     start_date = request.args.get('start_date')
@@ -70,6 +76,7 @@ def list_placed_orders(user):
 
 
 @ORDERS_BLUEPRINT.route('/<order_id>', methods=['PATCH'])
+@log_request_response
 @authenticate
 def update_order(order_id):
     try:
