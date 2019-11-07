@@ -3,6 +3,8 @@ from flask.json import JSONEncoder
 from bson import ObjectId
 from mongoengine.base import BaseDocument
 
+from models.user_profile import UserProfile
+
 
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):  # pylint: disable=E0202, W0221
@@ -14,5 +16,8 @@ class CustomJSONEncoder(JSONEncoder):
 
         if isinstance(obj, MagicMock):
             return "serializable for test"
+
+        if isinstance(obj, UserProfile):
+            return obj.__dict__
 
         return super(CustomJSONEncoder, self).default(obj)
