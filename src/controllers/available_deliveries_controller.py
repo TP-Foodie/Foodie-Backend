@@ -3,6 +3,7 @@
 from flask import request, jsonify, Blueprint
 
 from controllers.parser import parse_available_deliveries_request
+from logger import log_request_response
 from services import available_deliveries_service
 from schemas.available_delivery_schema import AvailableDeliverySchema
 from schemas.query_nearby_deliveries_schema import QueryNearbyDeliveriesSchema
@@ -22,6 +23,7 @@ AVAILABLE_DELIVERIES_BLUEPRINT = Blueprint(AVAILABLE_DELIVERIES_ROUTE, __name__)
 
 
 @AVAILABLE_DELIVERIES_BLUEPRINT.route(AVAILABLE_DELIVERIES_ROUTE, methods=['POST'])
+@log_request_response
 def post():
     """ This methos handle POST in available_deliveries endpoint"""
     # get json data, validates and deserializes it.
@@ -38,6 +40,7 @@ def post():
 
 
 @AVAILABLE_DELIVERIES_BLUEPRINT.route(AVAILABLE_DELIVERIES_ROUTE, methods=['GET'])
+@log_request_response
 def get():
     """ This methos handle GET in deliveries_disponibles endpoint"""
     # get json data, validates and deserializes it.
@@ -55,6 +58,7 @@ def get():
 
 
 @AVAILABLE_DELIVERIES_BLUEPRINT.route(AVAILABLE_DELIVERIES_ROUTE, methods=['DELETE'])
+@log_request_response
 def delete():
     """ This methos handle DELETE in deliveries_disponibles endpoint"""
     # get json data, validates and deserializes it.
