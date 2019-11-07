@@ -34,18 +34,21 @@ def create_user(user_data):
     return user.save()
 
 
-def update_user(_id, user_data):
-    user = get_user(_id)
+def update_user(user_data, _id=None, user=None):
+    if _id is not None:
+        user = get_user(_id)
 
     data = user_data
     if 'password' in user_data:
         data['password'] = _get_property(user_data, 'password')
 
+    if 'type' in user_data.keys():
+        user['type'] = user_data.pop('type')
+
     return user.update(**data)
 
 
 def is_valid(email=None, password=None, google_id=None, user=None):
-
     if google_id is not None:
         user = get_user_by_google_id(google_id)
         return user is not None
