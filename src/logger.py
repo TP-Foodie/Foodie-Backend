@@ -28,13 +28,13 @@ def log_request_response(function):
     def wrapper(*args, **kwargs):
         try:
             info(request.url + " " + str(request.json))
-        except RuntimeError:
+        except Exception:
             error("Error logging request")
 
         response = function(*args, **kwargs)
         try:
             info(response.status + " " + str(response.json))
-        except RuntimeError:
+        except Exception:
             error("Error logging response")
 
         return response
