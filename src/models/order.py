@@ -4,7 +4,6 @@ from mongoengine import Document, IntField, ReferenceField, \
 
 from models import User, Place
 from models.rule import RuleCondition
-from models.chat import Chat
 
 
 class Product(Document):
