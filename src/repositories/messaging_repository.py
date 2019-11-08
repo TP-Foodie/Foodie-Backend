@@ -4,6 +4,9 @@ import logger
 
 # This registration token comes from the client FCM SDKs.
 def send_message_to_device(message, registration_token):
+    if registration_token == "":
+        return
+
     fcm_message = messaging.Message(
         data=message,
         token=registration_token,

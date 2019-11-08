@@ -2,7 +2,6 @@ from marshmallow import Schema, fields
 
 from schemas.place import PlaceSchema
 from schemas.user import UserSchema
-from schemas.chat_schema import CreateChatSchema
 
 
 class ProductSchema(Schema):
@@ -16,14 +15,13 @@ class ListOrderSchema(Schema):
     delivery = fields.Nested(UserSchema)
 
     class Meta:
-        fields = ('id', 'number', 'status', 'type', 'delivery')
+        fields = ('id', 'number', 'status', 'type', 'delivery', 'id_chat')
 
 
 class DetailsOrderSchema(Schema):
     owner = fields.Nested(UserSchema)
     product = fields.Nested(ProductSchema)
     delivery = fields.Nested(UserSchema)
-    chat = fields.Nested(CreateChatSchema)
 
     class Meta:
-        fields = ('id', 'number', 'status', 'type', 'owner', 'product', 'delivery', 'chat')
+        fields = ('id', 'number', 'status', 'type', 'owner', 'product', 'delivery', 'id_chat')

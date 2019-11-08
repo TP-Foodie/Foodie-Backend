@@ -33,4 +33,4 @@ class Order(Document):
     payment_method = StringField(
         choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD
     )
-    chat = ReferenceField(Chat, reverse_delete_rule=NULLIFY)
+    id_chat = StringField(default="")
