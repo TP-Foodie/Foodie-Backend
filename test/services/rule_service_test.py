@@ -92,6 +92,11 @@ class TestRuleService:
 
         assert history.versions[0].name == a_rule.name
 
+    def test_history_when_rule_was_never_updated_returns_rule(self, a_rule):
+        history = self.rule_service.history(a_rule.id)
+
+        assert not history.versions
+        assert history.rule == a_rule
 
 # noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')

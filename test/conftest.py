@@ -16,6 +16,7 @@ from services import user_service
 
 # pylint: disable=redefined-outer-name, function-redefined
 # This is required, pylint doesn't work well with pytest
+from services.rule_service import RuleService
 
 
 @pytest.fixture
@@ -187,12 +188,12 @@ def a_consequence():
 
 
 @pytest.fixture
-def a_rule(cfaker, a_condition, a_consequence):
-    return Rule(
-        name=cfaker.name(),
-        conditions=[a_condition],
-        consequence=a_consequence
-    ).save()
+def a_rule(cfaker, a_condition_data, a_consequence_data):
+    return RuleService().create(**{
+        'name': cfaker.name(),
+        'conditions': [a_condition_data],
+        'consequence': a_consequence_data
+    })
 
 
 @pytest.fixture

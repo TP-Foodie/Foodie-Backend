@@ -30,7 +30,10 @@ class RuleService:
 
     def create(self, **kwargs):
         data = self.create_schema.load(kwargs)
-        return self.rule_repository.create(data)
+        new_rule = self.rule_repository.create(data)
+        self.rule_history_repository.create(new_rule.id)
+
+        return new_rule
 
     def list(self):
         return self.rule_repository.list()
@@ -54,11 +57,8 @@ class RuleService:
         history = self.rule_history_repository.get_for(rule_id)
         duplicated = self.duplicate(rule_id)
 
-        if not history:
-            self.rule_history_repository.create(rule_id, duplicated.id)
-        else:
-            history.versions.append(duplicated.id)
-            history.save()
+        history.versions.append(duplicated.id)
+        history.save()
 
     def history(self, rule_id):
         return self.rule_history_repository.get_for(rule_id)
