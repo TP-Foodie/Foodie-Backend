@@ -18,5 +18,5 @@ class Config:
     JWT_SECRET = os.getenv("JWT_SECRET", "foodie")
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
     GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
-    GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "")
+    GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "./src/google_credentials.json")
     MAP_QUEST_API_KEY = os.getenv("MAP_QUEST_API_KEY", "")
