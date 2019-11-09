@@ -34,8 +34,4 @@ def get():
     deliveries = available_deliveries_service.query_nearby_deliveries(
         query_nearby_deliveries_data)
 
-    schema = UserProfile()
-
-    deliveries = [schema.dump(user) for user in deliveries]
-
-    return jsonify({'body': deliveries}), 200
+    return jsonify({'body': UserProfile().dump(deliveries, many=True)}), 200
