@@ -13,8 +13,7 @@ MOCK_OBJECT = MagicMock()
 def test_success_query_nearby_deliveries(user):
     """ Test success query nearby deliveries """
     nearby_deliveries = []
-    user.objects = MOCK_OBJECT
-    MOCK_OBJECT.get.return_value = nearby_deliveries
+    user.objects.return_value = nearby_deliveries
 
     from services import available_deliveries_service
 

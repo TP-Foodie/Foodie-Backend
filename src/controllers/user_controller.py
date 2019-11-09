@@ -3,10 +3,9 @@ from flask import Blueprint
 from flask import request
 
 from logger import log_request_response
-from schemas.user import CreateUserSchema, UpdateUserSchema
+from schemas.user import CreateUserSchema, UpdateUserSchema, UserProfile
 from services import user_service
 from services.auth_service import authenticate
-from models.user_profile import UserProfile
 from models import User
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 
@@ -28,10 +27,7 @@ def get_user(user, _id):
         return jsonify(user_service.get_user(_id)), HTTP_200_OK
 
     user_data = user_service.get_user(_id)
-    user_profile = UserProfile(
-        user_data.name, user_data.last_name, user_data.email, user_data.profile_image,
-        user_data.type, user_data.subscription, user_data.reputation, user_data.messages_sent
-    )
+    user_profile = UserProfile().dump(user_data)
     return jsonify(user_profile), HTTP_200_OK
 
 
