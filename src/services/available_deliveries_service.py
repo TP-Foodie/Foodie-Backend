@@ -11,7 +11,7 @@ def query_nearby_deliveries(query_data):
     radius = query_data['radius']
 
     deliveries = User.objects(  # pylint: disable=E1101
-        coordinates__geo_within_center=[[longitude, latitude], radius],
+        location__geo_within_center=[[longitude, latitude], radius],
         type=User.DELIVERY_TYPE,
         available=True
     )
