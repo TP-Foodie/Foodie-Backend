@@ -9,7 +9,7 @@ from mongomock import ObjectId
 from app import APP
 from models import User, Place, Coordinates
 from models.order import Order, Product
-from models.rule import RuleCondition, RuleConsequence, Rule
+from models.rule import RuleCondition, RuleConsequence
 from models.chat import Chat, ChatMessage
 from services import user_service
 
