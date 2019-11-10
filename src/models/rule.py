@@ -1,4 +1,4 @@
-from mongoengine import Document, fields, EmbeddedDocument
+from mongoengine import Document, fields, EmbeddedDocument, CASCADE
 
 
 class RuleCondition(EmbeddedDocument):
@@ -90,5 +90,5 @@ class Rule(Document):
 
 
 class RuleHistory(Document):
-    rule = fields.ReferenceField(Rule)
+    rule = fields.ReferenceField(Rule, reverse_delete_rule=CASCADE)
     versions = fields.ListField(fields.ReferenceField(Rule))
