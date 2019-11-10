@@ -1,4 +1,6 @@
-from flask import current_app
+from functools import wraps
+
+from flask import current_app, request
 
 
 def get_logger():
@@ -19,3 +21,26 @@ def warn(msg, *args, **kwargs):
 
 def error(msg, *args, **kwargs):
     get_logger().error(msg, *args, **kwargs)
+
+
+def log_request_response(function):
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        try:
+            info(request.url + " " + str(request.json))
+        except Exception as ex:
+            error("Error " + str(ex) + " logging request " + str(request))
+
+        response = function(*args, **kwargs)
+        try:
+            if isinstance(response, tuple) and len(response) == 2:
+                info(str(response[1]) + " " + str(response[0].json))
+            elif isinstance(response, tuple) and len(response) <= 2:
+                info(str(response[0].json) + " " + str(response[0].status))
+            else:
+                info(response.status + " " + str(response.json))
+        except Exception as ex:
+            warn("Error " + str(ex) + " logging response " + str(response))
+
+        return response
+    return wrapper

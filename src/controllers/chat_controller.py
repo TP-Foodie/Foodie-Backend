@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
+from logger import log_request_response
 from schemas.chat_schema import CreateChatSchema, CreateChatMessageSchema
 from services import chat_service
 from services.auth_service import authenticate
@@ -9,6 +10,7 @@ CHATS_BLUEPRINT = Blueprint('chats', __name__)
 
 
 @CHATS_BLUEPRINT.route('/', methods=['POST'])
+@log_request_response
 @authenticate
 def post(user):
     content = request.get_json()
@@ -22,6 +24,7 @@ def post(user):
 
 
 @CHATS_BLUEPRINT.route('/<_id>', methods=['GET'])
+@log_request_response
 @authenticate
 def get_chat(user, _id):
     chat = chat_service.get_chat(_id)
@@ -33,6 +36,7 @@ def get_chat(user, _id):
 
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['POST'])
+@log_request_response
 @authenticate
 def create_chat_message(user, _id):
     content = request.get_json()
@@ -52,6 +56,7 @@ def create_chat_message(user, _id):
 
 
 @CHATS_BLUEPRINT.route('/<_id>/messages/', methods=['GET'])
+@log_request_response
 @authenticate
 def get_chat_messages(user, _id):
     chat = chat_service.get_chat(_id)

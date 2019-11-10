@@ -4,6 +4,7 @@ import urllib
 from datetime import datetime, timedelta
 
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
+from models.rule import RuleCondition, RuleConsequence, Rule
 from models.order import Order
 from repositories import order_repository
 
@@ -34,7 +35,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'product': {
                     'name': product.name,
                     'place': product.place.id
-                }
+                },
+                'payment_method': 'CPM'
             })
 
     def get_orders(self, client, user):
@@ -62,6 +64,15 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
             'number': an_order.number,
             'status': an_order.status,
             'type': an_order.type,
+            'delivery': {
+                'id': str(an_order.delivery.id),
+                'name': an_order.delivery.name,
+                'last_name': an_order.delivery.last_name,
+                'email': an_order.delivery.email,
+                'profile_image': an_order.delivery.profile_image,
+                'phone': an_order.delivery.phone,
+                'type': an_order.delivery.type
+            }
         }
 
     def test_get_orders_details_for_unauthenticated(self, a_client, an_order):
@@ -81,11 +92,13 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
             'status': an_order.status,
             'type': an_order.type,
             'owner': {
+                'id': str(an_order.owner.id),
                 'name': an_order.owner.name,
                 'last_name': an_order.owner.last_name,
                 'email': an_order.owner.email,
                 'profile_image': an_order.owner.profile_image,
-                'phone': an_order.owner.phone
+                'phone': an_order.owner.phone,
+                'type': an_order.owner.type
             },
             'product': {
                 'name': an_order.product.name,
@@ -96,6 +109,15 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                         'longitude': an_order.product.place.coordinates.longitude
                     }
                 }
+            },
+            'delivery': {
+                'id': str(an_order.delivery.id),
+                'name': an_order.delivery.name,
+                'last_name': an_order.delivery.last_name,
+                'email': an_order.delivery.email,
+                'profile_image': an_order.delivery.profile_image,
+                'phone': an_order.delivery.phone,
+                'type': an_order.delivery.type
             }
         }
 
@@ -179,6 +201,57 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert_404(response)
+
+    def test_quote_order_for_unauthenticated(self, a_client, an_order):
+        response = a_client.get('api/v1/orders/{}/quotation'.format(str(an_order.id)))
+
+        assert_401(response)
+
+    # noinspection PyTypeChecker
+    def test_quote_order_returns_order_quotation(self, a_client, a_client_user, an_order):
+        Rule(
+            name='$20 base',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                )
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value='20')
+        ).save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/{}/quotation'.format(str(an_order.id)))
+
+        assert_200(response)
+
+        assert json.loads(response.data) == 20
+
+    # noinspection PyTypeChecker
+    def test_quote_order_returns_zero_if_rule_does_not_apply(self, a_client,
+                                                             a_client_user, an_order):
+        an_order.owner = a_client_user
+        an_order.save()
+
+        Rule(
+            name='$20 base',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='3'
+                )
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value='20')
+        ).save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/{}/quotation'.format(str(an_order.id)))
+
+        assert_200(response)
+
+        assert json.loads(response.data) == 0
 
     def test_orders_placed_for_unauthorized(self, a_client):
         response = a_client.get('api/v1/orders/placed')

@@ -44,7 +44,7 @@ class TestUserService(TestCase):
         mock_user.get.return_value = old_user
         old_user.save.return_value = True
 
-        assert user_service.update_user(1, {"name": "nombre"})
+        assert user_service.update_user({"name": "nombre"}, 1)
 
     @mock.patch('services.user_service.User')
     def test_is_valid_user_should_verify_user_with_password(self, mock_user):
