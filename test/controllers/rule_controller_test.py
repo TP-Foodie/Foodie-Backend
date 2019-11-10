@@ -365,3 +365,12 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
             },
             'active': edited_rule.active
         }
+
+    def test_get_rules_should_not_return_history(self, a_client, a_client_user, a_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(a_client, 'api/v1/rules/{}'.format(str(a_rule.id)), {'name': 'new name'})
+        response = self.get(a_client, 'api/v1/rules/')
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1

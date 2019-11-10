@@ -1,4 +1,4 @@
-from models.rule import Rule
+from models.rule import Rule, RuleHistory
 from schemas.rule_schema import ListRuleSchema, RuleSchema
 
 
@@ -10,10 +10,10 @@ class RuleRepository:
         return Rule.objects.create(**data)
 
     def list(self):
-        return self.rules_schema.dump(Rule.objects.all())
+        return self.rules_schema.dump(self.all())
 
     def all(self):
-        return Rule.objects.all()
+        return RuleHistory.objects.all().values_list('rule')
 
     def get(self, rule_id):
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))

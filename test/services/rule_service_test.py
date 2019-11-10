@@ -57,7 +57,7 @@ class TestRuleService:
     def test_duplicate_rule_duplicates_all_fields_but_id(self, a_rule):
         duplicated = self.rule_service.duplicate(a_rule.id)
 
-        assert len(self.rule_service.list()) == 2
+        assert len(Rule.objects.all()) == 2
         assert duplicated.name == a_rule.name
         assert duplicated.conditions == a_rule.conditions
         assert duplicated.consequence == a_rule.consequence
