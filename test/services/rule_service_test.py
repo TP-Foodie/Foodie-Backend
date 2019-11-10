@@ -458,12 +458,12 @@ class TestExampleRules:
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.GREATER_THAN_EQUAL,
-                    condition_value='15:00:00'
+                    condition_value='Sat, 30 Nov 2019 15:00:00 -0300'
                 ),
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.LESS_THAN_EQUAL,
-                    condition_value='16:00:00'
+                    condition_value='Sat, 30 Nov 2019 16:00:00 -0300'
                 )
             ],
             consequence=RuleConsequence(
@@ -523,12 +523,12 @@ class TestExampleRules:
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.GREATER_THAN_EQUAL,
-                    condition_value='17:00:00'
+                    condition_value='Sat, 30 Nov 2019 15:00:00 -0300'
                 ),
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.LESS_THAN_EQUAL,
-                    condition_value='19:00:00'
+                    condition_value='Sat, 30 Nov 2019 19:00:00 -0300'
                 ),
             ],
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10)
