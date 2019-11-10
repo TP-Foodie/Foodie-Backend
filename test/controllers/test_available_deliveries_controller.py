@@ -20,7 +20,7 @@ class DeliveriesDisponiblesControllerTestCase(unittest.TestCase):
     #
 
     @patch(
-        'controllers.available_deliveries_controller.available_deliveries_service',
+        'controllers.available_deliveries_controller.delivery_service',
         autospec=True)
     def test_success_query_nearby_deliveries(self, mock_service):
         """ Test success query nearby deliveries """

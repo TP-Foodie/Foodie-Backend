@@ -1,8 +1,9 @@
 import json
 import requests
 from mongoengine import Q
-from repositories import order_repository, product_repository, user_repository
-from services.exceptions.user_exceptions import NonExistingDeliveryException
+
+from repositories import order_repository, product_repository
+from services import delivery_service
 from settings import Config
 
 
@@ -18,9 +19,10 @@ def create(order_type, product, payment_method, owner):
 
 
 def take(order_id, new_data):
-    delivery = new_data.get('delivery', None)
-    if not user_repository.delivery_exists(delivery):
-        raise NonExistingDeliveryException()
+    delivery_service.handle_status_change(
+        new_data.get('delivery', order_repository.get_order(order_id).delivery),
+        new_data.get('status')
+    )
 
     if new_data.get('status') is not None:
         order_repository.update(order_id, 'status', new_data.get('status'))
@@ -28,13 +30,16 @@ def take(order_id, new_data):
     if new_data.get('payment_method') is not None:
         order_repository.update(order_id, 'status', new_data.get('payment_method'))
 
-    return order_repository.update(order_id, 'delivery', delivery)
+    if new_data.get('delivery') is not None:
+        order_repository.update(order_id, 'delivery', new_data.get('delivery'))
+
+    return order_repository.get_order(order_id)
 
 
 def placed_by(user_id, start_date=None, end_date=None):
     user_orders = order_repository.filter_by({'owner': user_id})
 
-    return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date))\
+    return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
         if start_date and end_date else user_orders
 
 
