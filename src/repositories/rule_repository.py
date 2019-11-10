@@ -13,7 +13,7 @@ class RuleRepository:
         return self.rules_schema.dump(self.all())
 
     def all(self):
-        return RuleHistory.objects.all().values_list('rule')
+        return Rule.objects.filter(original=True)
 
     def get(self, rule_id):
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))
@@ -29,4 +29,4 @@ class RuleRepository:
         return Rule.objects.get(id=rule_id).delete()
 
     def active_sorted_by_value(self):
-        return Rule.objects.filter(active=True).order_by('-consequence__consequence_type')
+        return self.all().filter(active=True).order_by('-consequence__consequence_type')

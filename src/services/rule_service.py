@@ -51,6 +51,7 @@ class RuleService:
     def duplicate(self, rule_id):
         duplicated = deepcopy(self.get(rule_id))
         duplicated['id'] = None
+        duplicated['original'] = False
         return self.rule_repository.create(duplicated)
 
     def add_to_history(self, rule_id):
