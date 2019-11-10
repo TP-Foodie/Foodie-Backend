@@ -87,4 +87,3 @@ class TestUserController(TestMixin):
 
         customer_data = json.loads(response.data)
         assert a_customer_user.name == customer_data["name"]
-        assert "phone" not in customer_data
