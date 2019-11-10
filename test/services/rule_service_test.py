@@ -192,8 +192,8 @@ class TestPriceQuote:
         assert self.rule_service.quote_price(an_order.id) == 9
 
     def test_quote_price_with_datetime_rules(self, an_order):
-        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 GMT',
-                                          "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 -0300',
+                                          "%a, %d %b %Y %H:%M:%S %z")
         an_order.save()
 
         Rule(
@@ -202,7 +202,7 @@ class TestPriceQuote:
                 RuleCondition(
                     variable=RuleCondition.ORDER_DATE,
                     operator=RuleCondition.IS,
-                    condition_value='Sat, 30 Nov 2019 18:30:00 GMT'
+                    condition_value='Sat, 30 Nov 2019 18:30:00 -0300'
                 ),
             ],
             consequence=RuleConsequence(consequence_type=RuleConsequence.PERCENTAGE, value=-5)

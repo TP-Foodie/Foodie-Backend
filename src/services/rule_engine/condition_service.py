@@ -5,7 +5,7 @@ from models.rule import RuleCondition
 
 
 class RuleConditionService:
-    DEFAULT_DATE_FORMAT = "%a, %d %b %Y %H:%M:%S %Z"
+    DEFAULT_DATE_FORMAT = "%a, %d %b %Y %H:%M:%S %z"
     DEFAULT_TIME_FORMAT = "%H:%M:%S"
 
     DATE_VARIABLES = [RuleCondition.ORDER_DATE]
