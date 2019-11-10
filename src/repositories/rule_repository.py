@@ -1,4 +1,4 @@
-from models.rule import Rule, RuleHistory
+from models.rule import Rule
 from schemas.rule_schema import ListRuleSchema, RuleSchema
 
 
