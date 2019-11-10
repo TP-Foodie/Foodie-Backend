@@ -51,5 +51,6 @@ class UserProfile(Schema):
             'subscription',
             'reputation',
             'messages_sent',
-            'phone'
+            'phone',
+            'location'
         )
