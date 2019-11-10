@@ -22,7 +22,7 @@ def set_delivery_as_available(delivery_id):
 
 
 def get_nearby_available_deliveries(longitude, latitude, radius):
-    User.objects(  # pylint: disable=E1101
+    return User.objects(  # pylint: disable=E1101
         location__geo_within_center=[[longitude, latitude], radius],
         type=User.DELIVERY_TYPE,
         available=True

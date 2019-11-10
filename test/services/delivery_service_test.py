@@ -7,13 +7,11 @@ MOCK_OBJECT = MagicMock()
 #
 #   Success Tests
 #
-
-
-@patch('services.delivery_service.user_repository')
-def test_success_query_nearby_deliveries(user_repository):
+@patch('repositories.user_repository.User')
+def test_success_query_nearby_deliveries(user):
     """ Test success query nearby deliveries """
     nearby_deliveries = []
-    user_repository.get_nearby_available_deliveries.return_value = nearby_deliveries
+    user.objects.return_value = nearby_deliveries
 
     from services import delivery_service
 
