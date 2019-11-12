@@ -2,6 +2,7 @@ from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_repository import RuleRepository
 from repositories import order_repository
 from schemas.rule_schema import CreateRuleSchema
+from services import user_service
 from services.rule_engine.condition_service import RuleConditionService
 from services.rule_engine.consequence_service import RuleConsequenceService
 
@@ -43,7 +44,10 @@ class RuleService:
     def quote_price(self, order_id):
         order = order_repository.get_order(order_id)
         total = 0
-        for rule in self.rule_repository.active_sorted_by_value():
+        rules_to_apply = self.rule_repository.active_sorted_by_value()\
+            .filter(benefit=user_service.is_premium(order.owner))
+
+        for rule in rules_to_apply:
             result = self.condition_service.apply(order, *rule.conditions)
             if result:
                 total = self.consequence_service.apply(rule.consequence, total, order)
