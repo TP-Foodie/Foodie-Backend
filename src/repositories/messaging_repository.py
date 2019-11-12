@@ -1,18 +1,17 @@
-from firebase_admin import messaging
-import logger
+from firebase_admin.messaging import Message, send
 
 
 # This registration token comes from the client FCM SDKs.
 def send_message_to_device(message, registration_token):
     if registration_token == "":
-        return
+        return False
 
-    fcm_message = messaging.Message(
+    fcm_message = Message(
         data=message,
         token=registration_token,
     )
 
     # Send a message to the device corresponding to the provided
     # registration token.
-    response = messaging.send(fcm_message)
-    logger.info("MESSAGE SENT: " + response)
+    send(fcm_message)
+    return True
