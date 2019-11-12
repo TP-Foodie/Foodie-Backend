@@ -65,6 +65,13 @@ def get_consequence_types():
     return jsonify(rule_service.consequence_types), HTTP_200_OK
 
 
+@RULES_BLUEPRINT.route('/benefits', methods=['GET'])
+@log_request_response
+@authenticate
+def get_benefits():
+    return ''
+
+
 @RULES_BLUEPRINT.route('/<rule_id>', methods=['DELETE'])
 @log_request_response
 @authenticate
