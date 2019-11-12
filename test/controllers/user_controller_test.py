@@ -87,3 +87,13 @@ class TestUserController(TestMixin):
 
         customer_data = json.loads(response.data)
         assert a_customer_user.name == customer_data["name"]
+
+    def test_upgrade_subscription(self, a_client, a_client_user):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(
+            a_client,
+            'api/v1/users/{}'.format(str(a_client_user.id)),
+            {'subscription': User.PREMIUM_SUBSCRIPTION}
+        )
+
+        assert User.objects.get(id=a_client_user.id).subscription == User.PREMIUM_SUBSCRIPTION

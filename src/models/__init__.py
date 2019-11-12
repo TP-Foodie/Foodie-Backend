@@ -23,6 +23,9 @@ class User(Document):
     CUSTOMER_TYPE = "CUSTOMER"
     BACK_OFFICE_TYPE = "BACK_OFFICE"
 
+    FLAT_SUBSCRIPTION = "FLAT"
+    PREMIUM_SUBSCRIPTION = "PREMIUM"
+
     name = StringField(required=False)
     last_name = StringField(required=False)
     google_id = StringField(required=False)
