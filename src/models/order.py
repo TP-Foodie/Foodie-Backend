@@ -32,3 +32,4 @@ class Order(Document):
     payment_method = StringField(
         choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD
     )
+    id_chat = StringField(default="")

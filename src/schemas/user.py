@@ -54,3 +54,20 @@ class UserProfile(Schema):
             'phone',
             'location'
         )
+
+
+class DeliveryProfile(Schema):
+    class Meta:
+        fields = (
+            'id',
+            'name',
+            'last_name',
+            'email',
+            'profile_image',
+            'type',
+            'subscription',
+            'reputation',
+            'messages_sent',
+            'phone',
+            'location'
+        )

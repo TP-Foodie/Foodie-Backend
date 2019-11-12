@@ -28,10 +28,13 @@ def take(order_id, new_data):
         order_repository.update(order_id, 'status', new_data.get('status'))
 
     if new_data.get('payment_method') is not None:
-        order_repository.update(order_id, 'status', new_data.get('payment_method'))
+        order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
 
     if new_data.get('delivery') is not None:
         order_repository.update(order_id, 'delivery', new_data.get('delivery'))
+
+    if new_data.get('id_chat', None) is not None:
+        order_repository.update(order_id, 'id_chat', new_data.get('id_chat'))
 
     return order_repository.get_order(order_id)
 

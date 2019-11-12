@@ -72,7 +72,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'profile_image': an_order.delivery.profile_image,
                 'phone': an_order.delivery.phone,
                 'type': an_order.delivery.type
-            }
+            },
+            'id_chat': ""
         }
 
     def test_get_orders_details_for_unauthenticated(self, a_client, an_order):
@@ -118,7 +119,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'profile_image': an_order.delivery.profile_image,
                 'phone': an_order.delivery.phone,
                 'type': an_order.delivery.type
-            }
+            },
+            'id_chat': ""
         }
 
     def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):
