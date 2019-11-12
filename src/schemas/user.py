@@ -54,6 +54,7 @@ class UserProfile(Schema):
             'phone'
         )
 
+
 class DeliveryProfile(Schema):
     class Meta:
         fields = (
