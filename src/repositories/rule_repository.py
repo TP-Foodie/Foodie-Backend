@@ -10,10 +10,10 @@ class RuleRepository:
         return Rule.objects.create(**data)
 
     def list(self):
-        return self.rules_schema.dump(Rule.objects.all())
+        return self.rules_schema.dump(self.all())
 
     def all(self):
-        return Rule.objects.all()
+        return Rule.objects.filter(original=True)
 
     def get(self, rule_id):
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))
@@ -22,10 +22,11 @@ class RuleRepository:
         return Rule.objects.get(id=rule_id).conditions
 
     def update(self, rule_id, new_data):
-        return Rule(**new_data, id=rule_id).save()
+        Rule.objects.get(id=rule_id).update(**new_data)
+        return self.get(rule_id)
 
     def delete(self, rule_id):
         return Rule.objects.get(id=rule_id).delete()
 
     def active_sorted_by_value(self):
-        return Rule.objects.filter(active=True).order_by('-consequence__consequence_type')
+        return self.all().filter(active=True).order_by('-consequence__consequence_type')

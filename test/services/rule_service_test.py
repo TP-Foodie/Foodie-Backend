@@ -5,7 +5,7 @@ import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
-from models.rule import Rule, RuleConsequence
+from models.rule import Rule, RuleConsequence, RuleHistory
 from models.rule import RuleCondition
 from services.rule_service import RuleService
 
@@ -41,11 +41,6 @@ class TestRuleService:
 
         assert Rule.objects.get(id=a_rule.id).name == 'new name'
 
-    def test_update_does_not_duplicate(self, a_rule):
-        self.rule_service.update(a_rule.id, {'name': 'new name'})
-
-        assert Rule.objects.count() == 1
-
     def test_update_with_invalid_field_throws_error(self, a_rule):
         with pytest.raises(MongoEngineValidationError):
             self.rule_service.update(a_rule.id, {'conditions': [{'variable': 'DOES NOT EXISTS'}]})
@@ -54,6 +49,54 @@ class TestRuleService:
         self.rule_service.delete(a_rule.id)
         assert not Rule.objects.count()
 
+    def test_update_rule_should_create_history(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        assert RuleHistory.objects.count() == 1
+
+    def test_duplicate_rule_duplicates_all_fields_but_id(self, a_rule):
+        duplicated = self.rule_service.duplicate(a_rule.id)
+
+        assert len(Rule.objects.all()) == 2
+        assert duplicated.name == a_rule.name
+        assert duplicated.conditions == a_rule.conditions
+        assert duplicated.consequence == a_rule.consequence
+        assert duplicated.active == a_rule.active
+
+    def test_update_rule_adds_previous_version_to_history(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        assert RuleHistory.objects.first().versions[0].name == a_rule.name
+
+    def test_rule_history_with_3_versions(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+        self.rule_service.update(a_rule.id, {'name': 'new name2'})
+
+        history = RuleHistory.objects.first()
+
+        assert len(history.versions) == 2
+        assert history.versions[0].name == a_rule.name
+        assert history.versions[1].name == 'new name'
+
+    def test_adding_to_rule_history_does_not_modify_actual_rule(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        updated = Rule.objects.get(id=a_rule.id)
+
+        assert updated.id == a_rule.id
+
+    def test_history_returns_rule_history(self, a_rule):
+        self.rule_service.update(a_rule.id, {'name': 'new name'})
+
+        history = self.rule_service.history(a_rule.id)
+
+        assert history.versions[0].name == a_rule.name
+
+    def test_history_when_rule_was_never_updated_returns_rule(self, a_rule):
+        history = self.rule_service.history(a_rule.id)
+
+        assert not history.versions
+        assert history.rule == a_rule
 
 # noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')
@@ -149,8 +192,8 @@ class TestPriceQuote:
         assert self.rule_service.quote_price(an_order.id) == 9
 
     def test_quote_price_with_datetime_rules(self, an_order):
-        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 GMT',
-                                          "%a, %d %b %Y %H:%M:%S %Z")
+        an_order.date = datetime.strptime('Sat, 30 Nov 2019 18:30:00 -0300',
+                                          "%a, %d %b %Y %H:%M:%S %z")
         an_order.save()
 
         Rule(
@@ -159,7 +202,7 @@ class TestPriceQuote:
                 RuleCondition(
                     variable=RuleCondition.ORDER_DATE,
                     operator=RuleCondition.IS,
-                    condition_value='Sat, 30 Nov 2019 18:30:00 GMT'
+                    condition_value='Sat, 30 Nov 2019 18:30:00 -0300'
                 ),
             ],
             consequence=RuleConsequence(consequence_type=RuleConsequence.PERCENTAGE, value=-5)
@@ -415,12 +458,12 @@ class TestExampleRules:
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.GREATER_THAN_EQUAL,
-                    condition_value='15:00:00'
+                    condition_value='Sat, 30 Nov 2019 15:00:00 -0300'
                 ),
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.LESS_THAN_EQUAL,
-                    condition_value='16:00:00'
+                    condition_value='Sat, 30 Nov 2019 16:00:00 -0300'
                 )
             ],
             consequence=RuleConsequence(
@@ -480,12 +523,12 @@ class TestExampleRules:
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.GREATER_THAN_EQUAL,
-                    condition_value='17:00:00'
+                    condition_value='Sat, 30 Nov 2019 15:00:00 -0300'
                 ),
                 RuleCondition(
                     variable=RuleCondition.ORDER_TIME,
                     operator=RuleCondition.LESS_THAN_EQUAL,
-                    condition_value='19:00:00'
+                    condition_value='Sat, 30 Nov 2019 19:00:00 -0300'
                 ),
             ],
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10)
