@@ -19,8 +19,12 @@ def create(order_type, product, payment_method, owner):
 
 
 def take(order_id, new_data):
+    delivery = new_data.get('delivery', None)
+    if delivery is None:
+        delivery = order_repository.get_order(order_id).delivery.id
+
     delivery_service.handle_status_change(
-        new_data.get('delivery', order_repository.get_order(order_id).delivery),
+        delivery,
         new_data.get('status')
     )
 

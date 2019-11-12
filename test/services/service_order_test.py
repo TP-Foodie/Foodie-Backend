@@ -99,7 +99,6 @@ class TestOrderService:
         assert order.delivery.id == a_delivery_user.id
         assert delivery.available
 
-
     def test_take_order_with_non_existing_delivery_raises_error(self, an_order, an_object_id):
         with pytest.raises(NonExistingDeliveryException):
             order_service.take(

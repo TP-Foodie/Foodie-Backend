@@ -5,8 +5,8 @@ from flask import request, jsonify, Blueprint
 from controllers.parser import parse_available_deliveries_request
 from logger import log_request_response
 from schemas.user import DeliveryProfile
-from services import delivery_service
 from schemas.query_nearby_deliveries_schema import QueryNearbyDeliveriesSchema
+from services import delivery_service
 
 # Flask blueprint
 AVAILABLE_DELIVERIES_ROUTE = 'available_deliveries'
