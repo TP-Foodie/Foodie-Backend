@@ -19,16 +19,19 @@ def create(order_type, product, payment_method, owner):
 
 def take(order_id, new_data):
     delivery = new_data.get('delivery', None)
-    if not user_repository.delivery_exists(delivery):
-        raise NonExistingDeliveryException()
+    if delivery is not None:
+        if not user_repository.delivery_exists(delivery):
+            raise NonExistingDeliveryException()
+        order_repository.update(order_id, 'delivery', delivery)
 
     if new_data.get('status') is not None:
         order_repository.update(order_id, 'status', new_data.get('status'))
 
     if new_data.get('payment_method') is not None:
-        order_repository.update(order_id, 'status', new_data.get('payment_method'))
+        order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
 
-    return order_repository.update(order_id, 'delivery', delivery)
+    if new_data.get('id_chat', None) is not None:
+        order_repository.update(order_id, 'id_chat', new_data.get('id_chat'))
 
 
 def placed_by(user_id, start_date=None, end_date=None):
