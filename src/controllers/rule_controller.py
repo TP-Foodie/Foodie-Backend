@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
 from logger import log_request_response
+from schemas.rule_schema import RuleSchema
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
@@ -10,7 +11,7 @@ RULES_BLUEPRINT = Blueprint('rules', __name__)
 MISSING_ARGS_ERROR_MESSAGE = "missing arguments"
 
 rule_service = RuleService()  # pylint: disable=invalid-name
-
+rules_schema = RuleSchema(many=True)  # pylint: disable=invalid-name
 
 @RULES_BLUEPRINT.route('/', methods=['GET'])
 @log_request_response
@@ -69,7 +70,7 @@ def get_consequence_types():
 @log_request_response
 @authenticate
 def get_benefits():
-    return ''
+    return jsonify(rules_schema.dump(rule_service.benefits()))
 
 
 @RULES_BLUEPRINT.route('/<rule_id>', methods=['DELETE'])

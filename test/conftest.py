@@ -196,6 +196,13 @@ def a_rule(cfaker, a_condition, a_consequence):
 
 
 @pytest.fixture
+def a_benefit_rule(a_rule):
+    a_rule.benefit = True
+    a_rule.save()
+    return a_rule
+
+
+@pytest.fixture
 def a_chat(a_customer_user, a_delivery_user, an_order):
     return Chat(
         uid_1=str(a_customer_user.id),

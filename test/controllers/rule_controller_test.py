@@ -301,3 +301,20 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         response = a_client.get('api/v1/rules/benefits')
 
         assert_401(response)
+
+    def test_benefits_returns_benefits_rules(self, a_client, a_client_user, a_benefit_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/rules/benefits')
+
+        rules = json.loads(response.data)
+
+        assert len(rules) == 1
+        assert rules[0]['id'] == str(a_benefit_rule.id)
+
+    def test_benefits_does_not_return_normal_rules(self, a_client, a_client_user, a_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/rules/benefits')
+
+        rules = json.loads(response.data)
+
+        assert not rules
