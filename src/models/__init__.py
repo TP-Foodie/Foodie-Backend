@@ -38,7 +38,8 @@ class User(Document):
         regex="CUSTOMER|DELIVERY|BACK_OFFICE")
     subscription = StringField(
         required=False,
-        regex="FLAT|PREMIUM")
+        regex="FLAT|PREMIUM",
+        default="FLAT")
     recovery_token = StringField(required=False)
     recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
