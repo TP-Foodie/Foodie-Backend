@@ -32,7 +32,8 @@ def parse_take_order_request(values):
         'status': values['status'],
         'delivery': delivery,
         'id_chat': values.get('id_chat', None),
-        'payment_method': values.get('payment_method', None)
+        'payment_method': values.get('payment_method', None),
+        'quotation': values.get('quotation', None)
     })
     return values
 

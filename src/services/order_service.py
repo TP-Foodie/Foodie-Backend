@@ -40,6 +40,9 @@ def take(order_id, new_data):
     if new_data.get('id_chat', None) is not None:
         order_repository.update(order_id, 'id_chat', new_data.get('id_chat'))
 
+    if new_data.get('quotation', None) is not None:
+        order_repository.update(order_id, 'quotation', new_data.get('quotation'))
+
     return order_repository.get_order(order_id)
 
 
