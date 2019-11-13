@@ -95,17 +95,8 @@ def an_order_factory(cfaker, a_customer_user, a_product, a_delivery_user):
             product=a_product.id,
             delivery=a_delivery_user.id
         ).save()
+
     return create_order
-
-
-@pytest.fixture
-def an_order(an_order_factory):
-    return an_order_factory()
-
-
-@pytest.fixture
-def a_favor_order(an_order_factory):
-    return an_order_factory(Order.FAVOR_TYPE)
 
 
 @pytest.fixture
@@ -224,6 +215,7 @@ def a_chat_message_from_uid_2(a_chat, cfaker):
         id_chat=str(a_chat.id)
     ).save()
 
+
 @pytest.fixture
 def a_city(cfaker):
     return cfaker.city()
@@ -246,6 +238,7 @@ def a_geocode_response(a_city):
                 }
             ]
         }))
+
     return build_response
 
 
@@ -257,4 +250,5 @@ def a_distance_response():
                 'distance': distance
             }
         }))
+
     return build_response
