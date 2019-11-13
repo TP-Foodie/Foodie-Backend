@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from repositories import messaging_repository
 
+
 class TestMessagingRepository(unittest.TestCase):
 
     def test_empty_registration_token(self):

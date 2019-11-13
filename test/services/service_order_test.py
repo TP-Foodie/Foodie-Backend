@@ -5,7 +5,7 @@ import pytest
 from bson import ObjectId
 
 from models.order import Order
-from repositories import order_repository, product_repository
+from repositories import order_repository, product_repository, user_repository
 from services import order_service, product_service
 from services.exceptions.order_exceptions import NonExistingPlaceException
 from services.exceptions.user_exceptions import NonExistingDeliveryException
@@ -81,9 +81,23 @@ class TestOrderService:
                             'delivery': a_delivery_user.id})
 
         order = order_repository.get_order(an_order.id)
+        delivery = user_repository.get_user(a_delivery_user.id)
 
         assert order.status == Order.TAKEN_STATUS
         assert order.delivery.id == a_delivery_user.id
+        assert not delivery.available
+
+    def test_deliver_order_updates_status_and_delivery(self, an_order, a_delivery_user):
+        order_service.take(an_order.id,
+                           {'status': Order.DELIVERED_STATUS,
+                            'delivery': a_delivery_user.id})
+
+        order = order_repository.get_order(an_order.id)
+        delivery = user_repository.get_user(a_delivery_user.id)
+
+        assert order.status == Order.DELIVERED_STATUS
+        assert order.delivery.id == a_delivery_user.id
+        assert delivery.available
 
     def test_take_order_with_non_existing_delivery_raises_error(self, an_order, an_object_id):
         with pytest.raises(NonExistingDeliveryException):
@@ -126,6 +140,7 @@ class TestOrderService:
         orders = order_service.placed_by(a_customer_user.id, yesterday, today)
 
         assert not orders
+
     def test_count_for_user_return_zero_when_there_are_no_orders_for_user(self,
                                                                           an_order,
                                                                           a_delivery_user):
