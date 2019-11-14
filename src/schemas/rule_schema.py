@@ -29,3 +29,4 @@ class CreateRuleSchema(Schema):
     consequence = fields.Nested(ConsequenceSchema, required=True)
     name = fields.String(required=True)
     active = fields.Boolean(required=False)
+    benefit = fields.Boolean(required=False)

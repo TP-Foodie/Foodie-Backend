@@ -318,3 +318,12 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         rules = json.loads(response.data)
 
         assert not rules
+
+    def test_create_benefits(self, a_client, a_client_user, a_benefit_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        data = json.loads(a_benefit_rule.to_json())
+        del data['_id']
+        response = self.post(a_client, 'api/v1/rules/', data)
+
+        assert_201(response)
