@@ -195,6 +195,9 @@ def a_rule(cfaker, a_condition, a_consequence):
     ).save()
 
 
+another_rule = a_rule
+
+
 @pytest.fixture
 def a_benefit_rule(a_rule):
     a_rule.benefit = True

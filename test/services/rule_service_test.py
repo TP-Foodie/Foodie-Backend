@@ -555,3 +555,7 @@ class TestBenefitsRules:
     def test_benefits_returns_all_benefits_rules(self, a_benefit_rule):
         assert len(self.rule_service.benefits()) == 1
         assert self.rule_service.benefits()[0]['id'] == a_benefit_rule.id
+
+    def test_list_rules_should_not_include_benefits(self, another_rule, a_benefit_rule):
+        assert len(self.rule_service.list()) == 1
+        assert self.rule_service.list()[0]['id'] == another_rule.id
