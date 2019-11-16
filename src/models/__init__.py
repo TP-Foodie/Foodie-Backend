@@ -45,6 +45,7 @@ class User(Document):
     balance = FloatField(default=0)
     location = EmbeddedDocumentField(Coordinates)
     available = BooleanField(default=True)
+    deliveries_completed = IntField(default=0)
 
 
 class Transaction(Document):
