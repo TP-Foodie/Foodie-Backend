@@ -29,7 +29,7 @@ def parse_take_order_request(values):
         delivery = ObjectId(values['delivery'])
 
     values.update({
-        'status': values['status'],
+        'status': values.get('status', None),
         'delivery': delivery,
         'id_chat': values.get('id_chat', None),
         'payment_method': values.get('payment_method', None),

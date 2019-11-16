@@ -2,6 +2,7 @@ import json
 import requests
 from mongoengine import Q
 
+from models.order import Order
 from repositories import order_repository, product_repository
 from services import delivery_service
 from settings import Config
@@ -17,20 +18,23 @@ def create(order_type, product, payment_method, owner):
         number=order_repository.count() + 1
     )
 
+def handle_status_change(order_id, new_status, new_data):
+    new_delivery = new_data.get('delivery', None)
+    old_delivery = order_repository.get_order(order_id).delivery
+    if new_status == Order.TAKEN_STATUS:
+        delivery_service.handle_status_change(new_delivery, new_status)
+    elif new_status == Order.DELIVERED_STATUS:
+        delivery_service.handle_status_change(old_delivery.id, new_status)
+    else:
+        delivery_service.handle_status_change(old_delivery.id, new_status)
+        order_repository.update(order_id, 'delivery', None)
+        order_repository.update(order_id, 'quotation', None)
 
 def take(order_id, new_data):
-    delivery = new_data.get('delivery', None)
-    if delivery is None:
-        delivery = order_repository.get_order(order_id).delivery.id
-
-    delivery_service.handle_status_change(
-        delivery,
-        new_data.get('status')
-    )
-
     if new_data.get('status') is not None:
         order_repository.update(order_id, 'status', new_data.get('status'))
-
+        handle_status_change(order_id, new_data.get('status'), new_data)
+        
     if new_data.get('payment_method') is not None:
         order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
 
