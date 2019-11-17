@@ -9,13 +9,14 @@ from mongomock import ObjectId
 from app import APP
 from models import User, Place, Coordinates
 from models.order import Order, Product
-from models.rule import RuleCondition, RuleConsequence, Rule
+from models.rule import RuleCondition, RuleConsequence
 from models.chat import Chat, ChatMessage
 from services import user_service
 
 
 # pylint: disable=redefined-outer-name, function-redefined, invalid-name
 # This is required, pylint doesn't work well with pytest
+from services.rule_service import RuleService
 
 
 @pytest.fixture
@@ -94,17 +95,8 @@ def an_order_factory(cfaker, a_customer_user, a_product, a_delivery_user):
             product=a_product.id,
             delivery=a_delivery_user.id
         ).save()
+
     return create_order
-
-
-@pytest.fixture
-def an_order(an_order_factory):
-    return an_order_factory()
-
-
-@pytest.fixture
-def a_favor_order(an_order_factory):
-    return an_order_factory(Order.FAVOR_TYPE)
 
 
 @pytest.fixture
@@ -187,12 +179,12 @@ def a_consequence():
 
 
 @pytest.fixture
-def a_rule(cfaker, a_condition, a_consequence):
-    return Rule(
-        name=cfaker.name(),
-        conditions=[a_condition],
-        consequence=a_consequence
-    ).save()
+def a_rule(cfaker, a_condition_data, a_consequence_data):
+    return RuleService().create(**{
+        'name': cfaker.name(),
+        'conditions': [a_condition_data],
+        'consequence': a_consequence_data
+    })
 
 
 another_rule = a_rule
@@ -233,6 +225,7 @@ def a_chat_message_from_uid_2(a_chat, cfaker):
         id_chat=str(a_chat.id)
     ).save()
 
+
 @pytest.fixture
 def a_city(cfaker):
     return cfaker.city()
@@ -255,6 +248,7 @@ def a_geocode_response(a_city):
                 }
             ]
         }))
+
     return build_response
 
 
@@ -266,4 +260,5 @@ def a_distance_response():
                 'distance': distance
             }
         }))
+
     return build_response

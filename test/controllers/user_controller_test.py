@@ -80,7 +80,7 @@ class TestUserController(TestMixin):
 
     def test_get_public_user_data_when_customer_user(
             self, a_client, a_client_user, a_customer_user
-        ):
+    ):
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.get(a_client, 'api/v1/users/{}'.format(str(a_customer_user.id)))
         assert_200(response)

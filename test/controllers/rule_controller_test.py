@@ -224,6 +224,28 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert json.loads(response.data)
 
+    def test_patch_field_should_not_modify_other_fields(self, a_client, a_client_user, a_rule):
+        response = self.update_rule(
+            a_client,
+            a_client_user,
+            a_rule,
+            {'name': 'new name'}
+        )
+
+        rule = json.loads(response.data)
+
+        assert rule['active'] == a_rule.active
+        assert rule['conditions'][0] == {
+            'variable': a_rule.conditions[0].variable,
+            'operator': a_rule.conditions[0].operator,
+            'condition_value': a_rule.conditions[0].condition_value
+        }
+        assert rule['consequence'] == {
+            'consequence_type': a_rule.consequence.consequence_type,
+            'value': a_rule.consequence.value,
+            'variable': None
+        }
+
     def test_get_variables_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/rules/variables/')
         assert_401(response)
@@ -296,6 +318,62 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_200(response)
 
         assert not Rule.objects.count()
+
+    def test_rule_history_for_unauthenticated(self, a_client, a_rule):
+        response = a_client.get('api/v1/rules/{}/history'.format(str(a_rule.id)))
+
+        assert_401(response)
+
+    def test_rule_history_returns_all_rule_versions(self, a_client, a_client_user, a_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(a_client, 'api/v1/rules/{}'.format(str(a_rule.id)), {'name': 'new name'})
+        response = self.get(a_client, 'api/v1/rules/{}/history'.format(str(a_rule.id)))
+
+        assert_200(response)
+
+        rule_history = json.loads(response.data)
+
+        edited_rule = Rule.objects.get(id=a_rule.id)
+
+        assert len(rule_history) == 2
+        assert rule_history['versions'][0] == {
+            'name': a_rule.name,
+            'conditions': [{
+                'variable': a_rule.conditions[0].variable,
+                'operator': a_rule.conditions[0].operator,
+                'condition_value': a_rule.conditions[0].condition_value
+            }],
+            'consequence': {
+                'consequence_type': a_rule.consequence.consequence_type,
+                'value': a_rule.consequence.value,
+                'variable': None
+            },
+            'active': a_rule.active
+        }
+        assert rule_history['rule'] == {
+            'id': str(edited_rule.id),
+            'name': edited_rule.name,
+            'conditions': [{
+                'variable': edited_rule.conditions[0].variable,
+                'operator': edited_rule.conditions[0].operator,
+                'condition_value': edited_rule.conditions[0].condition_value
+            }],
+            'consequence': {
+                'consequence_type': edited_rule.consequence.consequence_type,
+                'value': edited_rule.consequence.value,
+                'variable': None,
+            },
+            'active': edited_rule.active
+        }
+
+    def test_get_rules_should_not_return_history(self, a_client, a_client_user, a_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(a_client, 'api/v1/rules/{}'.format(str(a_rule.id)), {'name': 'new name'})
+        response = self.get(a_client, 'api/v1/rules/')
+
+        orders = json.loads(response.data)
+
+        assert len(orders) == 1
 
     def test_benefits_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/rules/benefits')

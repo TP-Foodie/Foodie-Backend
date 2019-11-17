@@ -80,8 +80,8 @@ def list_placed_orders(user):
 @authenticate
 def update_order(order_id):
     try:
-        order = order_service.take(order_id, parse_take_order_request(request.json))
-        data = DetailsOrderSchema().dump(order)
+        order_service.take(order_id, parse_take_order_request(request.json))
+        data = DetailsOrderSchema().dump(order_repository.get_order(order_id))
     except NonExistingDeliveryException:
         raise InvalidUsage('Delivery does not exists', status_code=HTTP_400_BAD_REQUEST)
     except NonExistingOrderException:

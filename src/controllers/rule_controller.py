@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
+from schemas.rule_schema import RuleHistorySchema
 from logger import log_request_response
 from schemas.rule_schema import RuleSchema
 from services.auth_service import authenticate
@@ -12,6 +13,7 @@ MISSING_ARGS_ERROR_MESSAGE = "missing arguments"
 
 rule_service = RuleService()  # pylint: disable=invalid-name
 rules_schema = RuleSchema(many=True)  # pylint: disable=invalid-name
+history_schema = RuleHistorySchema()  # pylint: disable=invalid-name
 
 
 @RULES_BLUEPRINT.route('/', methods=['GET'])
@@ -80,3 +82,11 @@ def get_benefits():
 def delete_rule(rule_id):
     rule_service.delete(rule_id)
     return NO_CONTENT, HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/<rule_id>/history', methods=['GET'])
+@log_request_response
+@authenticate
+def get_rule_history(rule_id):
+    data = history_schema.dump(rule_service.history(rule_id))
+    return jsonify(data), HTTP_200_OK

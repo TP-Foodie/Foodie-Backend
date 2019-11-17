@@ -30,3 +30,16 @@ class CreateRuleSchema(Schema):
     name = fields.String(required=True)
     active = fields.Boolean(required=False)
     benefit = fields.Boolean(required=False)
+
+
+class RuleVersionSchema(Schema):
+    conditions = fields.List(fields.Nested(ConditionSchema))
+    consequence = fields.Nested(ConsequenceSchema)
+
+    class Meta:
+        fields = ('name', 'active', 'conditions', 'consequence')
+
+
+class RuleHistorySchema(Schema):
+    rule = fields.Nested(RuleSchema)
+    versions = fields.List(fields.Nested(RuleVersionSchema))

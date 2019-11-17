@@ -44,6 +44,7 @@ def notify_chat_member(id_chat, message):
         'body': message["message"],
         'channelId': 'Chat Channel',
         'senderId': message["uid_sender"],
+        'senderProfileImage': sender["profile_image"],
         'receiverId': id_receiver,
         'group': id_chat,
         'timestamp': str(message["timestamp"])

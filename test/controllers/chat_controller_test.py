@@ -1,4 +1,4 @@
-#pylint: disable-msg=too-many-arguments
+# pylint: disable-msg=too-many-arguments
 import json
 
 from test.support.utils import TestMixin, assert_200, assert_401, assert_201, assert_404

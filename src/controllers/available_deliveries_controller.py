@@ -4,9 +4,9 @@ from flask import request, jsonify, Blueprint
 
 from controllers.parser import parse_available_deliveries_request
 from logger import log_request_response
-from services import available_deliveries_service
-from schemas.user import UserProfile
+from schemas.user import DeliveryProfile
 from schemas.query_nearby_deliveries_schema import QueryNearbyDeliveriesSchema
+from services import delivery_service
 
 # Flask blueprint
 AVAILABLE_DELIVERIES_ROUTE = 'available_deliveries'
@@ -31,7 +31,7 @@ def get():
     query_nearby_deliveries_data = query_nearby_deliveries_schema.load(request_data)
 
     # query nearby deliveries.
-    deliveries = available_deliveries_service.query_nearby_deliveries(
+    deliveries = delivery_service.query_nearby_deliveries(
         query_nearby_deliveries_data)
 
-    return jsonify({'body': UserProfile().dump(deliveries, many=True)}), 200
+    return jsonify({'body': DeliveryProfile().dump(deliveries, many=True)}), 200
