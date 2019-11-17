@@ -18,6 +18,7 @@ def create(order_type, product, payment_method, owner):
         number=order_repository.count() + 1
     )
 
+
 def handle_status_change(order_id, new_status, new_data):
     new_delivery = new_data.get('delivery', None)
     old_delivery = order_repository.get_order(order_id).delivery
@@ -30,11 +31,12 @@ def handle_status_change(order_id, new_status, new_data):
         order_repository.update(order_id, 'delivery', None)
         order_repository.update(order_id, 'quotation', None)
 
+
 def take(order_id, new_data):
     if new_data.get('status') is not None:
         order_repository.update(order_id, 'status', new_data.get('status'))
         handle_status_change(order_id, new_data.get('status'), new_data)
-        
+
     if new_data.get('payment_method') is not None:
         order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
 

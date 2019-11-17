@@ -55,7 +55,7 @@ def order_details(order_id):
 @authenticate
 def order_quotation(order_id):
     price = rule_service.quote_price(order_id)
-    data = {'price' : price}
+    data = {'price': price}
     return jsonify(data)
 
 
