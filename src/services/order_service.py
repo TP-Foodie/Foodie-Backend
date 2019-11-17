@@ -2,7 +2,6 @@ import json
 import requests
 from mongoengine import Q
 
-from models.order import Order
 from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
 from settings import Config
