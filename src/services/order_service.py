@@ -3,9 +3,10 @@ import requests
 from mongoengine import Q
 
 from models.order import Order
-from repositories import order_repository, product_repository
+from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
 from settings import Config
+from models.order import Order
 
 
 def create(order_type, product, payment_method, owner):
@@ -34,6 +35,13 @@ def handle_status_change(order_id, new_status, new_data):
 
 def take(order_id, new_data):
     if new_data.get('status') is not None:
+        # if new status is delivered -> increment deliveries_completed in User docs
+        if new_data.get('status') == Order.DELIVERED_STATUS:
+            # get owner and delivery from Order data and increment deliveries_completed
+            order = order_repository.get_order(order_id)
+            user_repository.increment_deliveries_completed(str(order.owner.id))
+            user_repository.increment_deliveries_completed(str(order.delivery.id))
+
         order_repository.update(order_id, 'status', new_data.get('status'))
         handle_status_change(order_id, new_data.get('status'), new_data)
 

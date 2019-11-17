@@ -52,7 +52,8 @@ class UserProfile(Schema):
             'reputation',
             'messages_sent',
             'phone',
-            'location'
+            'location',
+            'deliveries_completed'
         )
 
 
@@ -69,5 +70,6 @@ class DeliveryProfile(Schema):
             'reputation',
             'messages_sent',
             'phone',
-            'location'
+            'location',
+            'deliveries_completed'
         )
