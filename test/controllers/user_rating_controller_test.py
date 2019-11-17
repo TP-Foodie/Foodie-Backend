@@ -16,10 +16,10 @@ class TestUserRatingController(TestMixin):
         response = self.post(
             a_client,
             'api/v1/user_ratings/',
-            json.dumps({
+            {
                 'user': str(a_user_rating.user.id),
                 'rating': 5
-            })
+            }
         )
 
         assert_201(response)
@@ -32,10 +32,10 @@ class TestUserRatingController(TestMixin):
         response = self.post(
             a_client,
             'api/v1/user_ratings/',
-            json.dumps({
+            {
                 'user': str(a_user_rating.user.id),
                 'rating': 5
-            })
+            }
         )
 
         user_rating = json.loads(response.data)
