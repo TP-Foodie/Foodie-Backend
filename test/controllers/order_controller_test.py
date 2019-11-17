@@ -317,3 +317,13 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         orders = json.loads(response.data)
 
         assert not orders
+
+    def test_mark_order_as_completed(self, a_client, a_client_user, an_order):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'status': Order.DELIVERED_STATUS}
+        )
+
+        assert_200(response)
