@@ -13,6 +13,10 @@ def increment_messages_sent(id_user):
     User.objects(id=id_user).update_one(inc__messages_sent=1)
 
 
+def increment_deliveries_completed(id_user):
+    User.objects(id=id_user).update_one(inc__deliveries_completed=1)
+
+
 def set_delivery_as_unavailable(delivery_id):
     get_user(delivery_id).update(available=False)
 
