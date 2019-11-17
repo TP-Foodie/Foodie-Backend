@@ -281,5 +281,5 @@ def a_user_rating_factory(cfaker, a_customer_user):
             user=a_customer_user.id,
             description=cfaker.text(),
             rating=rating
-        )
+        ).save()
     return create
