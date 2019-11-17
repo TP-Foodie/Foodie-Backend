@@ -106,11 +106,11 @@ class TestOrderService:
                            {'status': Order.TAKEN_STATUS,
                             'delivery': a_delivery_user.id,
                             'quotation': 50})
-        
+
         delivery = user_repository.get_user(a_delivery_user.id)
         assert not delivery.available
         assert not delivery is None
-        
+
         order_service.take(an_order.id, {'status': Order.CANCELLED_STATUS})
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
@@ -124,11 +124,11 @@ class TestOrderService:
         order_service.take(an_order.id,
                            {'status': Order.TAKEN_STATUS,
                             'delivery': a_delivery_user.id})
-        
+
         delivery = user_repository.get_user(a_delivery_user.id)
         assert not delivery.available
         assert not delivery is None
-        
+
         order_service.take(an_order.id, {'status': Order.WAITING_STATUS})
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
