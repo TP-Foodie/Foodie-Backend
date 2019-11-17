@@ -266,12 +266,8 @@ def a_distance_response():
 
 
 @pytest.fixture
-def a_user_rating(cfaker, a_customer_user):
-    return UserRating(
-        user=a_customer_user.id,
-        description=cfaker.text(),
-        rating=cfaker.random_int(min=1, max=5)
-    )
+def a_user_rating(a_user_rating_factory):
+    return a_user_rating_factory()
 
 
 @pytest.fixture

@@ -1,20 +1,21 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 
 from controllers.utils import HTTP_201_CREATED
 from logger import log_request_response
-from schemas.user_rating_schema import UserRatingSchema
+from schemas.user_rating_schema import ListUserRatingSchema, CreateUserRatingSchema
 from services.auth_service import authenticate
 from services.user_rating_service import UserRatingService
 
 USER_RATING_BLUEPRINT = Blueprint('user_ratings', __name__)
 
 user_rating_service = UserRatingService()  # pylint: disable=invalid-name
-user_rating_schema = UserRatingSchema()  # pylint: disable=invalid-name
+list_user_rating_schema = ListUserRatingSchema()  # pylint: disable=invalid-name
+create_user_rating_schema = CreateUserRatingSchema()  # pylint: disable=invalid-name
 
 
 @USER_RATING_BLUEPRINT.route('/', methods=['POST'])
 @log_request_response
 @authenticate
 def create():
-    user_rating_service.create(user_rating_schema.loads(request.json))
-    return '', HTTP_201_CREATED
+    data = user_rating_service.create(create_user_rating_schema.loads(request.json))
+    return list_user_rating_schema.dumps(data), HTTP_201_CREATED
