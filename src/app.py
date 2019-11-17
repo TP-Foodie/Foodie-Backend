@@ -7,6 +7,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import firebase_admin
 from firebase_admin import credentials
 
+from controllers.user_rating_controller import USER_RATING_BLUEPRINT
 from encoders import CustomJSONEncoder
 from settings import Config
 
@@ -44,6 +45,7 @@ APP.register_blueprint(PLACES_BLUEPRINT, url_prefix=f'{PREFIX}/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix=f'{PREFIX}/users')
 APP.register_blueprint(RULES_BLUEPRINT, url_prefix=f'{PREFIX}/rules')
 APP.register_blueprint(CHATS_BLUEPRINT, url_prefix=f'{PREFIX}/chats')
+APP.register_blueprint(USER_RATING_BLUEPRINT, url_prefix=f'{PREFIX}/user_ratings')
 
 APP.register_blueprint(ERRORS_BLUEPRINT)
 
