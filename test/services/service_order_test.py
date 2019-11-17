@@ -90,13 +90,52 @@ class TestOrderService:
     def test_deliver_order_updates_status_and_delivery(self, an_order, a_delivery_user):
         order_service.take(an_order.id,
                            {'status': Order.DELIVERED_STATUS,
-                            'delivery': a_delivery_user.id})
+                            'delivery': a_delivery_user.id,
+                            'quotation': 50})
 
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
 
         assert order.status == Order.DELIVERED_STATUS
         assert order.delivery.id == a_delivery_user.id
+        assert order.quotation == 50
+        assert delivery.available
+
+    def test_cancel_order_updates_status_and_delivery(self, an_order, a_delivery_user):
+        order_service.take(an_order.id,
+                           {'status': Order.TAKEN_STATUS,
+                            'delivery': a_delivery_user.id,
+                            'quotation': 50})
+        
+        delivery = user_repository.get_user(a_delivery_user.id)
+        assert not delivery.available
+        assert not delivery is None
+        
+        order_service.take(an_order.id, {'status': Order.CANCELLED_STATUS})
+        order = order_repository.get_order(an_order.id)
+        delivery = user_repository.get_user(a_delivery_user.id)
+
+        assert order.status == Order.CANCELLED_STATUS
+        assert order.delivery is None
+        assert order.quotation is None
+        assert delivery.available
+
+    def test_unassign_order_updates_status_and_delivery(self, an_order, a_delivery_user):
+        order_service.take(an_order.id,
+                           {'status': Order.TAKEN_STATUS,
+                            'delivery': a_delivery_user.id})
+        
+        delivery = user_repository.get_user(a_delivery_user.id)
+        assert not delivery.available
+        assert not delivery is None
+        
+        order_service.take(an_order.id, {'status': Order.WAITING_STATUS})
+        order = order_repository.get_order(an_order.id)
+        delivery = user_repository.get_user(a_delivery_user.id)
+
+        assert order.status == Order.WAITING_STATUS
+        assert order.delivery is None
+        assert order.quotation is None
         assert delivery.available
 
     def test_take_order_with_non_existing_delivery_raises_error(self, an_order, an_object_id):
