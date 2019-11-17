@@ -43,7 +43,3 @@ def parse_rule_request(values):
         **values.get('consequence', {}),
         'name': values.get('name', ''),
     }
-
-
-def parse_user_rating(data):
-    data['user'] = ObjectId(data['user'])
