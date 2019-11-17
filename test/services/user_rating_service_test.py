@@ -1,5 +1,6 @@
 import pytest
 
+from models import User
 from models.user_rating import UserRating
 from services.user_rating_service import UserRatingService
 
@@ -29,3 +30,11 @@ class TestUserRating:
 
         assert self.user_rating_service.average_for(a_customer_user.id) == 1.5
 
+    def test_creating_user_rating_should_update_user_reputation(self, a_customer_user):
+        self.user_rating_service.create({
+            'user': a_customer_user.id,
+            'description': 'nice experience',
+            'rating': 3}
+        )
+
+        assert User.objects.get(id=a_customer_user.id).reputation == 3

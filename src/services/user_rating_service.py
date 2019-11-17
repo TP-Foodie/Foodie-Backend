@@ -1,12 +1,17 @@
 from models.user_rating import UserRating
 from repositories.user_rating_repository import UserRatingRepository
+from services import user_service
 
 
 class UserRatingService:
     user_rating_repository = UserRatingRepository()
 
     def create(self, data):
-        UserRating(**data).save()
+        rating = UserRating(**data).save()
+
+        user_service.update_user({'reputation': self.average_for(rating.user)}, rating.user.id)
+
+        return rating
 
     def average_for(self, user_id):
         ratings = self.user_rating_repository.filter(user=user_id).values_list('rating')
