@@ -2,8 +2,8 @@ from flask import Blueprint, jsonify, request
 
 from controllers.utils import HTTP_200_OK, HTTP_201_CREATED, NO_CONTENT
 from schemas.rule_schema import RuleHistorySchema
-from logger import log_request_response
 from schemas.rule_schema import RuleSchema
+from logger import log_request_response
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 

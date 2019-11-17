@@ -403,6 +403,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
 
         data = json.loads(a_benefit_rule.to_json())
         del data['_id']
+        del data['original']
         response = self.post(a_client, 'api/v1/rules/', data)
 
         assert_201(response)
