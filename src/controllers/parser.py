@@ -23,17 +23,9 @@ def parse_order_request(values):
 
 
 def parse_take_order_request(values):
-    if values.get('delivery', None) is None:
-        delivery = None
-    else:
-        delivery = ObjectId(values['delivery'])
+    if values.get('delivery'):
+        values['delivery'] = ObjectId(values['delivery'])
 
-    values.update({
-        'status': values['status'],
-        'delivery': delivery,
-        'id_chat': values.get('id_chat', None),
-        'payment_method': values.get('payment_method', None)
-    })
     return values
 
 

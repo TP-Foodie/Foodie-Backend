@@ -1,6 +1,6 @@
 from datetime import datetime
 from mongoengine import Document, IntField, ReferenceField, \
-    CASCADE, StringField, NULLIFY, DateTimeField
+    CASCADE, StringField, NULLIFY, DateTimeField, FloatField
 
 from models import User, Place
 from models.rule import RuleCondition
@@ -33,3 +33,4 @@ class Order(Document):
         choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD
     )
     id_chat = StringField(default="")
+    price = FloatField(default=0)

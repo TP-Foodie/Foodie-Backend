@@ -4,8 +4,12 @@ from mongoengine import Q
 
 from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 from settings import Config
 from models.order import Order
+
+
+DELIVERY_PERCENTAGE = 0.85
 
 
 def create(order_type, product, payment_method, owner):
@@ -19,36 +23,35 @@ def create(order_type, product, payment_method, owner):
     )
 
 
-def take(order_id, new_data):
-    delivery = new_data.get('delivery', None)
-    if delivery is None:
-        delivery = order_repository.get_order(order_id).delivery.id
+def update(order_id, data):
+    if data.get('delivery'):
+        return take(order_id, data.get('delivery'))
 
-    delivery_service.handle_status_change(
-        delivery,
-        new_data.get('status')
-    )
+    if data.get('status') == Order.DELIVERED_STATUS:
+        return deliver(order_id)
 
-    if new_data.get('status') is not None:
-        # if new status is delivered -> increment deliveries_completed in User docs
-        if new_data.get('status') == Order.DELIVERED_STATUS:
-            # get owner and delivery from Order data and increment deliveries_completed
-            order = order_repository.get_order(order_id)
-            user_repository.increment_deliveries_completed(str(order.owner.id))
-            user_repository.increment_deliveries_completed(str(order.delivery.id))
+    return order_repository.update(order_id, data)
 
-        order_repository.update(order_id, 'status', new_data.get('status'))
 
-    if new_data.get('payment_method') is not None:
-        order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
+def take(order_id, delivery):
+    if not user_repository.delivery_exists(delivery):
+        raise NonExistingDeliveryException()
 
-    if new_data.get('delivery') is not None:
-        order_repository.update(order_id, 'delivery', new_data.get('delivery'))
+    delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS)
 
-    if new_data.get('id_chat', None) is not None:
-        order_repository.update(order_id, 'id_chat', new_data.get('id_chat'))
+    return order_repository.update(order_id, {'delivery': delivery, 'status': Order.TAKEN_STATUS})
 
-    return order_repository.get_order(order_id)
+
+def deliver(order_id):
+    order = order_repository.get_order(order_id)
+
+    user_repository.increment_deliveries_completed(str(order.owner.id))
+    user_repository.increment_deliveries_completed(str(order.delivery.id))
+
+    delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS)
+    user_repository.update(order.delivery.id, {'balance': order.price * DELIVERY_PERCENTAGE})
+
+    return order_repository.update(order_id, {'status': Order.DELIVERED_STATUS})
 
 
 def placed_by(user_id, start_date=None, end_date=None):

@@ -13,6 +13,7 @@ from controllers.utils import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, \
     HTTP_405_METHOD_NOT_ALLOWED, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_ERROR
 
 import logger
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ERRORS_BLUEPRINT = Blueprint('errors', __name__)
 
@@ -70,3 +71,9 @@ def handle_invalid_usage(error):
 def unauthorized(error):
     logger.info(error)
     return "Unauthorized", HTTP_401_UNAUTHORIZED
+
+
+@ERRORS_BLUEPRINT.app_errorhandler(NonExistingDeliveryException)
+def non_existing_delivery(error):
+    logger.info(error)
+    return "non existing delivery", HTTP_400_BAD_REQUEST

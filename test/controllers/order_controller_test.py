@@ -318,8 +318,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert not orders
 
-    def test_mark_order_as_completed(self, a_client, a_client_user, an_order):
+    def test_mark_order_as_completed(self, a_client, a_client_user, an_order, a_delivery_user):
         self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(a_client, 'api/v1/orders/{}'.format(str(an_order.id)), {'delivery': a_delivery_user.id})
         response = self.patch(
             a_client,
             'api/v1/orders/{}'.format(str(an_order.id)),
@@ -327,3 +328,24 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert_200(response)
+        assert Order.objects.get(id=an_order.id).status == Order.DELIVERED_STATUS
+
+    # noinspection PyTypeChecker
+    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(self, a_client,
+                                                                                            a_client_user, an_order,
+                                                                                            a_delivery_user):
+        Rule(
+            name='$20 base',
+            conditions=[],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value='20')
+        ).save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(a_client, 'api/v1/orders/{}'.format(str(an_order.id)), {'delivery': a_delivery_user.id})
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'status': Order.DELIVERED_STATUS}
+        )
+
+        assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20

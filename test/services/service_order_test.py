@@ -76,9 +76,7 @@ class TestOrderService:
         assert product_repository.count() == 1
 
     def test_take_order_updates_status_and_delivery(self, an_order, a_delivery_user):
-        order_service.take(an_order.id,
-                           {'status': Order.TAKEN_STATUS,
-                            'delivery': a_delivery_user.id})
+        order_service.take(an_order.id, a_delivery_user.id)
 
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
@@ -88,9 +86,7 @@ class TestOrderService:
         assert not delivery.available
 
     def test_deliver_order_updates_status_and_delivery(self, an_order, a_delivery_user):
-        order_service.take(an_order.id,
-                           {'status': Order.DELIVERED_STATUS,
-                            'delivery': a_delivery_user.id})
+        order_service.deliver(an_order.id)
 
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
@@ -101,9 +97,7 @@ class TestOrderService:
 
     def test_take_order_with_non_existing_delivery_raises_error(self, an_order, an_object_id):
         with pytest.raises(NonExistingDeliveryException):
-            order_service.take(
-                an_order.id, {
-                    'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
+            order_service.take(an_order.id, an_object_id)
 
     def test_placed_by_returns_orders_placed_by_user(self, an_order, a_customer_user):
         an_order.owner = a_customer_user
@@ -158,3 +152,11 @@ class TestOrderService:
         result = order_service.order_position(an_order)
 
         assert result == a_city.lower()
+
+    def test_deliver_order_should_increase_delivery_balance_by_85_percent_of_cost(self, an_order):
+        an_order.price = 100
+        an_order.save()
+
+        order_service.deliver(an_order.id)
+
+        assert an_order.delivery.balance == 85

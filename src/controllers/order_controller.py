@@ -79,12 +79,6 @@ def list_placed_orders(user):
 @log_request_response
 @authenticate
 def update_order(order_id):
-    try:
-        order_service.take(order_id, parse_take_order_request(request.json))
-        data = DetailsOrderSchema().dump(order_repository.get_order(order_id))
-    except NonExistingDeliveryException:
-        raise InvalidUsage('Delivery does not exists', status_code=HTTP_400_BAD_REQUEST)
-    except NonExistingOrderException:
-        raise InvalidUsage('Order does not exists', status_code=HTTP_404_NOT_FOUND)
-
+    data = parse_take_order_request(request.json)
+    order_service.update(order_id, data)
     return jsonify(data), HTTP_200_OK

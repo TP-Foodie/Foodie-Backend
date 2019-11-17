@@ -26,14 +26,9 @@ def create(order_type, owner, product, payment_method, number):
                                 payment_method=payment_method, number=number)
 
 
-def update(order_id, field, value):
+def update(order_id, values):
     order = Order.objects.filter(id=order_id).first()
-
-    if not order:
-        raise NonExistingOrderException()
-
-    order[field] = value
-    order.save()
+    order.update(**values)
     return order
 
 
