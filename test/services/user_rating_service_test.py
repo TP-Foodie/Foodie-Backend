@@ -1,4 +1,5 @@
 import pytest
+from mongoengine import DoesNotExist
 
 from models import User
 from models.user_rating import UserRating
@@ -38,3 +39,11 @@ class TestUserRating:
         )
 
         assert User.objects.get(id=a_customer_user.id).reputation == 3
+
+    def test_create_rating_with_non_existing_user_raises_error(self, an_object_id):
+        with pytest.raises(DoesNotExist):
+            self.user_rating_service.create({
+                'user': an_object_id,
+                'description': 'nice experience',
+                'rating': 3}
+            )
