@@ -272,3 +272,14 @@ def a_user_rating(cfaker, a_customer_user):
         description=cfaker.text(),
         rating=cfaker.random_int(min=1, max=5)
     )
+
+
+@pytest.fixture
+def a_user_rating_factory(cfaker, a_customer_user):
+    def create(rating=cfaker.random_int(min=1, max=5)):
+        return UserRating(
+            user=a_customer_user.id,
+            description=cfaker.text(),
+            rating=rating
+        )
+    return create
