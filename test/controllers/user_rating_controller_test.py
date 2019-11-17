@@ -1,7 +1,7 @@
 import json
 
-from models.user_rating import UserRating
 from test.support.utils import TestMixin, assert_401, assert_201
+from models.user_rating import UserRating
 
 
 class TestUserRatingController(TestMixin):

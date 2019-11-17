@@ -7,7 +7,6 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import firebase_admin
 from firebase_admin import credentials
 
-from controllers.user_rating_controller import USER_RATING_BLUEPRINT
 from encoders import CustomJSONEncoder
 from settings import Config
 
@@ -18,6 +17,7 @@ from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLU
 from controllers.order_controller import ORDERS_BLUEPRINT
 from controllers.rule_controller import RULES_BLUEPRINT
 from controllers.chat_controller import CHATS_BLUEPRINT
+from controllers.user_rating_controller import USER_RATING_BLUEPRINT
 from error_handlers import ERRORS_BLUEPRINT
 
 # initialize Flask app

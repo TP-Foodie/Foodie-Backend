@@ -14,12 +14,13 @@ class TestUserRating:
         self.user_rating_service.create({
             'user': a_customer_user.id,
             'description': 'nice experience',
-            'rating': 1}
-        )
+            'rating': 1
+        })
 
         assert UserRating.objects.count() == 1
 
-    def test_average_for_calculates_average_rating_for_user(self, a_user_rating_factory, a_customer_user):
+    def test_average_for_calculates_average_rating_for_user(self, a_user_rating_factory,
+                                                            a_customer_user):
         a_user_rating_factory(rating=1)
         a_user_rating_factory(rating=1)
 
@@ -35,8 +36,8 @@ class TestUserRating:
         self.user_rating_service.create({
             'user': a_customer_user.id,
             'description': 'nice experience',
-            'rating': 3}
-        )
+            'rating': 3
+        })
 
         assert User.objects.get(id=a_customer_user.id).reputation == 3
 
@@ -45,13 +46,13 @@ class TestUserRating:
             self.user_rating_service.create({
                 'user': an_object_id,
                 'description': 'nice experience',
-                'rating': 3}
-            )
+                'rating': 3
+            })
 
     def test_create_rating_with_wrong_number_should_raise_error(self, an_object_id):
         with pytest.raises(ValidationError):
             self.user_rating_service.create({
                 'user': an_object_id,
                 'description': 'nice experience',
-                'rating': -1}
-            )
+                'rating': -1
+            })

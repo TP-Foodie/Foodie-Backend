@@ -24,6 +24,6 @@ class CreateUserRatingSchema(Schema):
         fields = ('user', 'description', 'rating')
 
     @post_load
-    def make_data(self, data, **kwargs):
+    def make_data(self, data, **kwargs):  # pylint: disable=unused-argument
         data['user'] = ObjectId(data['user'])
         return data
