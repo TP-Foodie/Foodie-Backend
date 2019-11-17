@@ -1,5 +1,5 @@
 import pytest
-from mongoengine import DoesNotExist
+from mongoengine import DoesNotExist, ValidationError
 
 from models import User
 from models.user_rating import UserRating
@@ -46,4 +46,12 @@ class TestUserRating:
                 'user': an_object_id,
                 'description': 'nice experience',
                 'rating': 3}
+            )
+
+    def test_create_rating_with_wrong_number_should_raise_error(self, an_object_id):
+        with pytest.raises(ValidationError):
+            self.user_rating_service.create({
+                'user': an_object_id,
+                'description': 'nice experience',
+                'rating': -1}
             )
