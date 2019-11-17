@@ -312,6 +312,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert rules[0]['id'] == str(a_benefit_rule.id)
 
     def test_benefits_does_not_return_normal_rules(self, a_client, a_client_user, a_rule):
+        # pylint: disable=unused-argument
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.get(a_client, 'api/v1/rules/benefits')
 

@@ -13,6 +13,7 @@ MISSING_ARGS_ERROR_MESSAGE = "missing arguments"
 rule_service = RuleService()  # pylint: disable=invalid-name
 rules_schema = RuleSchema(many=True)  # pylint: disable=invalid-name
 
+
 @RULES_BLUEPRINT.route('/', methods=['GET'])
 @log_request_response
 @authenticate

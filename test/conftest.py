@@ -14,7 +14,7 @@ from models.chat import Chat, ChatMessage
 from services import user_service
 
 
-# pylint: disable=redefined-outer-name, function-redefined
+# pylint: disable=redefined-outer-name, function-redefined, invalid-name
 # This is required, pylint doesn't work well with pytest
 
 
