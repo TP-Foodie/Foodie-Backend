@@ -7,6 +7,8 @@ from services import delivery_service
 from settings import Config
 from models.order import Order
 
+import logger
+
 
 def create(order_type, product, payment_method, owner):
     created_product = product_repository.get_or_create(*product.values())
@@ -26,6 +28,8 @@ def handle_status_change(order_id, new_status, new_data):
         delivery_service.handle_status_change(new_delivery, new_status)
     elif new_status == Order.DELIVERED_STATUS:
         delivery_service.handle_status_change(old_delivery.id, new_status)
+    elif new_status == Order.CANCELLED_STATUS:
+        return
     else:
         delivery_service.handle_status_change(old_delivery.id, new_status)
         order_repository.update(order_id, 'delivery', None)
