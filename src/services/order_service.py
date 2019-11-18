@@ -22,7 +22,7 @@ def create(order_type, product, payment_method, owner):
 def handle_status_change(order_id, new_status, new_data):
     new_delivery = new_data.get('delivery', None)
     old_delivery = order_repository.get_order(order_id).delivery
-    if new_status == Order.TAKEN_STATUS:
+    if new_status == Order.TAKEN_STATUS and new_delivery is not None:
         delivery_service.handle_status_change(new_delivery, new_status)
     elif new_status == Order.DELIVERED_STATUS:
         delivery_service.handle_status_change(old_delivery.id, new_status)
