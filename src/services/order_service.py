@@ -7,8 +7,6 @@ from services import delivery_service
 from settings import Config
 from models.order import Order
 
-import logger
-
 
 def create(order_type, product, payment_method, owner):
     created_product = product_repository.get_or_create(*product.values())
