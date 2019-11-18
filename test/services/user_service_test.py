@@ -175,3 +175,12 @@ class TestUserVariables:
 class TestStatistics:
     def test_registrations_by_date_returns_empty_if_there_are_no_users(self):
         assert not user_service.registrations_by_date()
+
+    def test_registrations_by_date_with_one_user(self, users_factory):
+        user = users_factory()
+
+        assert len(user_service.registrations_by_date()) == 1
+        assert user_service.registrations_by_date()[0] == {
+            'date': datetime.combine(user.created, datetime.min.time()),
+            'count': 1
+        }

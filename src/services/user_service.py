@@ -137,4 +137,7 @@ def is_premium(user):
 
 
 def registrations_by_date():
-    return []
+    group_stage = {'$group': {'_id': '$created', 'count': {'$sum': 1}}}
+    project_stage = {'$project': {'_id': 0, 'count': 1, 'date': '$_id'}}
+
+    return list(User.objects.aggregate(group_stage, project_stage))
