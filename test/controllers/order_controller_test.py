@@ -121,7 +121,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'type': an_order.delivery.type
             },
             'id_chat': "",
-            'quotation': None
+            'quotation': 0
         }
 
     def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):

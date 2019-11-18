@@ -82,6 +82,6 @@ def list_placed_orders(user):
 @log_request_response
 @authenticate
 def update_order(order_id):
-    data = parse_take_order_request(request.json)
-    order_service.update(order_id, data)
-    return jsonify(data), HTTP_200_OK
+    data = order_service.update(order_id, parse_take_order_request(request.json))
+    a = ListOrderSchema().dump(data)
+    return jsonify(a), HTTP_200_OK

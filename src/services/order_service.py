@@ -23,26 +23,18 @@ def create(order_type, product, payment_method, owner):
     )
 
 
-def handle_status_change(order_id, new_status, new_data):
-    new_delivery = new_data.get('delivery', None)
-    old_delivery = order_repository.get_order(order_id).delivery
-    if new_status == Order.TAKEN_STATUS:
-        delivery_service.handle_status_change(new_delivery, new_status)
-    elif new_status == Order.DELIVERED_STATUS:
-        delivery_service.handle_status_change(old_delivery.id, new_status)
-    else:
-        delivery_service.handle_status_change(old_delivery.id, new_status)
-        order_repository.update(order_id, 'delivery', None)
-        order_repository.update(order_id, 'quotation', None)
-
 def update(order_id, data):
     if data.get('delivery'):
         return take(order_id, data.get('delivery'))
 
+    if data.get('status') in Order.CANCELLED_STATUS:
+        return cancel(order_id)
+
     if data.get('status') == Order.DELIVERED_STATUS:
         return deliver(order_id)
 
-    handle_status_change(order_id, new_data.get('status'), data)
+    if data.get('status') == Order.WAITING_STATUS:
+        return unassign(order_id)
 
     return order_repository.update(order_id, data)
 
@@ -63,9 +55,19 @@ def deliver(order_id):
     user_repository.increment_deliveries_completed(str(order.delivery.id))
 
     delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS)
-    user_repository.update(order.delivery.id, {'balance': order.price * DELIVERY_PERCENTAGE})
+    user_repository.update(order.delivery.id, {'balance': order.quotation * DELIVERY_PERCENTAGE})
 
     return order_repository.update(order_id, {'status': Order.DELIVERED_STATUS})
+
+
+def cancel(order_id):
+    unassign(order_id, Order.CANCELLED_STATUS)
+
+
+def unassign(order_id, status=Order.WAITING_STATUS):
+    order = order_repository.get_order(order_id)
+    delivery_service.handle_status_change(order.delivery.id, status)
+    return order_repository.update(order_id, {'status': status, 'delivery': None})
 
 
 def placed_by(user_id, start_date=None, end_date=None):
