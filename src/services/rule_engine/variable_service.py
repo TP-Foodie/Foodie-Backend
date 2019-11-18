@@ -53,6 +53,8 @@ class UserAntiquityVariable(Variable):
 class DeliveryAntiquityVariable(Variable):
     @property
     def value(self):
+        if self.order.delivery is None:
+            return 0
         return user_service.antiquity(self.order.delivery)
 
 

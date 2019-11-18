@@ -130,3 +130,7 @@ def monthly_travels(user):
 
 def antiquity(user):
     return (datetime.now().date() - user.created).days
+
+
+def is_premium(user):
+    return user.subscription == User.PREMIUM_SUBSCRIPTION

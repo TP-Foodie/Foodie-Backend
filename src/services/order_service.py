@@ -2,9 +2,10 @@ import json
 import requests
 from mongoengine import Q
 
-from repositories import order_repository, product_repository
+from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
 from settings import Config
+from models.order import Order
 
 
 def create(order_type, product, payment_method, owner):
@@ -18,18 +19,33 @@ def create(order_type, product, payment_method, owner):
     )
 
 
+def handle_status_change(order_id, new_status, new_data):
+    new_delivery = new_data.get('delivery', None)
+    old_delivery = order_repository.get_order(order_id).delivery
+    if new_status == Order.TAKEN_STATUS and new_delivery is not None:
+        delivery_service.handle_status_change(new_delivery, new_status)
+    elif new_status == Order.DELIVERED_STATUS:
+        delivery_service.handle_status_change(old_delivery.id, new_status)
+    elif new_status == Order.CANCELLED_STATUS and old_delivery is None:
+        order_repository.update(order_id, 'delivery', None)
+        order_repository.update(order_id, 'quotation', None)
+    else:
+        delivery_service.handle_status_change(old_delivery.id, new_status)
+        order_repository.update(order_id, 'delivery', None)
+        order_repository.update(order_id, 'quotation', None)
+
+
 def take(order_id, new_data):
-    delivery = new_data.get('delivery', None)
-    if delivery is None:
-        delivery = order_repository.get_order(order_id).delivery.id
-
-    delivery_service.handle_status_change(
-        delivery,
-        new_data.get('status')
-    )
-
     if new_data.get('status') is not None:
+        # if new status is delivered -> increment deliveries_completed in User docs
+        if new_data.get('status') == Order.DELIVERED_STATUS:
+            # get owner and delivery from Order data and increment deliveries_completed
+            order = order_repository.get_order(order_id)
+            user_repository.increment_deliveries_completed(str(order.owner.id))
+            user_repository.increment_deliveries_completed(str(order.delivery.id))
+
         order_repository.update(order_id, 'status', new_data.get('status'))
+        handle_status_change(order_id, new_data.get('status'), new_data)
 
     if new_data.get('payment_method') is not None:
         order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
@@ -39,6 +55,9 @@ def take(order_id, new_data):
 
     if new_data.get('id_chat', None) is not None:
         order_repository.update(order_id, 'id_chat', new_data.get('id_chat'))
+
+    if new_data.get('quotation', None) is not None:
+        order_repository.update(order_id, 'quotation', new_data.get('quotation'))
 
     return order_repository.get_order(order_id)
 

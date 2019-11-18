@@ -23,6 +23,9 @@ class User(Document):
     CUSTOMER_TYPE = "CUSTOMER"
     BACK_OFFICE_TYPE = "BACK_OFFICE"
 
+    FLAT_SUBSCRIPTION = "FLAT"
+    PREMIUM_SUBSCRIPTION = "PREMIUM"
+
     name = StringField(required=False)
     last_name = StringField(required=False)
     google_id = StringField(required=False)
@@ -35,7 +38,8 @@ class User(Document):
         regex="CUSTOMER|DELIVERY|BACK_OFFICE")
     subscription = StringField(
         required=False,
-        regex="FLAT|PREMIUM")
+        regex="FLAT|PREMIUM",
+        default="FLAT")
     recovery_token = StringField(required=False)
     recovery_token_date = DateTimeField(required=False)
     reputation = IntField(default=0)
@@ -45,6 +49,7 @@ class User(Document):
     balance = FloatField(default=0)
     location = EmbeddedDocumentField(Coordinates)
     available = BooleanField(default=True)
+    deliveries_completed = IntField(default=0)
 
 
 class Transaction(Document):
