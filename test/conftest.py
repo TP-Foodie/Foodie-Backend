@@ -14,7 +14,7 @@ from models.chat import Chat, ChatMessage
 from services import user_service
 
 
-# pylint: disable=redefined-outer-name, function-redefined
+# pylint: disable=redefined-outer-name, function-redefined, invalid-name
 # This is required, pylint doesn't work well with pytest
 from services.rule_service import RuleService
 
@@ -185,6 +185,16 @@ def a_rule(cfaker, a_condition_data, a_consequence_data):
         'conditions': [a_condition_data],
         'consequence': a_consequence_data
     })
+
+
+another_rule = a_rule
+
+
+@pytest.fixture
+def a_benefit_rule(a_rule):
+    a_rule.benefit = True
+    a_rule.save()
+    return a_rule
 
 
 @pytest.fixture

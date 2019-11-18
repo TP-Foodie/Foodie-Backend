@@ -15,10 +15,11 @@ class Order(Document):
     WAITING_STATUS = "WS"
     TAKEN_STATUS = "TS"
     DELIVERED_STATUS = "DS"
+    CANCELLED_STATUS = "CS"
     NORMAL_TYPE = "NT"
     FAVOR_TYPE = "FT"
 
-    status = (WAITING_STATUS, TAKEN_STATUS, DELIVERED_STATUS)
+    status = (WAITING_STATUS, TAKEN_STATUS, DELIVERED_STATUS, CANCELLED_STATUS)
     types = (NORMAL_TYPE, FAVOR_TYPE)
 
     number = IntField(required=True)
@@ -33,4 +34,4 @@ class Order(Document):
         choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD
     )
     id_chat = StringField(default="")
-    price = FloatField(default=0)
+    quotation = FloatField(required=False)

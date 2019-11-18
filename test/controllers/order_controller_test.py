@@ -120,7 +120,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'phone': an_order.delivery.phone,
                 'type': an_order.delivery.type
             },
-            'id_chat': ""
+            'id_chat': "",
+            'quotation': None
         }
 
     def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):
@@ -228,7 +229,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_200(response)
 
-        assert json.loads(response.data) == 20
+        assert json.loads(response.data) == {'price':20}
 
     # noinspection PyTypeChecker
     def test_quote_order_returns_zero_if_rule_does_not_apply(self, a_client,
@@ -253,7 +254,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_200(response)
 
-        assert json.loads(response.data) == 0
+        assert json.loads(response.data) == {'price':0}
 
     def test_orders_placed_for_unauthorized(self, a_client):
         response = a_client.get('api/v1/orders/placed')

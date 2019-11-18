@@ -10,7 +10,7 @@ class RuleRepository:
         return Rule.objects.create(**data)
 
     def list(self):
-        return self.rules_schema.dump(self.all())
+        return self.rules_schema.dump(self.all().filter(benefit=False))
 
     def all(self):
         return Rule.objects.filter(original=True)
