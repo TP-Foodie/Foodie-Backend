@@ -218,3 +218,18 @@ class TestStatistics:
                 'count': 1
             }
         ]
+
+    def test_registrations_by_date_sorts_by_date(self, user_factory):
+        a_user = user_factory()
+        another_user = user_factory()
+
+        a_user.created = datetime.now() - timedelta(days=1)
+        a_user.save()
+
+        another_user.created = datetime.now() + timedelta(days=1)
+        another_user.save()
+
+        data = user_service.registrations_by_date()
+
+        assert len(data) == 2
+        assert data[0]['date'] == datetime.combine(a_user.created, datetime.min.time())
