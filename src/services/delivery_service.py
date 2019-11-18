@@ -24,5 +24,5 @@ def handle_status_change(delivery, order_status):
 
     if order_status == Order.TAKEN_STATUS:
         user_repository.set_delivery_as_unavailable(delivery)
-    elif order_status == Order.DELIVERED_STATUS:
+    elif order_status in [Order.DELIVERED_STATUS, Order.WAITING_STATUS, Order.CANCELLED_STATUS]:
         user_repository.set_delivery_as_available(delivery)
