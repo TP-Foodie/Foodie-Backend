@@ -35,3 +35,7 @@ def parse_rule_request(values):
         **values.get('consequence', {}),
         'name': values.get('name', ''),
     }
+
+
+def build_quotation_response(price):
+    return {'price': price}

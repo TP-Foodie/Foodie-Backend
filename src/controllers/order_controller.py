@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from controllers.parser import parse_order_request, parse_take_order_request
+from controllers.parser import parse_order_request, parse_take_order_request, build_quotation_response
 from controllers.utils import HTTP_201_CREATED, \
     HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
 from logger import log_request_response
@@ -55,8 +55,7 @@ def order_details(order_id):
 @authenticate
 def order_quotation(order_id):
     price = rule_service.quote_price(order_id)
-    data = {'price': price}
-    return jsonify(data)
+    return jsonify(build_quotation_response(price))
 
 
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
