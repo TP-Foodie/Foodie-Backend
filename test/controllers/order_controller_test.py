@@ -321,7 +321,11 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
     def test_mark_order_as_completed(self, a_client, a_client_user, an_order, a_delivery_user):
         self.login(a_client, a_client_user.email, a_client_user.password)
-        self.patch(a_client, 'api/v1/orders/{}'.format(str(an_order.id)), {'delivery': a_delivery_user.id})
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'delivery': a_delivery_user.id}
+        )
         response = self.patch(
             a_client,
             'api/v1/orders/{}'.format(str(an_order.id)),
@@ -332,9 +336,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert Order.objects.get(id=an_order.id).status == Order.DELIVERED_STATUS
 
     # noinspection PyTypeChecker
-    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(self, a_client,
-                                                                                            a_client_user, an_order,
-                                                                                            a_delivery_user):
+    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(self, a_client, a_client_user, an_order, a_delivery_user):  # pylint: disable=line-too-long
         Rule(
             name='$20 base',
             conditions=[],
@@ -342,7 +344,11 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         ).save()
 
         self.login(a_client, a_client_user.email, a_client_user.password)
-        self.patch(a_client, 'api/v1/orders/{}'.format(str(an_order.id)), {'delivery': a_delivery_user.id})
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'delivery': a_delivery_user.id}
+        )
         self.patch(
             a_client,
             'api/v1/orders/{}'.format(str(an_order.id)),

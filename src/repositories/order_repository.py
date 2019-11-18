@@ -2,7 +2,6 @@ import calendar
 from datetime import datetime, timedelta
 from mongoengine import Q
 from models.order import Order
-from services.exceptions.order_exceptions import NonExistingOrderException
 
 
 def list_all():

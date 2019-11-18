@@ -1,16 +1,15 @@
 from flask import Blueprint, jsonify, request
 
-from controllers.parser import parse_order_request, parse_take_order_request, build_quotation_response
+from controllers.parser import parse_order_request, \
+    parse_take_order_request, build_quotation_response
 from controllers.utils import HTTP_201_CREATED, \
-    HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
+    HTTP_400_BAD_REQUEST, HTTP_200_OK
 from logger import log_request_response
 from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
 from services.exceptions.invalid_usage_exception import InvalidUsage
-from services.exceptions.user_exceptions import NonExistingDeliveryException
-from services.exceptions.order_exceptions import NonExistingPlaceException, \
-    NonExistingOrderException
+from services.exceptions.order_exceptions import NonExistingPlaceException
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
@@ -82,5 +81,4 @@ def list_placed_orders(user):
 @authenticate
 def update_order(order_id):
     data = order_service.update(order_id, parse_take_order_request(request.json))
-    a = ListOrderSchema().dump(data)
-    return jsonify(a), HTTP_200_OK
+    return jsonify(ListOrderSchema().dump(data)), HTTP_200_OK

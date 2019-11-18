@@ -8,12 +8,12 @@ from werkzeug.exceptions import MethodNotAllowed, NotFound
 
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 from services.exceptions.invalid_usage_exception import InvalidUsage
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 from controllers.utils import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, \
     HTTP_405_METHOD_NOT_ALLOWED, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_ERROR
 
 import logger
-from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 ERRORS_BLUEPRINT = Blueprint('errors', __name__)
 
