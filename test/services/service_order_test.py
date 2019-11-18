@@ -5,6 +5,7 @@ import pytest
 from bson import ObjectId
 
 from models.order import Order
+from models.rule import RuleConsequence, Rule
 from repositories import order_repository, product_repository, user_repository
 from services import order_service, product_service
 from services.exceptions.order_exceptions import NonExistingPlaceException
@@ -191,3 +192,15 @@ class TestOrderService:
         order_service.deliver(an_order.id)
 
         assert an_order.delivery.balance == 85
+
+    # noinspection PyTypeChecker
+    def test_should_calculate_quotation_based_on_rules(self, an_order, a_delivery_user):
+        Rule(
+            name='$20 base',
+            conditions=[],
+            consequence={'consequence_type': RuleConsequence.VALUE, 'value': 20}
+        ).save()
+
+        order_service.take(an_order.id, a_delivery_user.id)
+
+        assert Order.objects.get(id=an_order.id).quotation == 20

@@ -5,12 +5,13 @@ from mongoengine import Q
 from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
 from services.exceptions.user_exceptions import NonExistingDeliveryException
+from services.rule_service import RuleService
 from settings import Config
 from models.order import Order
 
 
 DELIVERY_PERCENTAGE = 0.85
-
+rule_service = RuleService()  # pylint: disable=invalid-name
 
 def create(order_type, product, payment_method, owner):
     created_product = product_repository.get_or_create(*product.values())
@@ -45,7 +46,14 @@ def take(order_id, delivery):
 
     delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS)
 
-    return order_repository.update(order_id, {'delivery': delivery, 'status': Order.TAKEN_STATUS})
+    return order_repository.update(
+        order_id,
+        {
+            'delivery': delivery,
+            'status': Order.TAKEN_STATUS,
+            'quotation': rule_service.quote_price(order_id)
+        }
+    )
 
 
 def deliver(order_id):
