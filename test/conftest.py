@@ -28,23 +28,23 @@ def cfaker():
 
 
 @pytest.fixture
-def a_customer_user(cfaker, a_location):
-    return User(
-        name=cfaker.first_name(),
-        last_name=cfaker.last_name(),
-        password=cfaker.prefix(),
-        email=cfaker.email(),
-        profile_image=cfaker.image_url(),
-        phone=cfaker.phone_number(),
-        type="CUSTOMER",
-        location=a_location
-    ).save()
+def a_customer_user(user_factory):
+    return user_factory()
 
 
 @pytest.fixture
-def users_factory(a_customer_user):
+def user_factory(cfaker, a_location):
     def create():
-        return a_customer_user
+        return User(
+            name=cfaker.first_name(),
+            last_name=cfaker.last_name(),
+            password=cfaker.prefix(),
+            email=cfaker.email(),
+            profile_image=cfaker.image_url(),
+            phone=cfaker.phone_number(),
+            type="CUSTOMER",
+            location=a_location
+        ).save()
 
     return create
 

@@ -4,6 +4,7 @@ from unittest import mock, TestCase
 from unittest.mock import Mock, MagicMock
 
 import pytest
+
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 from services import user_service
 
@@ -176,11 +177,24 @@ class TestStatistics:
     def test_registrations_by_date_returns_empty_if_there_are_no_users(self):
         assert not user_service.registrations_by_date()
 
-    def test_registrations_by_date_with_one_user(self, users_factory):
-        user = users_factory()
+    def test_registrations_by_date_with_one_user(self, user_factory):
+        user = user_factory()
 
         assert len(user_service.registrations_by_date()) == 1
         assert user_service.registrations_by_date()[0] == {
             'date': datetime.combine(user.created, datetime.min.time()),
             'count': 1
+        }
+
+    def test_registrations_by_date_groups_by_date(self, user_factory):
+        user_factory()
+        user = user_factory()
+        user.created = datetime.now() + timedelta(hours=3)
+
+        data = user_service.registrations_by_date()
+
+        assert len(data) == 1
+        assert data[0] == {
+            'date': datetime.combine(user.created, datetime.min.time()),
+            'count': 2
         }
