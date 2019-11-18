@@ -1,14 +1,7 @@
 from marshmallow import Schema, fields
 
-from schemas.place import PlaceSchema
 from schemas.user import UserSchema
-
-
-class ProductSchema(Schema):
-    place = fields.Nested(PlaceSchema)
-
-    class Meta:
-        fields = ('name', 'place')
+from schemas.product_schema import ProductSchema
 
 
 class ListOrderSchema(Schema):

@@ -15,6 +15,9 @@ def parse_order_request(values):
             'product': {
                 'name': values['product']['name'],
                 'place': ObjectId(values['product']['place']),
+                'description': values['product']['description'],
+                'price': values['product']['price'],
+                'image': values['product']['image']
             },
             'owner': ObjectId(values['user'].id)
         })

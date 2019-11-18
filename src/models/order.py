@@ -2,13 +2,9 @@ from datetime import datetime
 from mongoengine import Document, IntField, ReferenceField, \
     CASCADE, StringField, NULLIFY, DateTimeField
 
-from models import User, Place
+from models import User
 from models.rule import RuleCondition
-
-
-class Product(Document):
-    name = StringField(max_length=150, required=True)
-    place = ReferenceField(Place, required=True)
+from models.product import Product
 
 
 class Order(Document):
