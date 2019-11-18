@@ -134,3 +134,7 @@ def antiquity(user):
 
 def is_premium(user):
     return user.subscription == User.PREMIUM_SUBSCRIPTION
+
+
+def registrations_by_date():
+    return []

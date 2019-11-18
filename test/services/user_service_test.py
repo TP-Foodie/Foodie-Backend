@@ -169,3 +169,9 @@ class TestUserVariables:
         a_customer_user.created = datetime.now().date() - timedelta(days=1)
 
         assert user_service.antiquity(a_customer_user) == 1
+
+
+@pytest.mark.usefixtures('a_client')
+class TestStatistics:
+    def test_registrations_by_date_returns_empty_if_there_are_no_users(self):
+        assert not user_service.registrations_by_date()

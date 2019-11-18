@@ -42,6 +42,14 @@ def a_customer_user(cfaker, a_location):
 
 
 @pytest.fixture
+def users_factory(a_customer_user):
+    def create():
+        return a_customer_user
+
+    return create
+
+
+@pytest.fixture
 def a_delivery_user(cfaker):
     return User(
         name=cfaker.first_name(),
