@@ -198,3 +198,23 @@ class TestStatistics:
             'date': datetime.combine(user.created, datetime.min.time()),
             'count': 2
         }
+
+    def test_registrations_by_date_with_multiple_dates(self, user_factory):
+        a_user = user_factory()
+        another_user = user_factory()
+        another_user.created = datetime.now() + timedelta(days=1)
+        another_user.save()
+
+        data = user_service.registrations_by_date()
+
+        assert len(data) == 2
+        assert data == [
+            {
+                'date': datetime.combine(a_user.created, datetime.min.time()),
+                'count': 1
+            },
+            {
+                'date': datetime.combine(another_user.created, datetime.min.time()),
+                'count': 1
+            }
+        ]

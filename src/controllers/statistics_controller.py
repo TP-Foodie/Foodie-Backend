@@ -1,6 +1,8 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
+from controllers.utils import HTTP_200_OK
 from logger import log_request_response
+from services import user_service
 from services.auth_service import authenticate
 
 STATISTICS_BLUEPRINT = Blueprint('statistics', __name__)
@@ -10,4 +12,4 @@ STATISTICS_BLUEPRINT = Blueprint('statistics', __name__)
 @log_request_response
 @authenticate
 def registrations():
-    return ''
+    return jsonify(user_service.registrations_by_date()), HTTP_200_OK
