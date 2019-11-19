@@ -1,10 +1,16 @@
 from datetime import datetime
 from mongoengine import Document, IntField, ReferenceField, \
-    CASCADE, StringField, NULLIFY, DateTimeField, FloatField
+    CASCADE, StringField, NULLIFY, DateTimeField, FloatField, \
+    EmbeddedDocumentField, ListField, EmbeddedDocument
 
 from models import User
 from models.rule import RuleCondition
 from models.product import Product
+
+
+class OrderedProduct(EmbeddedDocument):
+    quantity = IntField(required=True)
+    product = ReferenceField(Product, required=True)
 
 
 class Order(Document):
@@ -22,7 +28,7 @@ class Order(Document):
     status = StringField(choices=status, default=WAITING_STATUS)
     type = StringField(choices=types, default=NORMAL_TYPE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
-    product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
+    ordered_products = ListField(EmbeddedDocumentField(OrderedProduct))
     delivery = ReferenceField(User, reverse_delete_rule=NULLIFY)
     created = DateTimeField(default=datetime.now())
     date = DateTimeField(default=datetime.now())

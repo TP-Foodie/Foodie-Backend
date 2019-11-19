@@ -2,18 +2,19 @@ import json
 import requests
 from mongoengine import Q
 
-from repositories import order_repository, product_repository, user_repository
+from repositories import order_repository, user_repository
 from services import delivery_service
 from settings import Config
 from models.order import Order
 
+import logger
 
-def create(order_type, product, payment_method, owner):
-    created_product = product_repository.get_or_create(*product.values())
+
+def create(order_type, ordered_products, payment_method, owner):
     return order_repository.create(
         order_type=order_type,
         owner=owner,
-        product=created_product.id,
+        ordered_products=ordered_products,
         payment_method=payment_method,
         number=order_repository.count() + 1
     )
@@ -63,10 +64,13 @@ def take(order_id, new_data):
 
 
 def placed_by(user_id, start_date=None, end_date=None):
+    logger.error("ACA LLEGO")
     user_orders = order_repository.filter_by({'owner': user_id})
-
-    return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
+    logger.error("ACA LLEGO")
+    algo = user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
         if start_date and end_date else user_orders
+    logger.error("ACA LLEGO")
+    return algo
 
 
 def distance(order):

@@ -12,12 +12,6 @@ def count():
     return Product.objects.count()
 
 
-def create_product(name, description, price, place, image):
-    return Product.objects.create(
-        name=name, description=description, price=price, place=place, image=image
-    )
-
-
 def get_products_from_place(id_place):
     places = Place.objects(id=id_place)
     return Product.objects(place__in=places)

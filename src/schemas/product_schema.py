@@ -16,3 +16,6 @@ class ProductSchema(Schema):
     price = fields.Int(required=True)
     place = fields.Nested(PlaceSchema, required=True)
     image = fields.String(required=False)
+
+    class Meta:
+        fields = ('id', 'name', 'description', 'price', 'place', 'image')

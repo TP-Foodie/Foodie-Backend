@@ -4,6 +4,13 @@ from schemas.user import UserSchema
 from schemas.product_schema import ProductSchema
 
 
+class OrderedProductSchema(Schema):
+    product = fields.Nested(ProductSchema)
+
+    class Meta:
+        fields = ('id', 'quantity', 'product')
+
+
 class ListOrderSchema(Schema):
     delivery = fields.Nested(UserSchema)
 
@@ -13,11 +20,11 @@ class ListOrderSchema(Schema):
 
 class DetailsOrderSchema(Schema):
     owner = fields.Nested(UserSchema)
-    product = fields.Nested(ProductSchema)
+    ordered_products = fields.List(fields.Nested(OrderedProductSchema))
     delivery = fields.Nested(UserSchema)
 
     class Meta:
         fields = (
-            'id', 'number', 'status', 'type', 'owner', 'product', 'delivery', 'id_chat',
+            'id', 'number', 'status', 'type', 'owner', 'ordered_products', 'delivery', 'id_chat',
             'quotation'
         )

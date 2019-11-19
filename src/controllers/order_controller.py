@@ -14,6 +14,8 @@ from services.exceptions.order_exceptions import NonExistingPlaceException, \
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
+import logger
+
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
 
 
@@ -73,8 +75,10 @@ def list_favor_orders():
 def list_placed_orders(user):
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
-
+    logger.error("ACA 1")
     data = ListOrderSchema(many=True).dump(order_service.placed_by(user.id, start_date, end_date))
+
+    logger.error("ACA 1")
     return jsonify(data)
 
 
