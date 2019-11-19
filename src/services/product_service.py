@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 
-from models import Place
+from models.place import Place
 from models.order import Product
 from services.exceptions.order_exceptions import NonExistingPlaceException
 from repositories import product_repository

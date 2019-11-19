@@ -1,4 +1,5 @@
 from models.product import Product
+from models.place import Place
 from services import product_service
 
 
@@ -18,4 +19,5 @@ def create_product(name, description, price, place, image):
 
 
 def get_products_from_place(id_place):
-    return Product.objects(place__id=id_place)
+    places = Place.objects(id=id_place)
+    return Product.objects(place__in=places)

@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from controllers.utils import HTTP_403_FORBIDDEN, HTTP_201_CREATED, HTTP_200_OK
-from schemas.product_schema import ProductSchema
+from schemas.product_schema import ProductSchema, ListProductSchema
 from services.auth_service import authenticate
 from services import product_service
 from logger import log_request_response
@@ -30,4 +30,8 @@ def post(user):
 def get_products():
     id_place = request.args.get('id_place')
 
-    return jsonify(product_service.get_products_from_place(id_place)), HTTP_200_OK
+    data = ListProductSchema(many=True).dump(
+        product_service.get_products_from_place(id_place)
+    )
+
+    return jsonify(data), HTTP_200_OK
