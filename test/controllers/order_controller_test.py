@@ -114,8 +114,10 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                         'name': an_order.ordered_products[0].product.place.name,
                         'image': an_order.ordered_products[0].product.place.image,
                         'coordinates': {
-                            'latitude': an_order.ordered_products[0].product.place.coordinates.latitude,
-                            'longitude': an_order.ordered_products[0].product.place.coordinates.longitude
+                            'latitude':
+                            an_order.ordered_products[0].product.place.coordinates.latitude,
+                            'longitude':
+                            an_order.ordered_products[0].product.place.coordinates.longitude
                         }
                     }
                 }
@@ -157,16 +159,22 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product)
         assert_201(response)
 
-    def test_create_orders_should_create_one_on_db(self, a_client, a_client_user, an_ordered_product):
+    def test_create_orders_should_create_one_on_db(
+            self, a_client, a_client_user, an_ordered_product
+    ):
         self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product)
 
         assert len(order_repository.list_all()) == 1
 
-    def test_create_should_return_created_http_code(self, a_client, a_client_user, an_ordered_product):
+    def test_create_should_return_created_http_code(
+            self, a_client, a_client_user, an_ordered_product
+    ):
         response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product)
         assert_201(response)
 
-    def test_create_with_wrong_type_should_return_400(self, a_client, a_client_user, an_ordered_product):
+    def test_create_with_wrong_type_should_return_400(
+            self, a_client, a_client_user, an_ordered_product
+    ):
         response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, an_ordered_product)
         assert_400(response)
 

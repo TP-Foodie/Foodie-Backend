@@ -93,7 +93,10 @@ def a_favor_order(an_order_factory):
 
 @pytest.fixture
 def an_ordered_product(cfaker, a_product):
-    return OrderedProduct(quantity=cfaker.pydecimal(positive=True, min_value=1, max_value=100), product=str(a_product.id))
+    return OrderedProduct(
+        quantity=cfaker.pydecimal(positive=True, min_value=1, max_value=100),
+        product=str(a_product.id)
+    )
 
 @pytest.fixture
 def an_order_factory(cfaker, a_customer_user, an_ordered_product, a_delivery_user):
