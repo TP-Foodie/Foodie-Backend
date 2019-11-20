@@ -216,3 +216,7 @@ class TestOrderService:
         assert orders[0]['count'] == 1
         assert orders[0]['date'].date() == a_complete_order.created.date()
 
+    def test_deliver_order_should_set_completed_date_field(self, an_order):
+        order_service.deliver(an_order.id)
+
+        assert Order.objects.get(id=an_order.id).completed_date.date() == datetime.today().date()

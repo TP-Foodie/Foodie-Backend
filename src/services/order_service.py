@@ -1,5 +1,6 @@
 import json
 import requests
+from datetime import datetime
 from mongoengine import Q
 
 from repositories import order_repository, product_repository, user_repository
@@ -66,7 +67,10 @@ def deliver(order_id):
     delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS)
     user_repository.update(order.delivery.id, {'balance': order.quotation * DELIVERY_PERCENTAGE})
 
-    return order_repository.update(order_id, {'status': Order.DELIVERED_STATUS})
+    return order_repository.update(
+        order_id,
+        {'status': Order.DELIVERED_STATUS, 'completed_date': datetime.now()}
+    )
 
 
 def cancel(order_id):
