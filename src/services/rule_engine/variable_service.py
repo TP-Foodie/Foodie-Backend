@@ -116,7 +116,7 @@ class ConditionVariableService:
     variable_mapping = {
         RuleCondition.USER_REPUTATION: UserReputationVariable,
         RuleCondition.DELIVERY_REPUTATION: DeliveryReputationVariable,
-        RuleCondition.USER_DAILY_TRAVELS: DeliveryReputationVariable,
+        RuleCondition.USER_DAILY_TRAVELS: UserDailyTravelsVariable,
         RuleCondition.DELIVERY_DAILY_TRAVELS: DeliveryDailyTravelsVariable,
         RuleCondition.DELIVERY_MONTHLY_TRAVELS: DeliveryMonthlyTravelsVariable,
         RuleCondition.USER_MONTHLY_TRAVELS: UserMonthlyTravelsVariable,
