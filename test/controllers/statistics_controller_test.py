@@ -24,3 +24,8 @@ class TestStatisticsController(TestMixin):
         data = json.loads(response.data)
 
         assert len(data) == 2
+
+    def test_completed_orders_for_unauthenticated(self, a_client):
+        response = a_client.get('api/v1/statistics/completed_orders')
+
+        assert_401(response)

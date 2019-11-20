@@ -13,3 +13,10 @@ STATISTICS_BLUEPRINT = Blueprint('statistics', __name__)
 @authenticate
 def registrations():
     return jsonify(user_service.registrations_by_date()), HTTP_200_OK
+
+
+@STATISTICS_BLUEPRINT.route('/completed_orders', methods=['GET'])
+@log_request_response
+@authenticate
+def completed_orders():
+    return ''
