@@ -13,6 +13,7 @@ from models.order import Order
 DELIVERY_PERCENTAGE = 0.85
 rule_service = RuleService()  # pylint: disable=invalid-name
 
+
 def create(order_type, product, payment_method, owner):
     created_product = product_repository.get_or_create(*product.values())
     return order_repository.create(
@@ -64,12 +65,11 @@ def handle_status_change(order_id, new_status, new_data):
     elif new_status == Order.DELIVERED_STATUS:
         delivery_service.handle_status_change(old_delivery.id, new_status)
     elif new_status == Order.CANCELLED_STATUS and old_delivery is None:
-        order_repository.update(order_id, 'delivery', None)
-        order_repository.update(order_id, 'quotation', None)
+        order_repository.update(order_id, {'delivery': None, 'quotation': None})
     else:
         delivery_service.handle_status_change(old_delivery.id, new_status)
-        order_repository.update(order_id, 'delivery', None)
-        order_repository.update(order_id, 'quotation', None)
+        order_repository.update(order_id, {'delivery': None, 'quotation': None})
+
 
 def deliver(order_id):
     order = order_repository.get_order(order_id)
