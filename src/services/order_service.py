@@ -107,3 +107,7 @@ def order_position(order):
     response = requests.get(url)
 
     return json.loads(response.content)['results'][0]['locations'][0]['adminArea5'].lower()
+
+
+def list_completed():
+    return order_repository.filter_by({'status':Order.DELIVERED_STATUS})

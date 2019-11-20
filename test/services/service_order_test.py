@@ -197,3 +197,10 @@ class TestOrderService:
         result = order_service.order_position(an_order)
 
         assert result == a_city.lower()
+
+    def test_list_completed_returns_all_orders_with_complete_status(self, an_order, a_complete_order):
+        # pylint: disable=unused-argument
+        orders = order_service.list_completed()
+
+        assert len(orders) == 1
+        assert a_complete_order.id == orders[0].id

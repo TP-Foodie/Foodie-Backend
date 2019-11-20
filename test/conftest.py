@@ -89,6 +89,13 @@ def an_order(an_order_factory):
 
 
 @pytest.fixture
+def a_complete_order(an_order):
+    an_order.status = Order.DELIVERED_STATUS
+    an_order.save()
+    return an_order
+
+
+@pytest.fixture
 def a_favor_order(an_order_factory):
     return an_order_factory(Order.FAVOR_TYPE)
 
