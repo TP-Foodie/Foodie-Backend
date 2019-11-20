@@ -9,12 +9,9 @@ from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
 from services.exceptions.invalid_usage_exception import InvalidUsage
 from services.exceptions.user_exceptions import NonExistingDeliveryException
-from services.exceptions.order_exceptions import NonExistingPlaceException, \
-    NonExistingOrderException
+from services.exceptions.order_exceptions import NonExistingOrderException
 from services.auth_service import authenticate
 from services.rule_service import RuleService
-
-import logger
 
 ORDERS_BLUEPRINT = Blueprint('orders', 'order_controller')
 
@@ -34,12 +31,9 @@ def list_orders():
 @log_request_response
 @authenticate
 def create_order(user):
-    try:
-        parsed_data = parse_order_request({**request.json, 'user': user})
-        order = order_service.create(**parsed_data)
-        data = DetailsOrderSchema().dump(order)
-    except NonExistingPlaceException:
-        raise InvalidUsage("Place does not exists", status_code=HTTP_400_BAD_REQUEST)
+    parsed_data = parse_order_request({**request.json, 'user': user})
+    order = order_service.create(**parsed_data)
+    data = DetailsOrderSchema().dump(order)
 
     return jsonify(data), HTTP_201_CREATED
 
@@ -75,10 +69,8 @@ def list_favor_orders():
 def list_placed_orders(user):
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
-    logger.error("ACA 1")
-    data = ListOrderSchema(many=True).dump(order_service.placed_by(user.id, start_date, end_date))
 
-    logger.error("ACA 1")
+    data = ListOrderSchema(many=True).dump(order_service.placed_by(user.id, start_date, end_date))
     return jsonify(data)
 
 

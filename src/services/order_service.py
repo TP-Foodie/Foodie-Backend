@@ -7,8 +7,6 @@ from services import delivery_service
 from settings import Config
 from models.order import Order
 
-import logger
-
 
 def create(order_type, ordered_products, payment_method, owner):
     return order_repository.create(
@@ -64,21 +62,17 @@ def take(order_id, new_data):
 
 
 def placed_by(user_id, start_date=None, end_date=None):
-    logger.error("ACA LLEGO")
     user_orders = order_repository.filter_by({'owner': user_id})
-    logger.error("ACA LLEGO")
-    algo = user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
+    return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
         if start_date and end_date else user_orders
-    logger.error("ACA LLEGO")
-    return algo
 
 
 def distance(order):
     owner_latitude = order.owner.location.latitude
     owner_longitude = order.owner.location.longitude
 
-    product_latitude = order.product.place.coordinates.latitude
-    product_longitude = order.product.place.coordinates.longitude
+    product_latitude = order.ordered_products[0].product.place.coordinates.latitude
+    product_longitude = order.ordered_products[0].product.place.coordinates.longitude
 
     key = Config.MAP_QUEST_API_KEY
     from_location = json.dumps({'latLng': {

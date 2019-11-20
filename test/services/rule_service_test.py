@@ -231,9 +231,9 @@ class TestPriceQuote:
         an_order.owner.save()
 
         # from Buenos Aires
-        an_order.product.place.coordinates.latitude = -34.603722
-        an_order.product.place.coordinates.longitude = -58.381592
-        an_order.product.place.save()
+        an_order.ordered_products[0].product.place.coordinates.latitude = -34.603722
+        an_order.ordered_products[0].product.place.coordinates.longitude = -58.381592
+        an_order.ordered_products[0].product.place.save()
 
         Rule(
             name='$200 if distance is greater than 50km',
@@ -307,9 +307,9 @@ class TestPriceQuote:
         an_order.owner.save()
 
         # from Buenos Aires
-        an_order.product.place.coordinates.latitude = -34.603722
-        an_order.product.place.coordinates.longitude = -58.381592
-        an_order.product.place.save()
+        an_order.ordered_products[0].product.place.coordinates.latitude = -34.603722
+        an_order.ordered_products[0].product.place.coordinates.longitude = -58.381592
+        an_order.ordered_products[0].product.place.save()
 
         Rule(
             name='$20 per km',
@@ -387,9 +387,9 @@ class TestExampleRules:
         an_order.owner.save()
 
         # from Buenos Aires
-        an_order.product.place.coordinates.latitude = -34.603722
-        an_order.product.place.coordinates.longitude = -58.381592
-        an_order.product.place.save()
+        an_order.ordered_products[0].product.place.coordinates.latitude = -34.603722
+        an_order.ordered_products[0].product.place.coordinates.longitude = -58.381592
+        an_order.ordered_products[0].product.place.save()
 
         Rule(
             name='$15 per extra kilometer above 2',
