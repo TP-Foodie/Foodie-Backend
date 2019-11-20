@@ -21,3 +21,10 @@ def registrations():
 @authenticate
 def completed_orders():
     return jsonify(order_service.completed_by_date()), HTTP_200_OK
+
+
+@STATISTICS_BLUEPRINT.route('/cancelled_orders', methods=['GET'])
+@log_request_response
+@authenticate
+def cancelled_orders():
+    return jsonify(order_service.cancelled_by_date()), HTTP_200_OK
