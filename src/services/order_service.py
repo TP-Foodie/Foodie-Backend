@@ -134,7 +134,7 @@ def order_position(order):
 
 
 def completed_by_date():
-    group_stage = {'$group': {'_id': '$created', 'count': {'$sum': 1}}}
+    group_stage = {'$group': {'_id': '$completed_date', 'count': {'$sum': 1}}}
     project_stage = {'$project': {'_id': 0, 'count': 1, 'date': '$_id'}}
 
     completed_orders = order_repository.filter_by({'status': Order.DELIVERED_STATUS})

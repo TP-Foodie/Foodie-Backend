@@ -214,7 +214,7 @@ class TestOrderService:
 
         assert len(orders) == 1
         assert orders[0]['count'] == 1
-        assert orders[0]['date'].date() == a_complete_order.created.date()
+        assert orders[0]['date'].date() == a_complete_order.completed_date.date()
 
     def test_deliver_order_should_set_completed_date_field(self, an_order):
         order_service.deliver(an_order.id)

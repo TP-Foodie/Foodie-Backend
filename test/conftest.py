@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from datetime import datetime
 from faker import Faker
 from faker.providers import person, internet, phone_number, geo, address
 from mongoengine import connect, disconnect
@@ -92,6 +93,7 @@ def an_order(an_order_factory):
 @pytest.fixture
 def a_complete_order(an_order):
     an_order.status = Order.DELIVERED_STATUS
+    an_order.completed_date = datetime.now()
     an_order.save()
     return an_order
 
