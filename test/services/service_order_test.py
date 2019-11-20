@@ -198,9 +198,14 @@ class TestOrderService:
 
         assert result == a_city.lower()
 
-    def test_list_completed_returns_all_orders_with_complete_status(self, an_order, a_complete_order):
+    def test_completed_by_date_returns_empty_list_if_no_orders_are_completed(self, an_order):
         # pylint: disable=unused-argument
-        orders = order_service.list_completed()
+        assert not order_service.completed_by_date()
+
+    def test_completed_by_date_returns_orders_completed_by_date(self, a_complete_order):
+        orders = order_service.completed_by_date()
 
         assert len(orders) == 1
-        assert a_complete_order.id == orders[0].id
+        assert orders[0]['count'] == 1
+        assert orders[0]['date'].date() == a_complete_order.created.date()
+

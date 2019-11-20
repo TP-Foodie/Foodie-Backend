@@ -109,5 +109,10 @@ def order_position(order):
     return json.loads(response.content)['results'][0]['locations'][0]['adminArea5'].lower()
 
 
-def list_completed():
-    return order_repository.filter_by({'status':Order.DELIVERED_STATUS})
+def completed_by_date():
+    group_stage = {'$group': {'_id': '$created', 'count': {'$sum': 1}}}
+    project_stage = {'$project': {'_id': 0, 'count': 1, 'date': '$_id'}}
+
+    completed_orders = order_repository.filter_by({'status': Order.DELIVERED_STATUS})
+
+    return list(completed_orders.aggregate(group_stage, project_stage))
