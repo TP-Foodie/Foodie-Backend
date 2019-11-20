@@ -220,3 +220,7 @@ class TestOrderService:
         order_service.deliver(an_order.id)
 
         assert Order.objects.get(id=an_order.id).completed_date.date() == datetime.today().date()
+
+    def test_cancelled_by_date_returns_empty_list_if_no_orders_are_cancelled(self, an_order):
+        # pylint: disable=unused-argument
+        assert not order_service.cancelled_by_date()

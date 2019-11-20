@@ -140,3 +140,7 @@ def completed_by_date():
     completed_orders = order_repository.filter_by({'status': Order.DELIVERED_STATUS})
 
     return list(completed_orders.aggregate(group_stage, project_stage))
+
+
+def cancelled_by_date():
+    return []
