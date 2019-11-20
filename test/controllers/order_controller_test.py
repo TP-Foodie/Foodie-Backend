@@ -121,7 +121,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'type': an_order.delivery.type
             },
             'id_chat': "",
-            'quotation': None
+            'quotation': 0
         }
 
     def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):
@@ -318,3 +318,58 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         orders = json.loads(response.data)
 
         assert not orders
+
+    def test_mark_order_as_completed(self, a_client, a_client_user, an_order, a_delivery_user):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'delivery': a_delivery_user.id}
+        )
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'status': Order.DELIVERED_STATUS}
+        )
+
+        assert_200(response)
+        assert Order.objects.get(id=an_order.id).status == Order.DELIVERED_STATUS
+
+    # noinspection PyTypeChecker
+    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(self, a_client, a_client_user, an_order, a_delivery_user):  # pylint: disable=line-too-long
+        Rule(
+            name='$20 base',
+            conditions=[],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value='20')
+        ).save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'delivery': a_delivery_user.id}
+        )
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(an_order.id)),
+            {'status': Order.DELIVERED_STATUS}
+        )
+
+        assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20
+
+    def test_create_order_with_non_existing_place_returns_400(self, a_client, a_client_user,
+                                                              an_object_id):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.post(
+            a_client,
+            self.build_url('/orders/'),
+            {
+                'order_type': Order.NORMAL_TYPE,
+                'product': {
+                    'name': 'big mac',
+                    'place': str(an_object_id)
+                },
+                'payment_method': 'CPM'
+            })
+
+        assert_400(response)

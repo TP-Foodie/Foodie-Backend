@@ -34,5 +34,5 @@ class Order(Document):
         choices=RuleCondition.PAYMENT_METHODS, default=RuleCondition.CASH_PAYMENT_METHOD
     )
     id_chat = StringField(default="")
-    quotation = FloatField(required=False)
+    quotation = FloatField(required=False, default=0)
     completed_date = DateTimeField()

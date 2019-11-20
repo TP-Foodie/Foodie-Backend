@@ -1,16 +1,15 @@
 from flask import Blueprint, jsonify, request
 
-from controllers.parser import parse_order_request, parse_take_order_request
+from controllers.parser import parse_order_request, \
+    parse_take_order_request, build_quotation_response
 from controllers.utils import HTTP_201_CREATED, \
-    HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
+    HTTP_400_BAD_REQUEST, HTTP_200_OK
 from logger import log_request_response
 from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
 from services.exceptions.invalid_usage_exception import InvalidUsage
-from services.exceptions.user_exceptions import NonExistingDeliveryException
-from services.exceptions.order_exceptions import NonExistingPlaceException, \
-    NonExistingOrderException
+from services.exceptions.order_exceptions import NonExistingPlaceException
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
@@ -55,8 +54,7 @@ def order_details(order_id):
 @authenticate
 def order_quotation(order_id):
     price = rule_service.quote_price(order_id)
-    data = {'price': price}
-    return jsonify(data)
+    return jsonify(build_quotation_response(price))
 
 
 @ORDERS_BLUEPRINT.route('/favors', methods=['GET'])
@@ -82,12 +80,5 @@ def list_placed_orders(user):
 @log_request_response
 @authenticate
 def update_order(order_id):
-    try:
-        order_service.take(order_id, parse_take_order_request(request.json))
-        data = DetailsOrderSchema().dump(order_repository.get_order(order_id))
-    except NonExistingDeliveryException:
-        raise InvalidUsage('Delivery does not exists', status_code=HTTP_400_BAD_REQUEST)
-    except NonExistingOrderException:
-        raise InvalidUsage('Order does not exists', status_code=HTTP_404_NOT_FOUND)
-
-    return jsonify(data), HTTP_200_OK
+    data = order_service.update(order_id, parse_take_order_request(request.json))
+    return jsonify(ListOrderSchema().dump(data)), HTTP_200_OK
