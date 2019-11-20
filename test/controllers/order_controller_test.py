@@ -357,7 +357,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20
 
-    def test_create_order_with_non_existing_place_returns_400(self, a_client, a_client_user, a_product, an_object_id):
+    def test_create_order_with_non_existing_place_returns_400(self, a_client, a_client_user,
+                                                              an_object_id):
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.post(
             a_client,
