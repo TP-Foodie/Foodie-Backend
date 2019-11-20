@@ -17,6 +17,7 @@ from controllers.available_deliveries_controller import AVAILABLE_DELIVERIES_BLU
 from controllers.order_controller import ORDERS_BLUEPRINT
 from controllers.rule_controller import RULES_BLUEPRINT
 from controllers.chat_controller import CHATS_BLUEPRINT
+from controllers.user_rating_controller import USER_RATING_BLUEPRINT
 from error_handlers import ERRORS_BLUEPRINT
 
 # initialize Flask app
@@ -44,6 +45,7 @@ APP.register_blueprint(PLACES_BLUEPRINT, url_prefix=f'{PREFIX}/places')
 APP.register_blueprint(USERS_BLUEPRINT, url_prefix=f'{PREFIX}/users')
 APP.register_blueprint(RULES_BLUEPRINT, url_prefix=f'{PREFIX}/rules')
 APP.register_blueprint(CHATS_BLUEPRINT, url_prefix=f'{PREFIX}/chats')
+APP.register_blueprint(USER_RATING_BLUEPRINT, url_prefix=f'{PREFIX}/user_ratings')
 
 APP.register_blueprint(ERRORS_BLUEPRINT)
 

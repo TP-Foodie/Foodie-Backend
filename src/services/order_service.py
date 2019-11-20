@@ -56,6 +56,21 @@ def take(order_id, delivery):
     )
 
 
+def handle_status_change(order_id, new_status, new_data):
+    new_delivery = new_data.get('delivery', None)
+    old_delivery = order_repository.get_order(order_id).delivery
+    if new_status == Order.TAKEN_STATUS and new_delivery is not None:
+        delivery_service.handle_status_change(new_delivery, new_status)
+    elif new_status == Order.DELIVERED_STATUS:
+        delivery_service.handle_status_change(old_delivery.id, new_status)
+    elif new_status == Order.CANCELLED_STATUS and old_delivery is None:
+        order_repository.update(order_id, 'delivery', None)
+        order_repository.update(order_id, 'quotation', None)
+    else:
+        delivery_service.handle_status_change(old_delivery.id, new_status)
+        order_repository.update(order_id, 'delivery', None)
+        order_repository.update(order_id, 'quotation', None)
+
 def deliver(order_id):
     order = order_repository.get_order(order_id)
 
