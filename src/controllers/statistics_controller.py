@@ -2,7 +2,8 @@ from flask import Blueprint, jsonify
 
 from controllers.utils import HTTP_200_OK
 from logger import log_request_response
-from services import user_service
+from schemas.order import ListOrderSchema
+from services import user_service, order_service
 from services.auth_service import authenticate
 
 STATISTICS_BLUEPRINT = Blueprint('statistics', __name__)
@@ -19,4 +20,4 @@ def registrations():
 @log_request_response
 @authenticate
 def completed_orders():
-    return ''
+    return jsonify(order_service.completed_by_date()), HTTP_200_OK

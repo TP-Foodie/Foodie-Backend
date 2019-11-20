@@ -29,3 +29,14 @@ class TestStatisticsController(TestMixin):
         response = a_client.get('api/v1/statistics/completed_orders')
 
         assert_401(response)
+
+    def test_list_completed_orders(self, a_client, a_client_user, a_complete_order):
+        # pylint: disable=unused-argument
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/statistics/completed_orders')
+
+        assert_200(response)
+
+        orders = json.loads(response.data)
+
+        assert orders[0]['count'] == 1
