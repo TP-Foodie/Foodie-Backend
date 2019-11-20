@@ -224,3 +224,10 @@ class TestOrderService:
     def test_cancelled_by_date_returns_empty_list_if_no_orders_are_cancelled(self, an_order):
         # pylint: disable=unused-argument
         assert not order_service.cancelled_by_date()
+
+    def test_cancelled_by_date_returns_orders_cancelled_by_date(self, a_cancelled_order):
+        orders = order_service.cancelled_by_date()
+
+        assert len(orders) == 1
+        assert orders[0]['count'] == 1
+        assert orders[0]['date'].date() == a_cancelled_order.completed_date.date()

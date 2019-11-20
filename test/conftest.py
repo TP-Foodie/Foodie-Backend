@@ -99,6 +99,14 @@ def a_complete_order(an_order):
 
 
 @pytest.fixture
+def a_cancelled_order(an_order):
+    an_order.status = Order.CANCELLED_STATUS
+    an_order.completed_date = datetime.now()
+    an_order.save()
+    return an_order
+
+
+@pytest.fixture
 def a_favor_order(an_order_factory):
     return an_order_factory(Order.FAVOR_TYPE)
 
