@@ -31,7 +31,3 @@ def get_nearby_available_deliveries(longitude, latitude, radius):
         type=User.DELIVERY_TYPE,
         available=True
     )
-
-
-def update(user_id, data):
-    return get_user(user_id).update(**data)
