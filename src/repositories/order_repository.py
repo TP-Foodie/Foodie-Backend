@@ -28,7 +28,7 @@ def create(order_type, owner, product, payment_method, number):
 def update(order_id, values):
     order = Order.objects.filter(id=order_id).first()
     order.update(**values)
-    return order
+    return get_order(order_id)
 
 
 def filter_by(params):
