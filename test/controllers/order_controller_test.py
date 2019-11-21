@@ -188,7 +188,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS
 
     def test_update_should_return_updated_order(self, a_client, an_order,
-                                           a_delivery_user, a_client_user):
+                                                a_delivery_user, a_client_user):
         response = self.patch_order(
             a_client,
             an_order,
