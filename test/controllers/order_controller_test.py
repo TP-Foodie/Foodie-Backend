@@ -25,12 +25,14 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         self.login(client, user.email, user.password)
         return self.get(client, self.build_url('/orders/favors'))
 
-    def create_order(self, client, order_type, user, ordered_product):
+    # pylint: disable=too-many-arguments
+    def create_order(self, name, client, order_type, user, ordered_product):
         self.login(client, user.email, user.password)
         return self.post(
             client,
             self.build_url('/orders/'),
             {
+                'name': name,
                 'order_type': order_type,
                 'ordered_products': [{
                     'quantity': ordered_product.quantity,
@@ -61,6 +63,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert order == {
             'id': str(an_order.id),
+            'name': an_order.name,
             'number': an_order.number,
             'status': an_order.status,
             'type': an_order.type,
@@ -89,6 +92,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert order == {
             'id': str(an_order.id),
+            'name': an_order.name,
             'number': an_order.number,
             'status': an_order.status,
             'type': an_order.type,
@@ -156,26 +160,34 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_401(response)
 
     def test_user_should_be_able_to_create_order(self, a_client, a_client_user, an_ordered_product):
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product)
+        response = self.create_order(
+            "name", a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product
+        )
         assert_201(response)
 
     def test_create_orders_should_create_one_on_db(
             self, a_client, a_client_user, an_ordered_product
     ):
-        self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product)
+        self.create_order(
+            "name", a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product
+        )
 
         assert len(order_repository.list_all()) == 1
 
     def test_create_should_return_created_http_code(
             self, a_client, a_client_user, an_ordered_product
     ):
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product)
+        response = self.create_order(
+            "name", a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product
+        )
         assert_201(response)
 
     def test_create_with_wrong_type_should_return_400(
             self, a_client, a_client_user, an_ordered_product
     ):
-        response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, an_ordered_product)
+        response = self.create_order(
+            "name", a_client, "NONEXISTINGTYPE", a_client_user, an_ordered_product
+        )
         assert_400(response)
 
     def test_update_for_unauthenticated(self, a_client, an_order):

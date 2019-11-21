@@ -102,6 +102,7 @@ def an_ordered_product(cfaker, a_product):
 def an_order_factory(cfaker, a_customer_user, an_ordered_product, a_delivery_user):
     def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
+            name=cfaker.first_name(),
             number=cfaker.pydecimal(),
             owner=a_customer_user.id,
             type=order_type,

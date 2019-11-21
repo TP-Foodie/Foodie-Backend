@@ -13,6 +13,7 @@ from services.exceptions.user_exceptions import NonExistingDeliveryException
 class TestOrderService:
     def test_create_order(self, a_customer_user, an_ordered_product):
         order_service.create(
+            "name",
             Order.NORMAL_TYPE,
             [{'quantity': an_ordered_product.quantity, 'product': an_ordered_product.product.id}],
             'CPM', a_customer_user.id
@@ -21,14 +22,17 @@ class TestOrderService:
         order = order_repository.list_all()[0]
 
         assert order.owner.id == a_customer_user.id
+        assert order.name == "name"
 
     def test_order_number_should_be_consecutive(self, a_customer_user, an_ordered_product):
         order_service.create(
+            "name",
             Order.NORMAL_TYPE,
             [{'quantity': an_ordered_product.quantity, 'product': an_ordered_product.product.id}],
             'CPM', a_customer_user.id
         )
         order_service.create(
+            "name2",
             Order.NORMAL_TYPE,
             [{'quantity': an_ordered_product.quantity, 'product': an_ordered_product.product.id}],
             'CPM', a_customer_user.id

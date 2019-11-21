@@ -15,7 +15,7 @@ class ListOrderSchema(Schema):
     delivery = fields.Nested(UserSchema)
 
     class Meta:
-        fields = ('id', 'number', 'status', 'type', 'delivery', 'id_chat')
+        fields = ('id', 'name', 'number', 'status', 'type', 'delivery', 'id_chat')
 
 
 class DetailsOrderSchema(Schema):
@@ -25,6 +25,6 @@ class DetailsOrderSchema(Schema):
 
     class Meta:
         fields = (
-            'id', 'number', 'status', 'type', 'owner', 'ordered_products', 'delivery', 'id_chat',
-            'quotation'
+            'id', 'name', 'number', 'status', 'type', 'owner', 'ordered_products',
+            'delivery', 'id_chat', 'quotation'
         )

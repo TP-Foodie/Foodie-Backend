@@ -24,6 +24,7 @@ class Order(Document):
     status = (WAITING_STATUS, TAKEN_STATUS, DELIVERED_STATUS, CANCELLED_STATUS)
     types = (NORMAL_TYPE, FAVOR_TYPE)
 
+    name = StringField(required=True)
     number = IntField(required=True)
     status = StringField(choices=status, default=WAITING_STATUS)
     type = StringField(choices=types, default=NORMAL_TYPE)

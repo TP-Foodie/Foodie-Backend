@@ -8,8 +8,9 @@ from settings import Config
 from models.order import Order
 
 
-def create(order_type, ordered_products, payment_method, owner):
+def create(name, order_type, ordered_products, payment_method, owner):
     return order_repository.create(
+        name=name,
         order_type=order_type,
         owner=owner,
         ordered_products=ordered_products,
