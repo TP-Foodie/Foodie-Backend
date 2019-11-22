@@ -13,6 +13,7 @@ from models.product import Product
 from models.order import Order, OrderedProduct
 from models.rule import RuleCondition, RuleConsequence
 from models.chat import Chat, ChatMessage
+from models.user_rating import UserRating
 from services import user_service
 
 
@@ -276,3 +277,19 @@ def a_distance_response():
         }))
 
     return build_response
+
+
+@pytest.fixture
+def a_user_rating(a_user_rating_factory):
+    return a_user_rating_factory()
+
+
+@pytest.fixture
+def a_user_rating_factory(cfaker, a_customer_user):
+    def create(rating=cfaker.random_int(min=1, max=5)):
+        return UserRating(
+            user=a_customer_user.id,
+            description=cfaker.text(),
+            rating=rating
+        ).save()
+    return create
