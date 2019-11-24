@@ -508,7 +508,7 @@ class TestExampleRules:
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=-100)
         ).save()
 
-        self.assert_price(an_order, -100)
+        self.assert_price(an_order, 0)
 
         an_order_factory()
 
