@@ -134,3 +134,11 @@ def antiquity(user):
 
 def is_premium(user):
     return user.subscription == User.PREMIUM_SUBSCRIPTION
+
+
+def confirm_favor_order(order):
+    order.owner.gratitude_points -= order.gratitude_points
+    order.delivery.gratitude_points += order.gratitude_points
+
+    order.owner.save()
+    order.delivery.save()

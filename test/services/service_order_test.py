@@ -250,6 +250,6 @@ class TestOrderService:
         a_customer_user.gratitude_points = 10
         a_customer_user.save()
 
-        order_service.take(a_favor_order.id, {'delivery': a_delivery_user.id})
+        order_service.take(a_favor_order.id, a_delivery_user.id)
 
-        assert User.objects.get(id=a_customer_user).gratitude_points == 5
+        assert User.objects.get(id=a_customer_user.id).gratitude_points == 5

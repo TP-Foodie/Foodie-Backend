@@ -3,7 +3,7 @@ import requests
 from mongoengine import Q
 
 from repositories import order_repository, product_repository, user_repository
-from services import delivery_service
+from services import delivery_service, user_service
 from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.rule_service import RuleService
@@ -53,6 +53,8 @@ def take(order_id, delivery):
         raise NonExistingDeliveryException()
 
     delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS)
+
+    user_service.confirm_favor_order(order_repository.get_order(order_id))
 
     return order_repository.update(
         order_id,
