@@ -29,7 +29,7 @@ def update(order_id, data):
     if data.get('delivery'):
         return take(order_id, data.get('delivery'))
 
-    if data.get('status', '') in Order.CANCELLED_STATUS:
+    if data.get('status', '') == Order.CANCELLED_STATUS:
         return cancel(order_id)
 
     if data.get('status') == Order.DELIVERED_STATUS:
