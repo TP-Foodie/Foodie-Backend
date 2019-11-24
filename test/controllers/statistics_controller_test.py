@@ -10,7 +10,8 @@ class TestStatisticsController(TestMixin):
 
         assert_401(response)
 
-    def test_registrations_returns_registrations_by_date(self, a_client, user_factory, a_client_user):
+    def test_registrations_returns_registrations_by_date(self, a_client,
+                                                         user_factory, a_client_user):
         user_factory()
         another_user = user_factory()
         another_user.created = datetime.now() + timedelta(days=1)
@@ -41,7 +42,8 @@ class TestStatisticsController(TestMixin):
 
         assert orders[0]['count'] == 1
 
-    def test_list_completed_orders_in_specific_month(self, a_client, a_client_user, a_complete_order):
+    def test_list_completed_orders_in_specific_month(self, a_client,
+                                                     a_client_user, a_complete_order):
         today = datetime.today()
 
         a_complete_order.completed_date = today + timedelta(days=31)
@@ -55,7 +57,7 @@ class TestStatisticsController(TestMixin):
 
         data = json.loads(response.data)
 
-        assert not len(data)
+        assert not data
 
     def test_cancelled_orders_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/statistics/cancelled_orders')

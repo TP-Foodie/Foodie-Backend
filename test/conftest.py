@@ -1,7 +1,7 @@
 import json
 
-import pytest
 from datetime import datetime
+import pytest
 from faker import Faker
 from faker.providers import person, internet, phone_number, geo, address
 from mongoengine import connect, disconnect

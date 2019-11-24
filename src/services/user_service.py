@@ -149,9 +149,10 @@ def registrations_by_date(month=datetime.today().month, year=datetime.today().ye
     group_stage = {'$group': {'_id': '$created', 'count': {'$sum': 1}}}
     project_stage = {'$project': {'_id': 0, 'date': '$_id', 'count': 1}}
 
-    return list(User.objects.aggregate(
-        add_month_year_stage,
-        filter_stage,
-        group_stage,
-        project_stage)
-    )
+    return list(
+        User.objects.aggregate(
+            add_month_year_stage,
+            filter_stage,
+            group_stage,
+            project_stage)
+        )

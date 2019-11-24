@@ -13,7 +13,7 @@ from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')
-class TestOrderService:
+class TestOrderService:  # pylint: disable=too-many-public-methods
     def test_create_order(self, a_customer_user, a_product):
         order_service.create(
             Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},

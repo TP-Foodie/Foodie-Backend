@@ -7,10 +7,10 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import firebase_admin
 from firebase_admin import credentials
 
-from controllers.statistics_controller import STATISTICS_BLUEPRINT
 from encoders import CustomJSONEncoder
 from settings import Config
 
+from controllers.statistics_controller import STATISTICS_BLUEPRINT
 from controllers.auth_controller import AUTH_BLUEPRINT
 from controllers.place_controller import PLACES_BLUEPRINT
 from controllers.user_controller import USERS_BLUEPRINT
