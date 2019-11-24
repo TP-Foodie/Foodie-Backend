@@ -73,6 +73,7 @@ def deliver(order_id):
     user_repository.increment_deliveries_completed(str(order.delivery.id))
 
     delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS)
+    delivery_service.complete_order(order)
     user_repository.update(order.delivery.id, {'balance': order.quotation * DELIVERY_PERCENTAGE})
 
     return order_repository.update(order_id, {'status': Order.DELIVERED_STATUS})
