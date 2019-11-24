@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 from bson import ObjectId
 
+from models import User
 from models.order import Order
 from models.rule import RuleCondition
 from repositories import order_repository, product_repository, user_repository
@@ -200,6 +201,9 @@ class TestOrderService:
         assert result == a_city.lower()
 
     def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_place):
+        a_customer_user.gratitude_points = 0
+        a_customer_user.save()
+
         with pytest.raises(NotEnoughGratitudePointsException):
             order_service.create(
                 Order.FAVOR_TYPE,
@@ -232,3 +236,14 @@ class TestOrderService:
         )
 
         assert order.gratitude_points == 5
+
+    def test_add_delivery_to_favor_order_subtracts_gratitude_points_from_user(self, a_favor_order, a_customer_user, a_delivery_user):
+        a_favor_order.gratitude_points = 5
+        a_favor_order.save()
+
+        a_customer_user.gratitude_points = 10
+        a_customer_user.save()
+
+        order_service.take(a_favor_order.id, {'delivery': a_delivery_user.id})
+
+        assert User.objects.get(id=a_customer_user).gratitude_points == 5

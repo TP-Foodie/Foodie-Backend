@@ -38,7 +38,8 @@ def a_customer_user(cfaker, a_location):
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
         type="CUSTOMER",
-        location=a_location
+        location=a_location,
+        gratitude_points=10
     ).save()
 
 
