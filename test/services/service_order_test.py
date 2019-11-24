@@ -6,7 +6,7 @@ from bson import ObjectId
 
 from models import User
 from models.order import Order
-from models.rule import RuleCondition
+from models.rule import RuleCondition, RuleConsequence, Rule
 from repositories import order_repository, product_repository, user_repository
 from services import order_service, product_service
 from services.exceptions.order_exceptions import NonExistingPlaceException, NotEnoughGratitudePointsException
@@ -78,9 +78,7 @@ class TestOrderService:
         assert product_repository.count() == 1
 
     def test_take_order_updates_status_and_delivery(self, an_order, a_delivery_user):
-        order_service.take(an_order.id,
-                           {'status': Order.TAKEN_STATUS,
-                            'delivery': a_delivery_user.id})
+        order_service.take(an_order.id, a_delivery_user.id)
 
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
@@ -90,61 +88,49 @@ class TestOrderService:
         assert not delivery.available
 
     def test_deliver_order_updates_status_and_delivery(self, an_order, a_delivery_user):
-        order_service.take(an_order.id,
-                           {'status': Order.DELIVERED_STATUS,
-                            'delivery': a_delivery_user.id,
-                            'quotation': 50})
+        order_service.deliver(an_order.id)
 
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
 
         assert order.status == Order.DELIVERED_STATUS
         assert order.delivery.id == a_delivery_user.id
-        assert order.quotation == 50
         assert delivery.available
 
     def test_cancel_order_updates_status_and_delivery(self, an_order, a_delivery_user):
-        order_service.take(an_order.id,
-                           {'status': Order.TAKEN_STATUS,
-                            'delivery': a_delivery_user.id,
-                            'quotation': 50})
+        order_service.take(an_order.id, a_delivery_user.id)
 
         delivery = user_repository.get_user(a_delivery_user.id)
         assert not delivery.available
         assert not delivery is None
 
-        order_service.take(an_order.id, {'status': Order.CANCELLED_STATUS})
+        order_service.update(an_order.id, {'status': Order.CANCELLED_STATUS})
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
 
         assert order.status == Order.CANCELLED_STATUS
         assert order.delivery is None
-        assert order.quotation is None
+        assert order.quotation == 0
         assert delivery.available
 
     def test_unassign_order_updates_status_and_delivery(self, an_order, a_delivery_user):
-        order_service.take(an_order.id,
-                           {'status': Order.TAKEN_STATUS,
-                            'delivery': a_delivery_user.id})
+        order_service.take(an_order.id, a_delivery_user.id)
 
         delivery = user_repository.get_user(a_delivery_user.id)
         assert not delivery.available
-        assert not delivery is None
 
-        order_service.take(an_order.id, {'status': Order.WAITING_STATUS})
+        order_service.update(an_order.id, {'status': Order.WAITING_STATUS})
         order = order_repository.get_order(an_order.id)
         delivery = user_repository.get_user(a_delivery_user.id)
 
         assert order.status == Order.WAITING_STATUS
         assert order.delivery is None
-        assert order.quotation is None
+        assert order.quotation == 0
         assert delivery.available
 
     def test_take_order_with_non_existing_delivery_raises_error(self, an_order, an_object_id):
         with pytest.raises(NonExistingDeliveryException):
-            order_service.take(
-                an_order.id, {
-                    'status': Order.TAKEN_STATUS, 'delivery': an_object_id})
+            order_service.take(an_order.id, an_object_id)
 
     def test_placed_by_returns_orders_placed_by_user(self, an_order, a_customer_user):
         an_order.owner = a_customer_user
@@ -199,6 +185,26 @@ class TestOrderService:
         result = order_service.order_position(an_order)
 
         assert result == a_city.lower()
+
+    def test_deliver_order_should_increase_delivery_balance_by_85_percent_of_cost(self, an_order):
+        an_order.quotation = 100
+        an_order.save()
+
+        order_service.deliver(an_order.id)
+
+        assert an_order.delivery.balance == 85
+
+    # noinspection PyTypeChecker
+    def test_should_calculate_quotation_based_on_rules(self, an_order, a_delivery_user):
+        Rule(
+            name='$20 base',
+            conditions=[],
+            consequence={'consequence_type': RuleConsequence.VALUE, 'value': 20}
+        ).save()
+
+        order_service.take(an_order.id, a_delivery_user.id)
+
+        assert Order.objects.get(id=an_order.id).quotation == 20
 
     def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_place):
         a_customer_user.gratitude_points = 0

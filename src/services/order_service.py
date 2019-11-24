@@ -5,8 +5,14 @@ from mongoengine import Q
 from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
 from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
+from services.exceptions.user_exceptions import NonExistingDeliveryException
+from services.rule_service import RuleService
 from settings import Config
 from models.order import Order
+
+
+DELIVERY_PERCENTAGE = 0.85
+rule_service = RuleService()  # pylint: disable=invalid-name
 
 
 def create(order_type, product, payment_method, owner, gratitude_points=0):
@@ -26,47 +32,58 @@ def create(order_type, product, payment_method, owner, gratitude_points=0):
     )
 
 
-def handle_status_change(order_id, new_status, new_data):
-    new_delivery = new_data.get('delivery', None)
-    old_delivery = order_repository.get_order(order_id).delivery
-    if new_status == Order.TAKEN_STATUS and new_delivery is not None:
-        delivery_service.handle_status_change(new_delivery, new_status)
-    elif new_status == Order.DELIVERED_STATUS:
-        delivery_service.handle_status_change(old_delivery.id, new_status)
-    elif new_status == Order.CANCELLED_STATUS and old_delivery is None:
-        order_repository.update(order_id, 'delivery', None)
-        order_repository.update(order_id, 'quotation', None)
-    else:
-        delivery_service.handle_status_change(old_delivery.id, new_status)
-        order_repository.update(order_id, 'delivery', None)
-        order_repository.update(order_id, 'quotation', None)
+def update(order_id, data):
+    if data.get('delivery'):
+        return take(order_id, data.get('delivery'))
+
+    if data.get('status', '') in Order.CANCELLED_STATUS:
+        return cancel(order_id)
+
+    if data.get('status') == Order.DELIVERED_STATUS:
+        return deliver(order_id)
+
+    if data.get('status') == Order.WAITING_STATUS:
+        return unassign(order_id)
+
+    return order_repository.update(order_id, data)
 
 
-def take(order_id, new_data):
-    if new_data.get('status') is not None:
-        # if new status is delivered -> increment deliveries_completed in User docs
-        if new_data.get('status') == Order.DELIVERED_STATUS:
-            # get owner and delivery from Order data and increment deliveries_completed
-            order = order_repository.get_order(order_id)
-            user_repository.increment_deliveries_completed(str(order.owner.id))
-            user_repository.increment_deliveries_completed(str(order.delivery.id))
+def take(order_id, delivery):
+    if not user_repository.delivery_exists(delivery):
+        raise NonExistingDeliveryException()
 
-        order_repository.update(order_id, 'status', new_data.get('status'))
-        handle_status_change(order_id, new_data.get('status'), new_data)
+    delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS)
 
-    if new_data.get('payment_method') is not None:
-        order_repository.update(order_id, 'payment_method', new_data.get('payment_method'))
+    return order_repository.update(
+        order_id,
+        {
+            'delivery': delivery,
+            'status': Order.TAKEN_STATUS,
+            'quotation': rule_service.quote_price(order_id)
+        }
+    )
 
-    if new_data.get('delivery') is not None:
-        order_repository.update(order_id, 'delivery', new_data.get('delivery'))
 
-    if new_data.get('id_chat', None) is not None:
-        order_repository.update(order_id, 'id_chat', new_data.get('id_chat'))
+def deliver(order_id):
+    order = order_repository.get_order(order_id)
 
-    if new_data.get('quotation', None) is not None:
-        order_repository.update(order_id, 'quotation', new_data.get('quotation'))
+    user_repository.increment_deliveries_completed(str(order.owner.id))
+    user_repository.increment_deliveries_completed(str(order.delivery.id))
 
-    return order_repository.get_order(order_id)
+    delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS)
+    user_repository.update(order.delivery.id, {'balance': order.quotation * DELIVERY_PERCENTAGE})
+
+    return order_repository.update(order_id, {'status': Order.DELIVERED_STATUS})
+
+
+def cancel(order_id):
+    unassign(order_id, Order.CANCELLED_STATUS)
+
+
+def unassign(order_id, status=Order.WAITING_STATUS):
+    order = order_repository.get_order(order_id)
+    delivery_service.handle_status_change(order.delivery.id, status)
+    return order_repository.update(order_id, {'status': status, 'delivery': None})
 
 
 def placed_by(user_id, start_date=None, end_date=None):
