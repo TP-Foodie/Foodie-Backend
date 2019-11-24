@@ -218,3 +218,17 @@ class TestOrderService:
         )
 
         assert order.gratitude_points == 0
+
+    def test_create_favor_order_with_gratitude_points_should_create_it(self, a_customer_user, a_place):
+        a_customer_user.gratitude_points = 10
+        a_customer_user.save()
+
+        order = order_service.create(
+            Order.FAVOR_TYPE,
+            {'name': 'product', 'place': a_place.id},
+            RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
+            a_customer_user.id,
+            5
+        )
+
+        assert order.gratitude_points == 5
