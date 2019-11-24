@@ -133,18 +133,32 @@ def order_position(order):
     return json.loads(response.content)['results'][0]['locations'][0]['adminArea5'].lower()
 
 
-def get_statistics_for(status):
+def get_statistics_for(status, month, year):
+    add_month_year_stage = {
+        '$project': {
+            'month': {'$month': '$completed_date'},
+            'year': {'$year': '$completed_date'},
+            'completed_date': 1
+        }
+    }
+    filter_stage = {'$match': {'month': month, 'year': year}}
+
     group_stage = {'$group': {'_id': '$completed_date', 'count': {'$sum': 1}}}
     project_stage = {'$project': {'_id': 0, 'count': 1, 'date': '$_id'}}
 
     completed_orders = order_repository.filter_by({'status': status})
 
-    return list(completed_orders.aggregate(group_stage, project_stage))
+    return list(completed_orders.aggregate(
+        add_month_year_stage,
+        filter_stage,
+        group_stage,
+        project_stage
+    ))
 
 
-def completed_by_date():
-    return get_statistics_for(Order.DELIVERED_STATUS)
+def completed_by_date(month=datetime.today().month, year=datetime.today().year):
+    return get_statistics_for(Order.DELIVERED_STATUS, month, year)
 
 
-def cancelled_by_date():
-    return get_statistics_for(Order.CANCELLED_STATUS)
+def cancelled_by_date(month=datetime.today().month, year=datetime.today().year):
+    return get_statistics_for(Order.CANCELLED_STATUS, month, year)

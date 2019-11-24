@@ -41,6 +41,22 @@ class TestStatisticsController(TestMixin):
 
         assert orders[0]['count'] == 1
 
+    def test_list_completed_orders_in_specific_month(self, a_client, a_client_user, a_complete_order):
+        today = datetime.today()
+
+        a_complete_order.completed_date = today + timedelta(days=31)
+        a_complete_order.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(
+            a_client,
+            'api/v1/statistics/completed_orders?month={}&year={}'.format(today.month, today.year)
+        )
+
+        data = json.loads(response.data)
+
+        assert not len(data)
+
     def test_cancelled_orders_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/statistics/cancelled_orders')
 
