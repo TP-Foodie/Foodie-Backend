@@ -205,7 +205,8 @@ class TestOrderService:
         assert not order_service.directions(an_order.id)
 
     @patch('services.order_service.requests.get')
-    def test_order_directions_requests_directions(self, mocked_get, an_order, a_directions_response):
+    def test_order_directions_requests_directions(self, mocked_get,
+                                                  an_order, a_directions_response):
         mocked_get.return_value = a_directions_response
         order_service.directions(an_order.id)
 

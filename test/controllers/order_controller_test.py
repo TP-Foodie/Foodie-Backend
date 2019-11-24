@@ -320,13 +320,15 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert not orders
 
-    def test_get_directions_for_unauthenticated(self, a_client, a_client_user, an_order):
+    def test_get_directions_for_unauthenticated(self, a_client, an_order):
         response = a_client.get('api/v1/orders/{}/directions'.format(str(an_order.id)))
 
         assert_401(response)
 
     @patch('services.order_service.requests.get')
-    def test_get_directions(self, mocked_get, a_client, a_client_user, an_order, a_directions_response):
+    def test_get_directions(self, mocked_get, a_client, a_client_user,
+                            an_order, a_directions_response):
+        # pylint: disable=too-many-arguments
         mocked_get.return_value = a_directions_response
 
         self.login(a_client, a_client_user.email, a_client_user.password)
