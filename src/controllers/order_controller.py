@@ -91,3 +91,10 @@ def update_order(order_id):
         raise InvalidUsage('Order does not exists', status_code=HTTP_404_NOT_FOUND)
 
     return jsonify(data), HTTP_200_OK
+
+
+@ORDERS_BLUEPRINT.route('/<order_id>/directions', methods=['GET'])
+@log_request_response
+@authenticate
+def directions(order_id):
+    return ''

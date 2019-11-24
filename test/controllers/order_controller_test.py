@@ -318,3 +318,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         orders = json.loads(response.data)
 
         assert not orders
+
+    def test_get_directions_for_unauthenticated(self, a_client, a_client_user, an_order):
+        response = a_client.get('api/v1/orders/{}/directions'.format(str(an_order.id)))
+
+        assert_401(response)
