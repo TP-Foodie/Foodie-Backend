@@ -197,3 +197,15 @@ class TestOrderService:
         result = order_service.order_position(an_order)
 
         assert result == a_city.lower()
+
+    def test_order_directions_for_order_without_delivery_returns_empty(self, an_order):
+        an_order.delivery = None
+        an_order.save()
+
+        assert not order_service.directions(an_order.id)
+
+    @patch('services.order_service.requests.get')
+    def test_order_directions_requests_directions(self, mocked_get, an_order):
+        order_service.directions(an_order.id)
+
+        assert mocked_get.called

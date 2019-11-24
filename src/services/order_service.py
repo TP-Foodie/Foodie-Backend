@@ -110,3 +110,22 @@ def order_position(order):
     response = requests.get(url)
 
     return json.loads(response.content)['results'][0]['locations'][0]['adminArea5'].lower()
+
+
+def directions(order_id):
+    order = order_repository.get_order(order_id)
+
+    if not order.delivery:
+        return []
+
+    owner_latitude = order.owner.location.latitude
+    owner_longitude = order.owner.location.longitude
+    delivery_latitude = order.delivery.location.latitude
+    delivery_longitude = order.delivery.location.longitude
+
+    key = Config.MAP_QUEST_API_KEY
+    url = 'http://www.mapquestapi.com/directions/v2/route?key={}&from={},{}&to={},{}'.format(
+        key, delivery_latitude, delivery_longitude, owner_latitude, owner_longitude
+    )
+
+    requests.get(url)
