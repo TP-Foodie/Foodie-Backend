@@ -205,5 +205,16 @@ class TestOrderService:
                 Order.FAVOR_TYPE,
                 {'name': 'product', 'place': a_place.id},
                 RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
-                a_customer_user.id
+                a_customer_user.id,
+                5,
             )
+
+    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_place):
+        order = order_service.create(
+            Order.FAVOR_TYPE,
+            {'name': 'product', 'place': a_place.id},
+            RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
+            a_customer_user.id
+        )
+
+        assert order.gratitude_points == 0

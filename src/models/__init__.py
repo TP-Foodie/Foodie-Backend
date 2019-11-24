@@ -50,6 +50,7 @@ class User(Document):
     location = EmbeddedDocumentField(Coordinates)
     available = BooleanField(default=True)
     deliveries_completed = IntField(default=0)
+    gratitude_points = IntField(default=0)
 
 
 class Transaction(Document):

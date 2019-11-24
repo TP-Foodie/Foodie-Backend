@@ -9,23 +9,21 @@ from settings import Config
 from models.order import Order
 
 
-def create(order_type, product, payment_method, owner):
+def create(order_type, product, payment_method, owner, gratitude_points=0):
     created_product = product_repository.get_or_create(*product.values())
+    user = user_repository.get_user(owner)
 
-    if order_type == Order.FAVOR_TYPE:
-        return create_favor(created_product, payment_method, owner)
+    if order_type == Order.FAVOR_TYPE and user.gratitude_points < gratitude_points:
+        raise NotEnoughGratitudePointsException()
 
     return order_repository.create(
         order_type=order_type,
         owner=owner,
         product=created_product.id,
         payment_method=payment_method,
-        number=order_repository.count() + 1
+        number=order_repository.count() + 1,
+        gratitude_points=gratitude_points
     )
-
-
-def create_favor(product, payment_method, owner):
-    raise NotEnoughGratitudePointsException()
 
 
 def handle_status_change(order_id, new_status, new_data):
