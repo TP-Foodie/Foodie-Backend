@@ -4,12 +4,17 @@ from mongoengine import Q
 
 from repositories import order_repository, product_repository, user_repository
 from services import delivery_service
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from settings import Config
 from models.order import Order
 
 
 def create(order_type, product, payment_method, owner):
     created_product = product_repository.get_or_create(*product.values())
+
+    if order_type == Order.FAVOR_TYPE:
+        return create_favor(created_product, payment_method, owner)
+
     return order_repository.create(
         order_type=order_type,
         owner=owner,
@@ -17,6 +22,10 @@ def create(order_type, product, payment_method, owner):
         payment_method=payment_method,
         number=order_repository.count() + 1
     )
+
+
+def create_favor(product, payment_method, owner):
+    raise NotEnoughGratitudePointsException()
 
 
 def handle_status_change(order_id, new_status, new_data):

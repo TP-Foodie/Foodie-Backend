@@ -5,9 +5,10 @@ import pytest
 from bson import ObjectId
 
 from models.order import Order
+from models.rule import RuleCondition
 from repositories import order_repository, product_repository, user_repository
 from services import order_service, product_service
-from services.exceptions.order_exceptions import NonExistingPlaceException
+from services.exceptions.order_exceptions import NonExistingPlaceException, NotEnoughGratitudePointsException
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
@@ -197,3 +198,12 @@ class TestOrderService:
         result = order_service.order_position(an_order)
 
         assert result == a_city.lower()
+
+    def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_place):
+        with pytest.raises(NotEnoughGratitudePointsException):
+            order_service.create(
+                Order.FAVOR_TYPE,
+                {'name': 'product', 'place': a_place.id},
+                RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
+                a_customer_user.id
+            )
