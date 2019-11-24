@@ -3,6 +3,7 @@ import urllib
 
 from datetime import datetime, timedelta
 
+from models import User
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
 from models.rule import RuleCondition, RuleConsequence, Rule
 from models.order import Order
@@ -387,5 +388,59 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 },
                 'payment_method': 'CPM'
             })
+
+        assert_400(response)
+
+
+class TestFavorOrderCycle(TestMixin):
+    def test_create_favor_order_cycle(self, a_client, a_client_user_factory, a_product, a_delivery_user):
+        a_client_user = a_client_user_factory(5)
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.post(a_client, 'api/v1/orders/', {
+            'order_type': Order.FAVOR_TYPE,
+            'product': {
+                'name': a_product.name,
+                'place': a_product.place.id
+            },
+            'payment_method': 'GPPM',
+            'gratitude_points': 5
+        })
+
+        assert_201(response)
+
+        order = json.loads(response.data)
+
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(order['id'])), {'delivery': a_delivery_user.id}
+        )
+
+        assert_200(response)
+
+        assert User.objects.get(id=a_client_user.id).gratitude_points == 0
+
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(order['id'])), {'status': Order.DELIVERED_STATUS}
+        )
+
+        assert_200(response)
+
+        assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
+
+    def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client, a_client_user_factory, a_product):
+        a_client_user = a_client_user_factory(3)
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.post(a_client, 'api/v1/orders/', {
+            'order_type': Order.FAVOR_TYPE,
+            'product': {
+                'name': a_product.name,
+                'place': a_product.place.id
+            },
+            'payment_method': 'GPPM',
+            'gratitude_points': 5
+        })
 
         assert_400(response)

@@ -243,7 +243,8 @@ class TestOrderService:
 
         assert order.gratitude_points == 5
 
-    def test_add_delivery_to_favor_order_subtracts_gratitude_points_from_user(self, a_favor_order, a_customer_user, a_delivery_user):
+    def test_add_delivery_to_favor_order_subtracts_gratitude_points_from_user(self, a_favor_order,
+                                                                              a_customer_user, a_delivery_user):
         a_favor_order.gratitude_points = 5
         a_favor_order.save()
 
@@ -254,7 +255,8 @@ class TestOrderService:
 
         assert User.objects.get(id=a_customer_user.id).gratitude_points == 5
 
-    def test_deliver_favor_order_should_add_gratitude_points_to_delivery(self, a_favor_order, a_customer_user, a_delivery_user):
+    def test_deliver_favor_order_should_add_gratitude_points_to_delivery(self, a_favor_order,
+                                                                         a_customer_user, a_delivery_user):
         a_favor_order.gratitude_points = 5
         a_favor_order.save()
 
