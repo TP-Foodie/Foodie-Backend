@@ -128,4 +128,6 @@ def directions(order_id):
         key, delivery_latitude, delivery_longitude, owner_latitude, owner_longitude
     )
 
-    requests.get(url)
+    response = requests.get(url)
+
+    return json.loads(response.content)['results']['locations']

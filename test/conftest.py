@@ -255,6 +255,15 @@ def a_geocode_response(a_city):
 
 
 @pytest.fixture
+def a_directions_response():
+    return MockedResponse(json.dumps({
+        'results': {
+            'locations': []
+        }
+    }))
+
+
+@pytest.fixture
 def a_distance_response():
     def build_response(distance=0):
         return MockedResponse(json.dumps({
