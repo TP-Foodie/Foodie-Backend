@@ -56,3 +56,21 @@ class TestStatisticsController(TestMixin):
         orders = json.loads(response.data)
 
         assert orders[0]['count'] == 1
+
+    def test_list_registrations_in_specific_month(self, a_client, a_client_user, user_factory):
+        user = user_factory()
+        user.created = datetime.now() - timedelta(days=31)
+        user.save()
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        today = datetime.today()
+        response = self.get(
+            a_client,
+            'api/v1/statistics/registrations?month={}&year={}'.format(today.month, today.year)
+        )
+
+        data = json.loads(response.data)
+
+        assert len(data) == 1
+        assert data[0]['count'] == 1

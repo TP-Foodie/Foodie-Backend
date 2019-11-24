@@ -233,3 +233,15 @@ class TestStatistics:
 
         assert len(data) == 2
         assert data[0]['date'] == datetime.combine(a_user.created, datetime.min.time())
+
+    def test_registrations_on_specific_date(self, user_factory):
+        today = datetime.today()
+
+        a_user = user_factory()
+        a_user.created = today - timedelta(days=31)
+        a_user.save()
+        user_factory()
+
+        data = user_service.registrations_by_date(today.month, today.year)
+
+        assert len(data) == 1

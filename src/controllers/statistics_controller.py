@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+from datetime import datetime
+from flask import Blueprint, jsonify, request
 
 from controllers.utils import HTTP_200_OK
 from logger import log_request_response
@@ -13,7 +14,9 @@ STATISTICS_BLUEPRINT = Blueprint('statistics', __name__)
 @log_request_response
 @authenticate
 def registrations():
-    return jsonify(user_service.registrations_by_date()), HTTP_200_OK
+    month = int(request.args.get('month', datetime.today().month))
+    year = int(request.args.get('year', datetime.today().year))
+    return jsonify(user_service.registrations_by_date(month, year)), HTTP_200_OK
 
 
 @STATISTICS_BLUEPRINT.route('/completed_orders', methods=['GET'])
