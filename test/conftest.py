@@ -257,9 +257,10 @@ def a_geocode_response(a_city):
 @pytest.fixture
 def a_directions_response():
     return MockedResponse(json.dumps({
-        'results': {
-            'locations': []
-        }
+        'locations': [{
+            'lat': 1,
+            'long': 1
+        }]
     }))
 
 

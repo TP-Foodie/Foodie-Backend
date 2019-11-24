@@ -97,4 +97,4 @@ def update_order(order_id):
 @log_request_response
 @authenticate
 def directions(order_id):
-    return ''
+    return jsonify(order_service.directions(order_id)), HTTP_200_OK

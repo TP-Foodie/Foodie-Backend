@@ -130,4 +130,4 @@ def directions(order_id):
 
     response = requests.get(url)
 
-    return json.loads(response.content)['results']['locations']
+    return json.loads(response.content)
