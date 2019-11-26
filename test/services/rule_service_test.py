@@ -350,6 +350,24 @@ class TestPriceQuote:
 
         assert self.rule_service.quote_price(an_order.id) == 0
 
+    def test_should_return_zero_if_quotation_is_negative(self, an_order):
+        Rule(
+            name='$20 discount',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.VALUE,
+                value=-20,
+            )
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 0
+
 
 # noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')
@@ -490,7 +508,7 @@ class TestExampleRules:
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=-100)
         ).save()
 
-        self.assert_price(an_order, -100)
+        self.assert_price(an_order, 0)
 
         an_order_factory()
 
