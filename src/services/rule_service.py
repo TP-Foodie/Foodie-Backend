@@ -75,7 +75,7 @@ class RuleService:
             result = self.condition_service.apply(order, *rule.conditions)
             if result:
                 total = self.consequence_service.apply(rule.consequence, total, order)
-        return total
+        return total if total > 0 else 0
 
     def benefits(self):
         return self.rule_repository.all().filter(benefit=True)

@@ -2,7 +2,6 @@ import calendar
 from datetime import datetime, timedelta
 from mongoengine import Q
 from models.order import Order
-from services.exceptions.order_exceptions import NonExistingOrderException
 
 
 def list_all():
@@ -29,15 +28,10 @@ def create(name, order_type, owner, ordered_products, payment_method, number):
     )
 
 
-def update(order_id, field, value):
+def update(order_id, values):
     order = Order.objects.filter(id=order_id).first()
-
-    if not order:
-        raise NonExistingOrderException()
-
-    order[field] = value
-    order.save()
-    return order
+    order.update(**values)
+    return get_order(order_id)
 
 
 def filter_by(params):
