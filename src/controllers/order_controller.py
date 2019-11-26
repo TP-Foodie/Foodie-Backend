@@ -2,13 +2,11 @@ from flask import Blueprint, jsonify, request
 
 from controllers.parser import parse_order_request, \
     parse_take_order_request, build_quotation_response
-from controllers.utils import HTTP_201_CREATED, \
-    HTTP_400_BAD_REQUEST, HTTP_200_OK
+from controllers.utils import HTTP_201_CREATED, HTTP_200_OK
 from logger import log_request_response
 from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
-from services.exceptions.invalid_usage_exception import InvalidUsage
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 

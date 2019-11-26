@@ -4,9 +4,9 @@ from unittest.mock import patch
 import pytest
 
 from models.order import Order
+from models.rule import RuleConsequence, Rule
 from repositories import order_repository, user_repository
 from services import order_service
-from models.rule import RuleConsequence, Rule
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
@@ -70,7 +70,7 @@ class TestOrderService:
 
         delivery = user_repository.get_user(a_delivery_user.id)
         assert not delivery.available
-        assert not delivery is None
+        assert delivery is not None
 
         order_service.update(an_order.id, {'status': Order.CANCELLED_STATUS})
         order = order_repository.get_order(an_order.id)

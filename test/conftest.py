@@ -99,6 +99,7 @@ def an_ordered_product(cfaker, a_product):
         product=str(a_product.id)
     )
 
+
 @pytest.fixture
 def an_order_factory(cfaker, a_customer_user, an_ordered_product, a_delivery_user):
     def create_order(order_type=Order.NORMAL_TYPE):

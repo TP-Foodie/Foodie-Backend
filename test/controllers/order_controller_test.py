@@ -65,7 +65,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'phone': an_order.owner.phone,
                 'type': an_order.owner.type
             },
-            'ordered_products' : [{
+            'ordered_products': [{
                 'quantity': an_order.ordered_products[0].quantity,
                 'product': {
                     'id': str(an_order.ordered_products[0].product.id),
@@ -135,13 +135,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
     def test_get_order_details(self, a_client, an_order, a_client_user):
         response = self.get_order(a_client, an_order.id, a_client_user)
-
         assert_200(response)
-
         order = json.loads(response.data)
-        
         assert order == self.get_order_json(an_order)
-
 
     def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/orders/favors')
@@ -269,7 +265,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_200(response)
 
-        assert json.loads(response.data) == {'price':20}
+        assert json.loads(response.data) == {'price': 20}
 
     # noinspection PyTypeChecker
     def test_quote_order_returns_zero_if_rule_does_not_apply(self, a_client,
@@ -294,7 +290,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_200(response)
 
-        assert json.loads(response.data) == {'price':0}
+        assert json.loads(response.data) == {'price': 0}
 
     def test_orders_placed_for_unauthorized(self, a_client):
         response = a_client.get('api/v1/orders/placed')
@@ -376,7 +372,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert Order.objects.get(id=an_order.id).status == Order.DELIVERED_STATUS
 
     # noinspection PyTypeChecker
-    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(self, a_client, a_client_user, an_order, a_delivery_user):  # pylint: disable=line-too-long
+    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(
+            self, a_client, a_client_user, an_order, a_delivery_user
+    ):
         Rule(
             name='$20 base',
             conditions=[],
@@ -396,20 +394,3 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20
-
-    def test_create_order_with_non_existing_place_returns_400(self, a_client, a_client_user,
-                                                              an_object_id):
-        self.login(a_client, a_client_user.email, a_client_user.password)
-        response = self.post(
-            a_client,
-            self.build_url('/orders/'),
-            {
-                'order_type': Order.NORMAL_TYPE,
-                'product': {
-                    'name': 'big mac',
-                    'place': str(an_object_id)
-                },
-                'payment_method': 'CPM'
-            })
-
-        assert_400(response)
