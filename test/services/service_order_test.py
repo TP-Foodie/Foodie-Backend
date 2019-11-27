@@ -154,6 +154,20 @@ class TestOrderService: # pylint: disable=too-many-public-methods
 
         assert result == a_city.lower()
 
+    def test_order_directions_for_order_without_delivery_returns_empty(self, an_order):
+        an_order.delivery = None
+        an_order.save()
+
+        assert not order_service.directions(an_order.id)
+
+    @patch('services.order_service.requests.get')
+    def test_order_directions_requests_directions(self, mocked_get,
+                                                  an_order, a_directions_response):
+        mocked_get.return_value = a_directions_response
+        order_service.directions(an_order.id)
+
+        assert mocked_get.called
+
     def test_deliver_order_should_increase_delivery_balance_by_85_percent_of_cost(self, an_order):
         an_order.quotation = 100
         an_order.save()

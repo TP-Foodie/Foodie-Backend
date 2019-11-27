@@ -76,3 +76,10 @@ def list_placed_orders(user):
 def update_order(order_id):
     data = order_service.update(order_id, parse_take_order_request(request.json))
     return jsonify(DetailsOrderSchema().dump(data)), HTTP_200_OK
+
+
+@ORDERS_BLUEPRINT.route('/<order_id>/directions', methods=['GET'])
+@log_request_response
+@authenticate
+def directions(order_id):
+    return jsonify(order_service.directions(order_id)), HTTP_200_OK

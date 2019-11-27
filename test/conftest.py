@@ -54,7 +54,7 @@ def user_factory(cfaker, a_location):
 
 
 @pytest.fixture
-def a_delivery_user(cfaker):
+def a_delivery_user(cfaker, a_location):
     return User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
@@ -62,7 +62,8 @@ def a_delivery_user(cfaker):
         email=cfaker.email(),
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
-        type="DELIVERY"
+        type="DELIVERY",
+        location=a_location
     ).save()
 
 
@@ -291,6 +292,16 @@ def a_geocode_response(a_city):
         }))
 
     return build_response
+
+
+@pytest.fixture
+def a_directions_response():
+    return MockedResponse(json.dumps({
+        'locations': [{
+            'lat': 1,
+            'long': 1
+        }]
+    }))
 
 
 @pytest.fixture

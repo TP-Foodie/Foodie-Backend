@@ -2,6 +2,7 @@ import json
 import urllib
 
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
 from models.rule import RuleCondition, RuleConsequence, Rule
@@ -354,6 +355,24 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         orders = json.loads(response.data)
 
         assert not orders
+
+    def test_get_directions_for_unauthenticated(self, a_client, an_order):
+        response = a_client.get('api/v1/orders/{}/directions'.format(str(an_order.id)))
+
+        assert_401(response)
+
+    @patch('services.order_service.requests.get')
+    def test_get_directions(self, mocked_get, a_client, a_client_user,
+                            an_order, a_directions_response):
+        # pylint: disable=too-many-arguments
+        mocked_get.return_value = a_directions_response
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.get(a_client, 'api/v1/orders/{}/directions'.format(str(an_order.id)))
+
+        assert_200(response)
+
+        assert json.loads(response.data)
 
     def test_mark_order_as_completed(self, a_client, a_client_user, an_order, a_delivery_user):
         self.login(a_client, a_client_user.email, a_client_user.password)
