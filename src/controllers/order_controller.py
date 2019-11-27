@@ -2,14 +2,11 @@ from flask import Blueprint, jsonify, request
 
 from controllers.parser import parse_order_request, \
     parse_take_order_request, build_quotation_response
-from controllers.utils import HTTP_201_CREATED, \
-    HTTP_400_BAD_REQUEST, HTTP_200_OK
+from controllers.utils import HTTP_201_CREATED, HTTP_200_OK
 from logger import log_request_response
 from repositories import order_repository
 from schemas.order import ListOrderSchema, DetailsOrderSchema
 from services import order_service
-from services.exceptions.invalid_usage_exception import InvalidUsage
-from services.exceptions.order_exceptions import NonExistingPlaceException
 from services.auth_service import authenticate
 from services.rule_service import RuleService
 
@@ -31,12 +28,9 @@ def list_orders():
 @log_request_response
 @authenticate
 def create_order(user):
-    try:
-        parsed_data = parse_order_request({**request.json, 'user': user})
-        order = order_service.create(**parsed_data)
-        data = DetailsOrderSchema().dump(order)
-    except NonExistingPlaceException:
-        raise InvalidUsage("Place does not exists", status_code=HTTP_400_BAD_REQUEST)
+    parsed_data = parse_order_request({**request.json, 'user': user})
+    order = order_service.create(**parsed_data)
+    data = DetailsOrderSchema().dump(order)
 
     return jsonify(data), HTTP_201_CREATED
 
@@ -81,4 +75,4 @@ def list_placed_orders(user):
 @authenticate
 def update_order(order_id):
     data = order_service.update(order_id, parse_take_order_request(request.json))
-    return jsonify(ListOrderSchema().dump(data)), HTTP_200_OK
+    return jsonify(DetailsOrderSchema().dump(data)), HTTP_200_OK

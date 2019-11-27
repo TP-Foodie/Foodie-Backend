@@ -25,17 +25,19 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         self.login(client, user.email, user.password)
         return self.get(client, self.build_url('/orders/favors'))
 
-    def create_order(self, client, order_type, user, product):
+    # pylint: disable=too-many-arguments
+    def create_order(self, name, client, order_type, user, ordered_product):
         self.login(client, user.email, user.password)
         return self.post(
             client,
             self.build_url('/orders/'),
             {
+                'name': name,
                 'order_type': order_type,
-                'product': {
-                    'name': product.name,
-                    'place': product.place.id
-                },
+                'ordered_products': [{
+                    'quantity': ordered_product.quantity,
+                    'product': str(ordered_product.product.id)
+                }],
                 'payment_method': 'CPM'
             })
 
@@ -46,6 +48,56 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
     def get_order(self, client, order_id, a_client_user):
         self.login(client, a_client_user.email, a_client_user.password)
         return self.get(client, self.build_url('/orders/{}'.format(str(order_id))))
+
+    def get_order_json(self, an_order):
+        return {
+            'id': str(an_order.id),
+            'name': an_order.name,
+            'number': an_order.number,
+            'status': an_order.status,
+            'type': an_order.type,
+            'owner': {
+                'id': str(an_order.owner.id),
+                'name': an_order.owner.name,
+                'last_name': an_order.owner.last_name,
+                'email': an_order.owner.email,
+                'profile_image': an_order.owner.profile_image,
+                'phone': an_order.owner.phone,
+                'type': an_order.owner.type
+            },
+            'ordered_products': [{
+                'quantity': an_order.ordered_products[0].quantity,
+                'product': {
+                    'id': str(an_order.ordered_products[0].product.id),
+                    'name': an_order.ordered_products[0].product.name,
+                    'description': an_order.ordered_products[0].product.description,
+                    'image': an_order.ordered_products[0].product.image,
+                    'price': an_order.ordered_products[0].product.price,
+                    'place': {
+                        'id': str(an_order.ordered_products[0].product.place.id),
+                        'name': an_order.ordered_products[0].product.place.name,
+                        'image': an_order.ordered_products[0].product.place.image,
+                        'coordinates': {
+                            'latitude':
+                            an_order.ordered_products[0].product.place.coordinates.latitude,
+                            'longitude':
+                            an_order.ordered_products[0].product.place.coordinates.longitude
+                        }
+                    }
+                }
+            }],
+            'delivery': {
+                'id': str(an_order.delivery.id),
+                'name': an_order.delivery.name,
+                'last_name': an_order.delivery.last_name,
+                'email': an_order.delivery.email,
+                'profile_image': an_order.delivery.profile_image,
+                'phone': an_order.delivery.phone,
+                'type': an_order.delivery.type
+            },
+            'id_chat': "",
+            'quotation': 0
+        }
 
     def test_orders_endpoint_exists(self, a_client, a_client_user):
         response = self.get_orders(a_client, a_client_user)
@@ -61,6 +113,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert order == {
             'id': str(an_order.id),
+            'name': an_order.name,
             'number': an_order.number,
             'status': an_order.status,
             'type': an_order.type,
@@ -82,47 +135,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
     def test_get_order_details(self, a_client, an_order, a_client_user):
         response = self.get_order(a_client, an_order.id, a_client_user)
-
         assert_200(response)
-
         order = json.loads(response.data)
-
-        assert order == {
-            'id': str(an_order.id),
-            'number': an_order.number,
-            'status': an_order.status,
-            'type': an_order.type,
-            'owner': {
-                'id': str(an_order.owner.id),
-                'name': an_order.owner.name,
-                'last_name': an_order.owner.last_name,
-                'email': an_order.owner.email,
-                'profile_image': an_order.owner.profile_image,
-                'phone': an_order.owner.phone,
-                'type': an_order.owner.type
-            },
-            'product': {
-                'name': an_order.product.name,
-                'place': {
-                    'name': an_order.product.place.name,
-                    'coordinates': {
-                        'latitude': an_order.product.place.coordinates.latitude,
-                        'longitude': an_order.product.place.coordinates.longitude
-                    }
-                }
-            },
-            'delivery': {
-                'id': str(an_order.delivery.id),
-                'name': an_order.delivery.name,
-                'last_name': an_order.delivery.last_name,
-                'email': an_order.delivery.email,
-                'profile_image': an_order.delivery.profile_image,
-                'phone': an_order.delivery.phone,
-                'type': an_order.delivery.type
-            },
-            'id_chat': "",
-            'quotation': 0
-        }
+        assert order == self.get_order_json(an_order)
 
     def test_get_orders_filtered_by_favors_for_unauthenticated(self, a_client):
         response = a_client.get('api/v1/orders/favors')
@@ -144,27 +159,35 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         response = a_client.post('api/v1/orders/', json={})
         assert_401(response)
 
-    def test_user_should_be_able_to_create_order(self, a_client, a_client_user, a_product):
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_user_should_be_able_to_create_order(self, a_client, a_client_user, an_ordered_product):
+        response = self.create_order(
+            "name", a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product
+        )
         assert_201(response)
 
-    def test_create_orders_should_create_one_on_db(self, a_client, a_client_user, a_product):
-        self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_create_orders_should_create_one_on_db(
+            self, a_client, a_client_user, an_ordered_product
+    ):
+        self.create_order(
+            "name", a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product
+        )
 
         assert len(order_repository.list_all()) == 1
 
-    def test_create_should_return_created_http_code(self, a_client, a_client_user, a_product):
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_create_should_return_created_http_code(
+            self, a_client, a_client_user, an_ordered_product
+    ):
+        response = self.create_order(
+            "name", a_client, Order.NORMAL_TYPE, a_client_user, an_ordered_product
+        )
         assert_201(response)
 
-    def test_create_with_wrong_type_should_return_400(self, a_client, a_client_user, a_product):
-        response = self.create_order(a_client, "NONEXISTINGTYPE", a_client_user, a_product)
-        assert_400(response)
-
-    def test_create_with_invalid_place_id_should_return_400(
-            self, a_client, a_client_user, a_product):
-        a_product.place.id = '1'
-        response = self.create_order(a_client, Order.NORMAL_TYPE, a_client_user, a_product)
+    def test_create_with_wrong_type_should_return_400(
+            self, a_client, a_client_user, an_ordered_product
+    ):
+        response = self.create_order(
+            "name", a_client, "NONEXISTINGTYPE", a_client_user, an_ordered_product
+        )
         assert_400(response)
 
     def test_update_for_unauthenticated(self, a_client, an_order):
@@ -183,6 +206,19 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_200(response)
 
         assert order_repository.get_order(an_order.id).status == Order.TAKEN_STATUS
+
+    def test_update_should_return_updated_order(self, a_client, an_order,
+                                                a_delivery_user, a_client_user):
+        response = self.patch_order(
+            a_client,
+            an_order,
+            a_client_user,
+            {'status': Order.TAKEN_STATUS, 'delivery': str(a_delivery_user.id)}
+        )
+
+        updated_order = json.loads(response.data)
+
+        assert updated_order == self.get_order_json(order_repository.get_order(an_order.id))
 
     def test_should_return_400_if_delivery_does_not_exists(self, a_client, an_object_id,
                                                            an_order, a_client_user):
@@ -229,7 +265,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_200(response)
 
-        assert json.loads(response.data) == {'price':20}
+        assert json.loads(response.data) == {'price': 20}
 
     # noinspection PyTypeChecker
     def test_quote_order_returns_zero_if_rule_does_not_apply(self, a_client,
@@ -254,7 +290,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_200(response)
 
-        assert json.loads(response.data) == {'price':0}
+        assert json.loads(response.data) == {'price': 0}
 
     def test_orders_placed_for_unauthorized(self, a_client):
         response = a_client.get('api/v1/orders/placed')
@@ -336,7 +372,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert Order.objects.get(id=an_order.id).status == Order.DELIVERED_STATUS
 
     # noinspection PyTypeChecker
-    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(self, a_client, a_client_user, an_order, a_delivery_user):  # pylint: disable=line-too-long
+    def test_mark_order_as_completed_increases_delivery_balance_by_85_percent_of_order_trip(
+            self, a_client, a_client_user, an_order, a_delivery_user
+    ):
         Rule(
             name='$20 base',
             conditions=[],
@@ -356,20 +394,3 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20
-
-    def test_create_order_with_non_existing_place_returns_400(self, a_client, a_client_user,
-                                                              an_object_id):
-        self.login(a_client, a_client_user.email, a_client_user.password)
-        response = self.post(
-            a_client,
-            self.build_url('/orders/'),
-            {
-                'order_type': Order.NORMAL_TYPE,
-                'product': {
-                    'name': 'big mac',
-                    'place': str(an_object_id)
-                },
-                'payment_method': 'CPM'
-            })
-
-        assert_400(response)

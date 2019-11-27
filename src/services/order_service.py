@@ -3,7 +3,7 @@ import json
 import requests
 from mongoengine import Q
 
-from repositories import order_repository, product_repository, user_repository
+from repositories import order_repository, user_repository
 from services import delivery_service
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.rule_service import RuleService
@@ -15,12 +15,12 @@ DELIVERY_PERCENTAGE = 0.85
 rule_service = RuleService()  # pylint: disable=invalid-name
 
 
-def create(order_type, product, payment_method, owner):
-    created_product = product_repository.get_or_create(*product.values())
+def create(name, order_type, ordered_products, payment_method, owner):
     return order_repository.create(
+        name=name,
         order_type=order_type,
         owner=owner,
-        product=created_product.id,
+        ordered_products=ordered_products,
         payment_method=payment_method,
         number=order_repository.count() + 1
     )
@@ -30,7 +30,7 @@ def update(order_id, data):
     if data.get('delivery'):
         return take(order_id, data.get('delivery'))
 
-    if data.get('status') in Order.CANCELLED_STATUS:
+    if data.get('status', '') == Order.CANCELLED_STATUS:
         return cancel(order_id)
 
     if data.get('status') == Order.DELIVERED_STATUS:
@@ -85,7 +85,6 @@ def unassign(order_id, status=Order.WAITING_STATUS):
 
 def placed_by(user_id, start_date=None, end_date=None):
     user_orders = order_repository.filter_by({'owner': user_id})
-
     return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
         if start_date and end_date else user_orders
 
@@ -94,8 +93,8 @@ def distance(order):
     owner_latitude = order.owner.location.latitude
     owner_longitude = order.owner.location.longitude
 
-    product_latitude = order.product.place.coordinates.latitude
-    product_longitude = order.product.place.coordinates.longitude
+    product_latitude = order.ordered_products[0].product.place.coordinates.latitude
+    product_longitude = order.ordered_products[0].product.place.coordinates.longitude
 
     key = Config.MAP_QUEST_API_KEY
     from_location = json.dumps({'latLng': {

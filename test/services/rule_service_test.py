@@ -231,9 +231,9 @@ class TestPriceQuote:
         an_order.owner.save()
 
         # from Buenos Aires
-        an_order.product.place.coordinates.latitude = -34.603722
-        an_order.product.place.coordinates.longitude = -58.381592
-        an_order.product.place.save()
+        an_order.ordered_products[0].product.place.coordinates.latitude = -34.603722
+        an_order.ordered_products[0].product.place.coordinates.longitude = -58.381592
+        an_order.ordered_products[0].product.place.save()
 
         Rule(
             name='$200 if distance is greater than 50km',
@@ -307,9 +307,9 @@ class TestPriceQuote:
         an_order.owner.save()
 
         # from Buenos Aires
-        an_order.product.place.coordinates.latitude = -34.603722
-        an_order.product.place.coordinates.longitude = -58.381592
-        an_order.product.place.save()
+        an_order.ordered_products[0].product.place.coordinates.latitude = -34.603722
+        an_order.ordered_products[0].product.place.coordinates.longitude = -58.381592
+        an_order.ordered_products[0].product.place.save()
 
         Rule(
             name='$20 per km',
@@ -350,6 +350,24 @@ class TestPriceQuote:
 
         assert self.rule_service.quote_price(an_order.id) == 0
 
+    def test_should_return_zero_if_quotation_is_negative(self, an_order):
+        Rule(
+            name='$20 discount',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(
+                consequence_type=RuleConsequence.VALUE,
+                value=-20,
+            )
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 0
+
 
 # noinspection PyTypeChecker
 @pytest.mark.usefixtures('a_client')
@@ -387,9 +405,9 @@ class TestExampleRules:
         an_order.owner.save()
 
         # from Buenos Aires
-        an_order.product.place.coordinates.latitude = -34.603722
-        an_order.product.place.coordinates.longitude = -58.381592
-        an_order.product.place.save()
+        an_order.ordered_products[0].product.place.coordinates.latitude = -34.603722
+        an_order.ordered_products[0].product.place.coordinates.longitude = -58.381592
+        an_order.ordered_products[0].product.place.save()
 
         Rule(
             name='$15 per extra kilometer above 2',
@@ -490,7 +508,7 @@ class TestExampleRules:
             consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=-100)
         ).save()
 
-        self.assert_price(an_order, -100)
+        self.assert_price(an_order, 0)
 
         an_order_factory()
 
