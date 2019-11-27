@@ -1,5 +1,6 @@
 import json
 
+from datetime import datetime
 import pytest
 from faker import Faker
 from faker.providers import person, internet, phone_number, geo, address
@@ -31,17 +32,25 @@ def cfaker():
 
 
 @pytest.fixture
-def a_customer_user(cfaker, a_location):
-    return User(
-        name=cfaker.first_name(),
-        last_name=cfaker.last_name(),
-        password=cfaker.prefix(),
-        email=cfaker.email(),
-        profile_image=cfaker.image_url(),
-        phone=cfaker.phone_number(),
-        type="CUSTOMER",
-        location=a_location
-    ).save()
+def a_customer_user(user_factory):
+    return user_factory()
+
+
+@pytest.fixture
+def user_factory(cfaker, a_location):
+    def create():
+        return User(
+            name=cfaker.first_name(),
+            last_name=cfaker.last_name(),
+            password=cfaker.prefix(),
+            email=cfaker.email(),
+            profile_image=cfaker.image_url(),
+            phone=cfaker.phone_number(),
+            type="CUSTOMER",
+            location=a_location
+        ).save()
+
+    return create
 
 
 @pytest.fixture
@@ -85,6 +94,22 @@ def a_product(cfaker, a_place):
 @pytest.fixture
 def an_order(an_order_factory):
     return an_order_factory()
+
+
+@pytest.fixture
+def a_complete_order(an_order):
+    an_order.status = Order.DELIVERED_STATUS
+    an_order.completed_date = datetime.now()
+    an_order.save()
+    return an_order
+
+
+@pytest.fixture
+def a_cancelled_order(an_order):
+    an_order.status = Order.CANCELLED_STATUS
+    an_order.completed_date = datetime.now()
+    an_order.save()
+    return an_order
 
 
 @pytest.fixture

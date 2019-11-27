@@ -38,3 +38,4 @@ class Order(Document):
     )
     id_chat = StringField(default="")
     quotation = FloatField(required=False, default=0)
+    completed_date = DateTimeField()

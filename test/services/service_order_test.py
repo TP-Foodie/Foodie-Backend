@@ -11,7 +11,7 @@ from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')
-class TestOrderService:
+class TestOrderService: # pylint: disable=too-many-public-methods
     def test_create_order(self, a_customer_user, an_ordered_product):
         order_service.create(
             "name",
@@ -173,3 +173,30 @@ class TestOrderService:
         order_service.take(an_order.id, a_delivery_user.id)
 
         assert Order.objects.get(id=an_order.id).quotation == 20
+
+    def test_completed_by_date_returns_empty_list_if_no_orders_are_completed(self, an_order):
+        # pylint: disable=unused-argument
+        assert not order_service.completed_by_date()
+
+    def test_completed_by_date_returns_orders_completed_by_date(self, a_complete_order):
+        orders = order_service.completed_by_date()
+
+        assert len(orders) == 1
+        assert orders[0]['count'] == 1
+        assert orders[0]['date'].date() == a_complete_order.completed_date.date()
+
+    def test_deliver_order_should_set_completed_date_field(self, an_order):
+        order_service.deliver(an_order.id)
+
+        assert Order.objects.get(id=an_order.id).completed_date.date() == datetime.today().date()
+
+    def test_cancelled_by_date_returns_empty_list_if_no_orders_are_cancelled(self, an_order):
+        # pylint: disable=unused-argument
+        assert not order_service.cancelled_by_date()
+
+    def test_cancelled_by_date_returns_orders_cancelled_by_date(self, a_cancelled_order):
+        orders = order_service.cancelled_by_date()
+
+        assert len(orders) == 1
+        assert orders[0]['count'] == 1
+        assert orders[0]['date'].date() == a_cancelled_order.completed_date.date()
