@@ -7,8 +7,10 @@ from mongoengine import connect, disconnect
 from mongomock import ObjectId
 
 from app import APP
-from models import User, Place, Coordinates
-from models.order import Order, Product
+from models import User, Coordinates
+from models.place import Place
+from models.product import Product
+from models.order import Order, OrderedProduct
 from models.rule import RuleCondition, RuleConsequence
 from models.chat import Chat, ChatMessage
 from models.user_rating import UserRating
@@ -64,7 +66,8 @@ def a_location(cfaker):
 def a_place(cfaker, a_location):
     return Place(
         name=cfaker.name(),
-        coordinates=a_location
+        coordinates=a_location,
+        image=cfaker.image_url()
     ).save()
 
 
@@ -72,7 +75,10 @@ def a_place(cfaker, a_location):
 def a_product(cfaker, a_place):
     return Product(
         name=cfaker.name(),
-        place=a_place
+        description=cfaker.text(),
+        price=cfaker.pydecimal(positive=True, min_value=1, max_value=100),
+        place=a_place,
+        image=cfaker.image_url()
     ).save()
 
 
@@ -87,13 +93,22 @@ def a_favor_order(an_order_factory):
 
 
 @pytest.fixture
-def an_order_factory(cfaker, a_customer_user, a_product, a_delivery_user):
+def an_ordered_product(cfaker, a_product):
+    return OrderedProduct(
+        quantity=cfaker.pydecimal(positive=True, min_value=1, max_value=100),
+        product=str(a_product.id)
+    )
+
+
+@pytest.fixture
+def an_order_factory(cfaker, a_customer_user, an_ordered_product, a_delivery_user):
     def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
+            name=cfaker.first_name(),
             number=cfaker.pydecimal(),
             owner=a_customer_user.id,
             type=order_type,
-            product=a_product.id,
+            ordered_products=[an_ordered_product],
             delivery=a_delivery_user.id
         ).save()
 
