@@ -2,7 +2,6 @@ import calendar
 from datetime import datetime, timedelta
 from mongoengine import Q
 from models.order import Order
-from services.exceptions.order_exceptions import NonExistingOrderException
 
 
 def list_all():
@@ -21,20 +20,18 @@ def count():
     return Order.objects.count()
 
 
-def create(order_type, owner, product, payment_method, number):
-    return Order.objects.create(type=order_type, owner=owner, product=product,
-                                payment_method=payment_method, number=number)
+# pylint: disable=too-many-arguments
+def create(name, order_type, owner, ordered_products, payment_method, number):
+    return Order.objects.create(
+        name=name, type=order_type, owner=owner, ordered_products=ordered_products,
+        payment_method=payment_method, number=number
+    )
 
 
-def update(order_id, field, value):
+def update(order_id, values):
     order = Order.objects.filter(id=order_id).first()
-
-    if not order:
-        raise NonExistingOrderException()
-
-    order[field] = value
-    order.save()
-    return order
+    order.update(**values)
+    return get_order(order_id)
 
 
 def filter_by(params):

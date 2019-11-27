@@ -1,30 +1,30 @@
 from marshmallow import Schema, fields
 
-from schemas.place import PlaceSchema
 from schemas.user import UserSchema
+from schemas.product_schema import ProductSchema
 
 
-class ProductSchema(Schema):
-    place = fields.Nested(PlaceSchema)
+class OrderedProductSchema(Schema):
+    product = fields.Nested(ProductSchema)
 
     class Meta:
-        fields = ('name', 'place')
+        fields = ('id', 'quantity', 'product')
 
 
 class ListOrderSchema(Schema):
     delivery = fields.Nested(UserSchema)
 
     class Meta:
-        fields = ('id', 'number', 'status', 'type', 'delivery', 'id_chat')
+        fields = ('id', 'name', 'number', 'status', 'type', 'delivery', 'id_chat')
 
 
 class DetailsOrderSchema(Schema):
     owner = fields.Nested(UserSchema)
-    product = fields.Nested(ProductSchema)
+    ordered_products = fields.List(fields.Nested(OrderedProductSchema))
     delivery = fields.Nested(UserSchema)
 
     class Meta:
         fields = (
-            'id', 'number', 'status', 'type', 'owner', 'product', 'delivery', 'id_chat',
-            'quotation'
+            'id', 'name', 'number', 'status', 'type', 'owner', 'ordered_products',
+            'delivery', 'id_chat', 'quotation'
         )

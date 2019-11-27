@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import Blueprint
 
 from logger import log_request_response
-from models import Place
+from models.place import Place
 
 PLACES_BLUEPRINT = Blueprint('places', __name__)
 

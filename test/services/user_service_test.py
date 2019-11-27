@@ -4,6 +4,7 @@ from unittest import mock, TestCase
 from unittest.mock import Mock, MagicMock
 
 import pytest
+
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 from services import user_service
 
@@ -169,3 +170,78 @@ class TestUserVariables:
         a_customer_user.created = datetime.now().date() - timedelta(days=1)
 
         assert user_service.antiquity(a_customer_user) == 1
+
+
+@pytest.mark.usefixtures('a_client')
+class TestStatistics:
+    def test_registrations_by_date_returns_empty_if_there_are_no_users(self):
+        assert not user_service.registrations_by_date()
+
+    def test_registrations_by_date_with_one_user(self, user_factory):
+        user = user_factory()
+
+        assert len(user_service.registrations_by_date()) == 1
+        assert user_service.registrations_by_date()[0] == {
+            'date': datetime.combine(user.created, datetime.min.time()),
+            'count': 1
+        }
+
+    def test_registrations_by_date_groups_by_date(self, user_factory):
+        user_factory()
+        user = user_factory()
+        user.created = datetime.now() + timedelta(hours=3)
+
+        data = user_service.registrations_by_date()
+
+        assert len(data) == 1
+        assert data[0] == {
+            'date': datetime.combine(user.created, datetime.min.time()),
+            'count': 2
+        }
+
+    def test_registrations_by_date_with_multiple_dates(self, user_factory):
+        a_user = user_factory()
+        another_user = user_factory()
+        another_user.created = datetime.now() + timedelta(days=1)
+        another_user.save()
+
+        data = user_service.registrations_by_date()
+
+        assert len(data) == 2
+        assert data == [
+            {
+                'date': datetime.combine(a_user.created, datetime.min.time()),
+                'count': 1
+            },
+            {
+                'date': datetime.combine(another_user.created, datetime.min.time()),
+                'count': 1
+            }
+        ]
+
+    def test_registrations_by_date_sorts_by_date(self, user_factory):
+        a_user = user_factory()
+        another_user = user_factory()
+
+        a_user.created = datetime.now() - timedelta(days=1)
+        a_user.save()
+
+        another_user.created = datetime.now() + timedelta(days=1)
+        another_user.save()
+
+        data = user_service.registrations_by_date()
+
+        assert len(data) == 2
+        assert data[0]['date'] == datetime.combine(a_user.created, datetime.min.time())
+
+    def test_registrations_on_specific_date(self, user_factory):
+        today = datetime.today()
+
+        a_user = user_factory()
+        a_user.created = today - timedelta(days=31)
+        a_user.save()
+        user_factory()
+
+        data = user_service.registrations_by_date(today.month, today.year)
+
+        assert len(data) == 1
