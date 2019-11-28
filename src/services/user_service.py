@@ -139,3 +139,8 @@ def is_premium(user):
 def confirm_favor_order(order):
     order.owner.gratitude_points -= order.gratitude_points
     order.owner.save()
+
+
+def cancel_favor_order(order):
+    order.owner.gratitude_points += order.gratitude_points
+    order.owner.save()

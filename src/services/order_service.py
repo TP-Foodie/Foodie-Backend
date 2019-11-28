@@ -80,6 +80,7 @@ def deliver(order_id):
 
 
 def cancel(order_id):
+    user_service.cancel_favor_order(order_repository.get_order(order_id))
     unassign(order_id, Order.CANCELLED_STATUS)
 
 
