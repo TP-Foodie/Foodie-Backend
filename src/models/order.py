@@ -1,7 +1,7 @@
 from datetime import datetime
 from mongoengine import Document, IntField, ReferenceField, \
     CASCADE, StringField, NULLIFY, DateTimeField, FloatField, \
-    EmbeddedDocumentField, ListField, EmbeddedDocument
+    EmbeddedDocumentField, ListField, EmbeddedDocument, BooleanField
 
 from models import User
 from models.rule import RuleCondition
@@ -39,3 +39,5 @@ class Order(Document):
     id_chat = StringField(default="")
     quotation = FloatField(required=False, default=0)
     completed_date = DateTimeField()
+    delivery_rated = BooleanField(default=False)
+    owner_rated = BooleanField(default=False)

@@ -10,7 +10,7 @@ class TestUserRatingController(TestMixin):
 
         assert_401(response)
 
-    def test_create_user_rating(self, a_client, a_client_user, a_user_rating):
+    def test_create_user_rating(self, a_client, a_client_user, a_user_rating, an_order):
         self.login(a_client, a_client_user.email, a_client_user.password)
 
         response = self.post(
@@ -18,7 +18,8 @@ class TestUserRatingController(TestMixin):
             'api/v1/user_ratings/',
             {
                 'user': str(a_user_rating.user.id),
-                'rating': 5
+                'rating': 5,
+                'order': an_order.id
             }
         )
 
@@ -26,7 +27,9 @@ class TestUserRatingController(TestMixin):
 
         assert UserRating.objects.count() == 2
 
-    def test_create_user_rating_should_return_it(self, a_client, a_client_user, a_user_rating):
+    def test_create_user_rating_should_return_it(
+            self, a_client, a_client_user, a_user_rating, an_order
+    ):
         self.login(a_client, a_client_user.email, a_client_user.password)
 
         response = self.post(
@@ -34,7 +37,8 @@ class TestUserRatingController(TestMixin):
             'api/v1/user_ratings/',
             {
                 'user': str(a_user_rating.user.id),
-                'rating': 5
+                'rating': 5,
+                'order': an_order.id
             }
         )
 
