@@ -3,11 +3,9 @@ import json
 import requests
 from mongoengine import Q
 
-from repositories import order_repository, product_repository, user_repository
-from services import delivery_service, user_service
-from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from repositories import order_repository, user_repository
-from services import delivery_service
+from services import user_service, delivery_service
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.rule_service import RuleService
 from settings import Config
@@ -18,6 +16,7 @@ DELIVERY_PERCENTAGE = 0.85
 rule_service = RuleService()  # pylint: disable=invalid-name
 
 
+# pylint: disable=too-many-arguments
 def create(name, order_type, ordered_products, payment_method, owner, gratitude_points=0):
     user = user_repository.get_user(owner)
     if order_type == Order.FAVOR_TYPE and user.gratitude_points < gratitude_points:

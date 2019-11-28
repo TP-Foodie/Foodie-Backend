@@ -418,7 +418,7 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
 class TestFavorOrderCycle(TestMixin):
     def test_create_favor_order_cycle(self, a_client, a_client_user_factory,
-                                      a_product, a_delivery_user, an_ordered_product):
+                                      a_delivery_user, an_ordered_product):
         a_client_user = a_client_user_factory(5)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
@@ -426,9 +426,9 @@ class TestFavorOrderCycle(TestMixin):
             'name': 'new order',
             'order_type': Order.FAVOR_TYPE,
             'ordered_products': [{
-                    'quantity': an_ordered_product.quantity,
-                    'product': str(an_ordered_product.product.id)
-                }],
+                'quantity': an_ordered_product.quantity,
+                'product': str(an_ordered_product.product.id)
+            }],
             'payment_method': 'GPPM',
             'gratitude_points': 5
         })
@@ -457,7 +457,7 @@ class TestFavorOrderCycle(TestMixin):
 
     def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client,
                                                                   a_client_user_factory,
-                                                                  a_product, an_ordered_product):
+                                                                  an_ordered_product):
         a_client_user = a_client_user_factory(3)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
@@ -465,9 +465,9 @@ class TestFavorOrderCycle(TestMixin):
             'name': 'new order',
             'order_type': Order.FAVOR_TYPE,
             'ordered_products': [{
-                    'quantity': an_ordered_product.quantity,
-                    'product': str(an_ordered_product.product.id)
-                }],
+                'quantity': an_ordered_product.quantity,
+                'product': str(an_ordered_product.product.id)
+            }],
             'payment_method': 'GPPM',
             'gratitude_points': 5
         })
@@ -476,7 +476,7 @@ class TestFavorOrderCycle(TestMixin):
 
     def test_cancel_favor_order_replenish_user_gratitude_points(self, a_client,
                                                                 a_client_user_factory,
-                                                                a_product, a_delivery_user,
+                                                                a_delivery_user,
                                                                 an_ordered_product):
         a_client_user = a_client_user_factory(5)
 
@@ -485,9 +485,9 @@ class TestFavorOrderCycle(TestMixin):
             'name': 'new order',
             'order_type': Order.FAVOR_TYPE,
             'ordered_products': [{
-                    'quantity': an_ordered_product.quantity,
-                    'product': str(an_ordered_product.product.id)
-                }],
+                'quantity': an_ordered_product.quantity,
+                'product': str(an_ordered_product.product.id)
+            }],
             'payment_method': 'GPPM',
             'gratitude_points': 5
         })

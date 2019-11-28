@@ -204,7 +204,7 @@ class TestOrderService: # pylint: disable=too-many-public-methods
                 5,
             )
 
-    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_place, a_product):  # pylint: disable=line-too-long
+    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_product):  # pylint: disable=line-too-long
         order = order_service.create(
             'some order',
             Order.FAVOR_TYPE,
@@ -217,7 +217,7 @@ class TestOrderService: # pylint: disable=too-many-public-methods
 
     def test_create_favor_order_with_gratitude_points_should_create_it(self,
                                                                        a_customer_user,
-                                                                       a_place, a_product):
+                                                                       a_product):
         a_customer_user.gratitude_points = 10
         a_customer_user.save()
 
