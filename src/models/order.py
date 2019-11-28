@@ -1,14 +1,16 @@
 from datetime import datetime
 from mongoengine import Document, IntField, ReferenceField, \
-    CASCADE, StringField, NULLIFY, DateTimeField, FloatField
+    CASCADE, StringField, NULLIFY, DateTimeField, FloatField, \
+    EmbeddedDocumentField, ListField, EmbeddedDocument
 
-from models import User, Place
+from models import User
 from models.rule import RuleCondition
+from models.product import Product
 
 
-class Product(Document):
-    name = StringField(max_length=150, required=True)
-    place = ReferenceField(Place, required=True)
+class OrderedProduct(EmbeddedDocument):
+    quantity = IntField(required=True)
+    product = ReferenceField(Product, required=True)
 
 
 class Order(Document):
@@ -22,11 +24,12 @@ class Order(Document):
     status = (WAITING_STATUS, TAKEN_STATUS, DELIVERED_STATUS, CANCELLED_STATUS)
     types = (NORMAL_TYPE, FAVOR_TYPE)
 
+    name = StringField(required=True)
     number = IntField(required=True)
     status = StringField(choices=status, default=WAITING_STATUS)
     type = StringField(choices=types, default=NORMAL_TYPE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
-    product = ReferenceField(Product, reverse_delete_rule=CASCADE, required=True)
+    ordered_products = ListField(EmbeddedDocumentField(OrderedProduct))
     delivery = ReferenceField(User, reverse_delete_rule=NULLIFY)
     created = DateTimeField(default=datetime.now())
     date = DateTimeField(default=datetime.now())
@@ -36,3 +39,4 @@ class Order(Document):
     id_chat = StringField(default="")
     gratitude_points = IntField(default=0)
     quotation = FloatField(required=False, default=0)
+    completed_date = DateTimeField()

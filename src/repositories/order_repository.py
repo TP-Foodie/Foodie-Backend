@@ -20,10 +20,10 @@ def count():
     return Order.objects.count()
 
 
-def create(order_type, owner, product, payment_method, number, gratitude_points):  # pylint: disable=too-many-arguments
-    return Order.objects.create(type=order_type, owner=owner, product=product,
-                                payment_method=payment_method, number=number,
-                                gratitude_points=gratitude_points)
+def create(order_type, owner, ordered_products, payment_method, number, gratitude_points):  # pylint: disable=too-many-arguments
+    return Order.objects.create(
+        name=name, type=order_type, owner=owner, ordered_products=ordered_products,
+        payment_method=payment_method, number=number, gratitude_points=gratitude_points)
 
 
 def update(order_id, values):

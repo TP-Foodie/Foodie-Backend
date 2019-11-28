@@ -144,3 +144,25 @@ def confirm_favor_order(order):
 def cancel_favor_order(order):
     order.owner.gratitude_points += order.gratitude_points
     order.owner.save()
+
+
+def registrations_by_date(month=datetime.today().month, year=datetime.today().year):
+    add_month_year_stage = {
+        '$project': {
+            'month': {'$month': '$created'},
+            'year': {'$year': '$created'},
+            'created': 1
+        }
+    }
+    filter_stage = {'$match': {'month': month, 'year': year}}
+
+    group_stage = {'$group': {'_id': '$created', 'count': {'$sum': 1}}}
+    project_stage = {'$project': {'_id': 0, 'date': '$_id', 'count': 1}}
+
+    return list(
+        User.objects.aggregate(
+            add_month_year_stage,
+            filter_stage,
+            group_stage,
+            project_stage)
+        )

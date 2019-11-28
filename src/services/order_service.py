@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import requests
 from mongoengine import Q
@@ -5,6 +6,8 @@ from mongoengine import Q
 from repositories import order_repository, product_repository, user_repository
 from services import delivery_service, user_service
 from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
+from repositories import order_repository, user_repository
+from services import delivery_service
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 from services.rule_service import RuleService
 from settings import Config
@@ -15,7 +18,7 @@ DELIVERY_PERCENTAGE = 0.85
 rule_service = RuleService()  # pylint: disable=invalid-name
 
 
-def create(order_type, product, payment_method, owner, gratitude_points=0):
+def create(name, order_type, ordered_products, payment_method, owner, gratitude_points=0):
     created_product = product_repository.get_or_create(*product.values())
     user = user_repository.get_user(owner)
 
@@ -23,9 +26,10 @@ def create(order_type, product, payment_method, owner, gratitude_points=0):
         raise NotEnoughGratitudePointsException()
 
     return order_repository.create(
+        name=name,
         order_type=order_type,
         owner=owner,
-        product=created_product.id,
+        ordered_products=ordered_products,
         payment_method=payment_method,
         number=order_repository.count() + 1,
         gratitude_points=gratitude_points
@@ -36,7 +40,7 @@ def update(order_id, data):
     if data.get('delivery'):
         return take(order_id, data.get('delivery'))
 
-    if data.get('status', '') in Order.CANCELLED_STATUS:
+    if data.get('status', '') == Order.CANCELLED_STATUS:
         return cancel(order_id)
 
     if data.get('status') == Order.DELIVERED_STATUS:
@@ -81,7 +85,10 @@ def deliver(order_id):
     delivery_service.complete_order(order)
     user_repository.update(order.delivery.id, {'balance': order.quotation * DELIVERY_PERCENTAGE})
 
-    return order_repository.update(order_id, {'status': Order.DELIVERED_STATUS})
+    return order_repository.update(
+        order_id,
+        {'status': Order.DELIVERED_STATUS, 'completed_date': datetime.now()}
+    )
 
 
 def cancel(order_id):
@@ -97,7 +104,6 @@ def unassign(order_id, status=Order.WAITING_STATUS):
 
 def placed_by(user_id, start_date=None, end_date=None):
     user_orders = order_repository.filter_by({'owner': user_id})
-
     return user_orders.filter(Q(created__gte=start_date) & Q(created__lte=end_date)) \
         if start_date and end_date else user_orders
 
@@ -106,8 +112,8 @@ def distance(order):
     owner_latitude = order.owner.location.latitude
     owner_longitude = order.owner.location.longitude
 
-    product_latitude = order.product.place.coordinates.latitude
-    product_longitude = order.product.place.coordinates.longitude
+    product_latitude = order.ordered_products[0].product.place.coordinates.latitude
+    product_longitude = order.ordered_products[0].product.place.coordinates.longitude
 
     key = Config.MAP_QUEST_API_KEY
     from_location = json.dumps({'latLng': {
@@ -143,3 +149,55 @@ def order_position(order):
     response = requests.get(url)
 
     return json.loads(response.content)['results'][0]['locations'][0]['adminArea5'].lower()
+
+
+def directions(order_id):
+    order = order_repository.get_order(order_id)
+
+    if not order.delivery:
+        return []
+
+    owner_latitude = order.owner.location.latitude
+    owner_longitude = order.owner.location.longitude
+    delivery_latitude = order.delivery.location.latitude
+    delivery_longitude = order.delivery.location.longitude
+
+    key = Config.MAP_QUEST_API_KEY
+    url = 'http://www.mapquestapi.com/directions/v2/route?key={}&from={},{}&to={},{}'.format(
+        key, delivery_latitude, delivery_longitude, owner_latitude, owner_longitude
+    )
+
+    response = requests.get(url)
+
+    return json.loads(response.content)
+
+
+def get_statistics_for(status, month, year):
+    add_month_year_stage = {
+        '$project': {
+            'month': {'$month': '$completed_date'},
+            'year': {'$year': '$completed_date'},
+            'completed_date': 1
+        }
+    }
+    filter_stage = {'$match': {'month': month, 'year': year}}
+
+    group_stage = {'$group': {'_id': '$completed_date', 'count': {'$sum': 1}}}
+    project_stage = {'$project': {'_id': 0, 'count': 1, 'date': '$_id'}}
+
+    completed_orders = order_repository.filter_by({'status': status})
+
+    return list(completed_orders.aggregate(
+        add_month_year_stage,
+        filter_stage,
+        group_stage,
+        project_stage
+    ))
+
+
+def completed_by_date(month=datetime.today().month, year=datetime.today().year):
+    return get_statistics_for(Order.DELIVERED_STATUS, month, year)
+
+
+def cancelled_by_date(month=datetime.today().month, year=datetime.today().year):
+    return get_statistics_for(Order.CANCELLED_STATUS, month, year)

@@ -1,5 +1,6 @@
 import json
 
+from datetime import datetime
 import pytest
 from faker import Faker
 from faker.providers import person, internet, phone_number, geo, address
@@ -7,8 +8,10 @@ from mongoengine import connect, disconnect
 from mongomock import ObjectId
 
 from app import APP
-from models import User, Place, Coordinates
-from models.order import Order, Product
+from models import User, Coordinates
+from models.place import Place
+from models.product import Product
+from models.order import Order, OrderedProduct
 from models.rule import RuleCondition, RuleConsequence
 from models.chat import Chat, ChatMessage
 from models.user_rating import UserRating
@@ -28,8 +31,30 @@ def cfaker():
     return cfaker
 
 
+def a_customer_user(user_factory):
+    return user_factory()
+
+
 @pytest.fixture
-def a_customer_user(cfaker, a_location):
+def user_factory(cfaker, a_location):
+    def create():
+        return User(
+            name=cfaker.first_name(),
+            last_name=cfaker.last_name(),
+            password=cfaker.prefix(),
+            email=cfaker.email(),
+            profile_image=cfaker.image_url(),
+            phone=cfaker.phone_number(),
+            type="CUSTOMER",
+            location=a_location,
+            gratitude_points=10
+        ).save()
+
+    return create
+
+
+@pytest.fixture
+def a_delivery_user(cfaker, a_location):
     return User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
@@ -37,22 +62,8 @@ def a_customer_user(cfaker, a_location):
         email=cfaker.email(),
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
-        type="CUSTOMER",
-        location=a_location,
-        gratitude_points=10
-    ).save()
-
-
-@pytest.fixture
-def a_delivery_user(cfaker):
-    return User(
-        name=cfaker.first_name(),
-        last_name=cfaker.last_name(),
-        password=cfaker.prefix(),
-        email=cfaker.email(),
-        profile_image=cfaker.image_url(),
-        phone=cfaker.phone_number(),
-        type="DELIVERY"
+        type="DELIVERY",
+        location=a_location
     ).save()
 
 
@@ -65,7 +76,8 @@ def a_location(cfaker):
 def a_place(cfaker, a_location):
     return Place(
         name=cfaker.name(),
-        coordinates=a_location
+        coordinates=a_location,
+        image=cfaker.image_url()
     ).save()
 
 
@@ -73,7 +85,10 @@ def a_place(cfaker, a_location):
 def a_product(cfaker, a_place):
     return Product(
         name=cfaker.name(),
-        place=a_place
+        description=cfaker.text(),
+        price=cfaker.pydecimal(positive=True, min_value=1, max_value=100),
+        place=a_place,
+        image=cfaker.image_url()
     ).save()
 
 
@@ -83,18 +98,43 @@ def an_order(an_order_factory):
 
 
 @pytest.fixture
+def a_complete_order(an_order):
+    an_order.status = Order.DELIVERED_STATUS
+    an_order.completed_date = datetime.now()
+    an_order.save()
+    return an_order
+
+
+@pytest.fixture
+def a_cancelled_order(an_order):
+    an_order.status = Order.CANCELLED_STATUS
+    an_order.completed_date = datetime.now()
+    an_order.save()
+    return an_order
+
+
+@pytest.fixture
 def a_favor_order(an_order_factory):
     return an_order_factory(Order.FAVOR_TYPE)
 
 
 @pytest.fixture
-def an_order_factory(cfaker, a_customer_user, a_product, a_delivery_user):
+def an_ordered_product(cfaker, a_product):
+    return OrderedProduct(
+        quantity=cfaker.pydecimal(positive=True, min_value=1, max_value=100),
+        product=str(a_product.id)
+    )
+
+
+@pytest.fixture
+def an_order_factory(cfaker, a_customer_user, an_ordered_product, a_delivery_user):
     def create_order(order_type=Order.NORMAL_TYPE):
         return Order(
+            name=cfaker.first_name(),
             number=cfaker.pydecimal(),
             owner=a_customer_user.id,
             type=order_type,
-            product=a_product.id,
+            ordered_products=[an_ordered_product],
             delivery=a_delivery_user.id
         ).save()
 
@@ -260,6 +300,16 @@ def a_geocode_response(a_city):
         }))
 
     return build_response
+
+
+@pytest.fixture
+def a_directions_response():
+    return MockedResponse(json.dumps({
+        'locations': [{
+            'lat': 1,
+            'long': 1
+        }]
+    }))
 
 
 @pytest.fixture

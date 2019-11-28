@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import pytest
-from bson import ObjectId
 
 from models import User
 from models.order import Order
@@ -11,72 +10,42 @@ from repositories import order_repository, product_repository, user_repository
 from services import order_service, product_service
 from services.exceptions.order_exceptions import NonExistingPlaceException,\
     NotEnoughGratitudePointsException
-from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')
-class TestOrderService:  # pylint: disable=too-many-public-methods
-    def test_create_order(self, a_customer_user, a_product):
+class TestOrderService: # pylint: disable=too-many-public-methods
+    def test_create_order(self, a_customer_user, an_ordered_product):
         order_service.create(
-            Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
-            'CPM', a_customer_user.id)
+            "name",
+            Order.NORMAL_TYPE,
+            [{'quantity': an_ordered_product.quantity, 'product': an_ordered_product.product.id}],
+            'CPM', a_customer_user.id
+        )
 
         order = order_repository.list_all()[0]
 
         assert order.owner.id == a_customer_user.id
+        assert order.name == "name"
 
-    def test_order_number_should_be_consecutive(self, a_customer_user, a_product):
+    def test_order_number_should_be_consecutive(self, a_customer_user, an_ordered_product):
         order_service.create(
-            Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
-            'CPM', a_customer_user.id)
+            "name",
+            Order.NORMAL_TYPE,
+            [{'quantity': an_ordered_product.quantity, 'product': an_ordered_product.product.id}],
+            'CPM', a_customer_user.id
+        )
         order_service.create(
-            Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
-            'CPM', a_customer_user.id)
+            "name2",
+            Order.NORMAL_TYPE,
+            [{'quantity': an_ordered_product.quantity, 'product': an_ordered_product.product.id}],
+            'CPM', a_customer_user.id
+        )
 
         first_order = order_repository.list_all()[0]
         second_order = order_repository.list_all()[1]
 
         assert first_order.number == 1
         assert second_order.number == 2
-
-    def test_creating_order_should_create_product_if_it_does_not_exists(
-            self, a_customer_user, a_product):
-        order_service.create(
-            Order.NORMAL_TYPE, {'name': "hamburger", 'place': a_product.place.id},
-            'CPM', a_customer_user.id)
-
-        order = order_repository.list_all()[0]
-
-        assert order.product.id != a_product.id
-        assert order.product.name == "hamburger"
-
-    def test_creating_order_should_not_create_product_if_it_exists(self, a_customer_user,
-                                                                   a_product):
-        order_service.create(
-            Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
-            'CPM', a_customer_user.id)
-
-        order = order_repository.list_all()[0]
-
-        assert order.product.id == a_product.id
-        assert product_repository.count() == 1
-
-    def test_create_product_with_invalid_place_id_should_rice_exception(self):
-        invalid_place_id = 1
-
-        with pytest.raises(NonExistingPlaceException):
-            product_service.create("some_name", invalid_place_id)
-
-    def test_create_product_with_non_existing_place_should_rice_exception(self):
-        non_existing_place_id = ObjectId()
-
-        with pytest.raises(NonExistingPlaceException):
-            product_service.create("some_name", non_existing_place_id)
-
-    def test_should_create_product_if_its_alright(self, a_place):
-        product_service.create("some name", a_place.id)
-
-        assert product_repository.count() == 1
 
     def test_take_order_updates_status_and_delivery(self, an_order, a_delivery_user):
         order_service.take(an_order.id, a_delivery_user.id)
@@ -103,7 +72,7 @@ class TestOrderService:  # pylint: disable=too-many-public-methods
 
         delivery = user_repository.get_user(a_delivery_user.id)
         assert not delivery.available
-        assert not delivery is None
+        assert delivery is not None
 
         order_service.update(an_order.id, {'status': Order.CANCELLED_STATUS})
         order = order_repository.get_order(an_order.id)
@@ -186,6 +155,20 @@ class TestOrderService:  # pylint: disable=too-many-public-methods
         result = order_service.order_position(an_order)
 
         assert result == a_city.lower()
+
+    def test_order_directions_for_order_without_delivery_returns_empty(self, an_order):
+        an_order.delivery = None
+        an_order.save()
+
+        assert not order_service.directions(an_order.id)
+
+    @patch('services.order_service.requests.get')
+    def test_order_directions_requests_directions(self, mocked_get,
+                                                  an_order, a_directions_response):
+        mocked_get.return_value = a_directions_response
+        order_service.directions(an_order.id)
+
+        assert mocked_get.called
 
     def test_deliver_order_should_increase_delivery_balance_by_85_percent_of_cost(self, an_order):
         an_order.quotation = 100
@@ -286,3 +269,30 @@ class TestOrderService:  # pylint: disable=too-many-public-methods
         order_service.take(a_favor_order.id, a_delivery_user.id)
 
         assert Order.objects.get(id=a_favor_order.id).quotation == 0
+
+    def test_completed_by_date_returns_empty_list_if_no_orders_are_completed(self, an_order):
+        # pylint: disable=unused-argument
+        assert not order_service.completed_by_date()
+
+    def test_completed_by_date_returns_orders_completed_by_date(self, a_complete_order):
+        orders = order_service.completed_by_date()
+
+        assert len(orders) == 1
+        assert orders[0]['count'] == 1
+        assert orders[0]['date'].date() == a_complete_order.completed_date.date()
+
+    def test_deliver_order_should_set_completed_date_field(self, an_order):
+        order_service.deliver(an_order.id)
+
+        assert Order.objects.get(id=an_order.id).completed_date.date() == datetime.today().date()
+
+    def test_cancelled_by_date_returns_empty_list_if_no_orders_are_cancelled(self, an_order):
+        # pylint: disable=unused-argument
+        assert not order_service.cancelled_by_date()
+
+    def test_cancelled_by_date_returns_orders_cancelled_by_date(self, a_cancelled_order):
+        orders = order_service.cancelled_by_date()
+
+        assert len(orders) == 1
+        assert orders[0]['count'] == 1
+        assert orders[0]['date'].date() == a_cancelled_order.completed_date.date()

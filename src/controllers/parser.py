@@ -1,3 +1,4 @@
+from datetime import datetime
 from bson import ObjectId
 
 
@@ -12,10 +13,6 @@ def parse_available_deliveries_request(values):
 def parse_order_request(values):
     values.update(
         {
-            'product': {
-                'name': values['product']['name'],
-                'place': ObjectId(values['product']['place']),
-            },
             'owner': ObjectId(values['user'].id)
         })
     del values['user']
@@ -39,3 +36,9 @@ def parse_rule_request(values):
 
 def build_quotation_response(price):
     return {'price': price}
+
+
+def get_month_and_year(request):
+    month = int(request.args.get('month', datetime.today().month))
+    year = int(request.args.get('year', datetime.today().year))
+    return month, year

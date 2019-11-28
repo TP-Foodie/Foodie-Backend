@@ -13,11 +13,6 @@ class Coordinates(EmbeddedDocument):
     longitude = FloatField(required=True)
 
 
-class Place(Document):
-    name = StringField(required=True)
-    coordinates = EmbeddedDocumentField(Coordinates)
-
-
 class User(Document):
     DELIVERY_TYPE = "DELIVERY"
     CUSTOMER_TYPE = "CUSTOMER"
