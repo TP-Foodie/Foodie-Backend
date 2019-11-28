@@ -54,15 +54,20 @@ def take(order_id, delivery):
 
     delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS)
 
-    user_service.confirm_favor_order(order_repository.get_order(order_id))
+    order = order_repository.get_order(order_id)
+    user_service.confirm_favor_order(order)
+
+    data_to_update = {
+        'delivery': delivery,
+        'status': Order.TAKEN_STATUS,
+    }
+
+    if order.type != order.FAVOR_TYPE:
+        data_to_update['quotation'] = rule_service.quote_price(order_id)
 
     return order_repository.update(
         order_id,
-        {
-            'delivery': delivery,
-            'status': Order.TAKEN_STATUS,
-            'quotation': rule_service.quote_price(order_id)
-        }
+        data_to_update
     )
 
 

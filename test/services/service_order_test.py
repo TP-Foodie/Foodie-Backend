@@ -267,3 +267,15 @@ class TestOrderService:
         order_service.deliver(a_favor_order.id)
 
         assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
+
+    # noinspection PyTypeChecker
+    def test_take_favor_order_should_not_calculate_quotation(self, a_favor_order, a_delivery_user):
+        Rule(
+            name='$20 base',
+            conditions=[],
+            consequence={'consequence_type': RuleConsequence.VALUE, 'value': 20}
+        ).save()
+
+        order_service.take(a_favor_order.id, a_delivery_user.id)
+
+        assert Order.objects.get(id=a_favor_order.id).quotation == 0
