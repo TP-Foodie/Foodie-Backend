@@ -9,12 +9,13 @@ from models.order import Order
 from models.rule import RuleCondition, RuleConsequence, Rule
 from repositories import order_repository, product_repository, user_repository
 from services import order_service, product_service
-from services.exceptions.order_exceptions import NonExistingPlaceException, NotEnoughGratitudePointsException
+from services.exceptions.order_exceptions import NonExistingPlaceException,\
+    NotEnoughGratitudePointsException
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')
-class TestOrderService:
+class TestOrderService:  # pylint: disable=too-many-public-methods
     def test_create_order(self, a_customer_user, a_product):
         order_service.create(
             Order.NORMAL_TYPE, {'name': a_product.name, 'place': a_product.place.id},
@@ -206,7 +207,7 @@ class TestOrderService:
 
         assert Order.objects.get(id=an_order.id).quotation == 20
 
-    def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_place):
+    def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_place):  # pylint: disable=line-too-long
         a_customer_user.gratitude_points = 0
         a_customer_user.save()
 
@@ -219,7 +220,7 @@ class TestOrderService:
                 5,
             )
 
-    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_place):
+    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_place):  # pylint: disable=line-too-long
         order = order_service.create(
             Order.FAVOR_TYPE,
             {'name': 'product', 'place': a_place.id},
@@ -229,7 +230,9 @@ class TestOrderService:
 
         assert order.gratitude_points == 0
 
-    def test_create_favor_order_with_gratitude_points_should_create_it(self, a_customer_user, a_place):
+    def test_create_favor_order_with_gratitude_points_should_create_it(self,
+                                                                       a_customer_user,
+                                                                       a_place):
         a_customer_user.gratitude_points = 10
         a_customer_user.save()
 
@@ -244,7 +247,8 @@ class TestOrderService:
         assert order.gratitude_points == 5
 
     def test_add_delivery_to_favor_order_subtracts_gratitude_points_from_user(self, a_favor_order,
-                                                                              a_customer_user, a_delivery_user):
+                                                                              a_customer_user,
+                                                                              a_delivery_user):
         a_favor_order.gratitude_points = 5
         a_favor_order.save()
 
@@ -256,7 +260,8 @@ class TestOrderService:
         assert User.objects.get(id=a_customer_user.id).gratitude_points == 5
 
     def test_deliver_favor_order_should_add_gratitude_points_to_delivery(self, a_favor_order,
-                                                                         a_customer_user, a_delivery_user):
+                                                                         a_customer_user,
+                                                                         a_delivery_user):
         a_favor_order.gratitude_points = 5
         a_favor_order.save()
 
@@ -269,7 +274,9 @@ class TestOrderService:
         assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
 
     # noinspection PyTypeChecker
-    def test_take_favor_order_should_not_calculate_quotation(self, a_favor_order, a_delivery_user):
+    def test_take_favor_order_should_not_calculate_quotation(self,
+                                                             a_favor_order,
+                                                             a_delivery_user):
         Rule(
             name='$20 base',
             conditions=[],

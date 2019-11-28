@@ -3,8 +3,8 @@ import urllib
 
 from datetime import datetime, timedelta
 
-from models import User
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
+from models import User
 from models.rule import RuleCondition, RuleConsequence, Rule
 from models.order import Order
 from repositories import order_repository
@@ -393,7 +393,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
 
 class TestFavorOrderCycle(TestMixin):
-    def test_create_favor_order_cycle(self, a_client, a_client_user_factory, a_product, a_delivery_user):
+    def test_create_favor_order_cycle(self, a_client, a_client_user_factory,
+                                      a_product, a_delivery_user):
         a_client_user = a_client_user_factory(5)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
@@ -429,7 +430,8 @@ class TestFavorOrderCycle(TestMixin):
 
         assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
 
-    def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client, a_client_user_factory, a_product):
+    def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client,
+                                                                  a_client_user_factory, a_product):
         a_client_user = a_client_user_factory(3)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
@@ -445,7 +447,8 @@ class TestFavorOrderCycle(TestMixin):
 
         assert_400(response)
 
-    def test_cancel_favor_order_replenish_user_gratitude_points(self, a_client, a_client_user_factory,
+    def test_cancel_favor_order_replenish_user_gratitude_points(self, a_client,
+                                                                a_client_user_factory,
                                                                 a_product, a_delivery_user):
         a_client_user = a_client_user_factory(5)
 
