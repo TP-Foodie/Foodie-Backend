@@ -190,6 +190,7 @@ class TestStatistics:
         user_factory()
         user = user_factory()
         user.created = datetime.now() + timedelta(hours=3)
+        user.save()
 
         data = user_service.registrations_by_date()
 
