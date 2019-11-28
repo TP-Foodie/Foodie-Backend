@@ -31,6 +31,7 @@ def cfaker():
     return cfaker
 
 
+@pytest.fixture
 def a_customer_user(user_factory):
     return user_factory()
 

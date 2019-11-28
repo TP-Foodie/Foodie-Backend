@@ -6,10 +6,10 @@ import pytest
 from models import User
 from models.order import Order
 from models.rule import RuleCondition, RuleConsequence, Rule
-from repositories import order_repository, product_repository, user_repository
-from services import order_service, product_service
-from services.exceptions.order_exceptions import NonExistingPlaceException,\
-    NotEnoughGratitudePointsException
+from repositories import order_repository, user_repository
+from services import order_service
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
+from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
 @pytest.mark.usefixtures('a_client')
@@ -190,23 +190,25 @@ class TestOrderService: # pylint: disable=too-many-public-methods
 
         assert Order.objects.get(id=an_order.id).quotation == 20
 
-    def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_place):  # pylint: disable=line-too-long
+    def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_product):  # pylint: disable=line-too-long
         a_customer_user.gratitude_points = 0
         a_customer_user.save()
 
         with pytest.raises(NotEnoughGratitudePointsException):
             order_service.create(
+                'some order',
                 Order.FAVOR_TYPE,
-                {'name': 'product', 'place': a_place.id},
+                [{'quantity': 1, 'product': a_product.id}],
                 RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
                 a_customer_user.id,
                 5,
             )
 
-    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_place):  # pylint: disable=line-too-long
+    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_place, a_product):  # pylint: disable=line-too-long
         order = order_service.create(
+            'some order',
             Order.FAVOR_TYPE,
-            {'name': 'product', 'place': a_place.id},
+            [{'quantity': 1, 'product': a_product.id}],
             RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
             a_customer_user.id
         )
@@ -215,13 +217,14 @@ class TestOrderService: # pylint: disable=too-many-public-methods
 
     def test_create_favor_order_with_gratitude_points_should_create_it(self,
                                                                        a_customer_user,
-                                                                       a_place):
+                                                                       a_place, a_product):
         a_customer_user.gratitude_points = 10
         a_customer_user.save()
 
         order = order_service.create(
+            'some order',
             Order.FAVOR_TYPE,
-            {'name': 'product', 'place': a_place.id},
+            [{'quantity': 1, 'product': a_product.id}],
             RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
             a_customer_user.id,
             5

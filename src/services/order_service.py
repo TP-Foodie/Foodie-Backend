@@ -19,9 +19,7 @@ rule_service = RuleService()  # pylint: disable=invalid-name
 
 
 def create(name, order_type, ordered_products, payment_method, owner, gratitude_points=0):
-    created_product = product_repository.get_or_create(*product.values())
     user = user_repository.get_user(owner)
-
     if order_type == Order.FAVOR_TYPE and user.gratitude_points < gratitude_points:
         raise NotEnoughGratitudePointsException()
 

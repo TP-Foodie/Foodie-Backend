@@ -415,36 +415,20 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20
 
-    def test_create_order_with_non_existing_place_returns_400(self, a_client, a_client_user,
-                                                              an_object_id):
-        self.login(a_client, a_client_user.email, a_client_user.password)
-        response = self.post(
-            a_client,
-            self.build_url('/orders/'),
-            {
-                'order_type': Order.NORMAL_TYPE,
-                'product': {
-                    'name': 'big mac',
-                    'place': str(an_object_id)
-                },
-                'payment_method': 'CPM'
-            })
-
-        assert_400(response)
-
 
 class TestFavorOrderCycle(TestMixin):
     def test_create_favor_order_cycle(self, a_client, a_client_user_factory,
-                                      a_product, a_delivery_user):
+                                      a_product, a_delivery_user, an_ordered_product):
         a_client_user = a_client_user_factory(5)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.post(a_client, 'api/v1/orders/', {
+            'name': 'new order',
             'order_type': Order.FAVOR_TYPE,
-            'product': {
-                'name': a_product.name,
-                'place': a_product.place.id
-            },
+            'ordered_products': [{
+                    'quantity': an_ordered_product.quantity,
+                    'product': str(an_ordered_product.product.id)
+                }],
             'payment_method': 'GPPM',
             'gratitude_points': 5
         })
@@ -472,16 +456,18 @@ class TestFavorOrderCycle(TestMixin):
         assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
 
     def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client,
-                                                                  a_client_user_factory, a_product):
+                                                                  a_client_user_factory,
+                                                                  a_product, an_ordered_product):
         a_client_user = a_client_user_factory(3)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.post(a_client, 'api/v1/orders/', {
+            'name': 'new order',
             'order_type': Order.FAVOR_TYPE,
-            'product': {
-                'name': a_product.name,
-                'place': a_product.place.id
-            },
+            'ordered_products': [{
+                    'quantity': an_ordered_product.quantity,
+                    'product': str(an_ordered_product.product.id)
+                }],
             'payment_method': 'GPPM',
             'gratitude_points': 5
         })
@@ -490,16 +476,18 @@ class TestFavorOrderCycle(TestMixin):
 
     def test_cancel_favor_order_replenish_user_gratitude_points(self, a_client,
                                                                 a_client_user_factory,
-                                                                a_product, a_delivery_user):
+                                                                a_product, a_delivery_user,
+                                                                an_ordered_product):
         a_client_user = a_client_user_factory(5)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.post(a_client, 'api/v1/orders/', {
+            'name': 'new order',
             'order_type': Order.FAVOR_TYPE,
-            'product': {
-                'name': a_product.name,
-                'place': a_product.place.id
-            },
+            'ordered_products': [{
+                    'quantity': an_ordered_product.quantity,
+                    'product': str(an_ordered_product.product.id)
+                }],
             'payment_method': 'GPPM',
             'gratitude_points': 5
         })
