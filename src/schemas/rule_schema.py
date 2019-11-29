@@ -21,7 +21,7 @@ class RuleSchema(Schema):
     consequence = fields.Nested(ConsequenceSchema)
 
     class Meta:
-        fields = ('id', 'name', 'active', 'conditions', 'consequence')
+        fields = ('id', 'name', 'active', 'conditions', 'consequence', 'redeemable')
 
 
 class CreateRuleSchema(Schema):
