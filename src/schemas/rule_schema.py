@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validates_schema, ValidationError
 
 
 class ConditionSchema(Schema):
@@ -31,6 +31,12 @@ class CreateRuleSchema(Schema):
     active = fields.Boolean(required=False)
     benefit = fields.Boolean(required=False)
     redeemable = fields.Boolean(required=False)
+    cost = fields.Int(required=False)
+
+    @validates_schema
+    def validate_schema(self, data, **kwargs):
+        if data.get('redeemable') and not data.get('benefit'):
+            raise ValidationError('redeemable rules must be benefits')
 
 
 class RuleVersionSchema(Schema):

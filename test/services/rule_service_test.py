@@ -702,3 +702,19 @@ class TestBenefitsRules:
         ).save()
 
         assert rule.cost == 0
+
+    def test_redeemable_rule_should_be_benefit(self):
+        with pytest.raises(ValidationError):
+            self.rule_service.create(
+                name='Minimum delivery cost of $10 for premium users',
+                conditions=[
+                    RuleCondition(
+                        variable=RuleCondition.USER_REPUTATION,
+                        operator=RuleCondition.GREATER_THAN_EQUAL,
+                        condition_value='0'
+                    ),
+                ],
+                consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+                benefit=False,
+                redeemable=True,
+            )
