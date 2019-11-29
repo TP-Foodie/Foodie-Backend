@@ -97,3 +97,6 @@ class RuleService:
         rule.redeemed_by.append(user_id)
         rule.save()
         user.save()
+
+    def redeemable(self):
+        return self.benefits().filter(redeemable=True)

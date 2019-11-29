@@ -746,3 +746,9 @@ class TestBenefitsRules:
         self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
 
         assert User.objects.get(id=a_customer_user.id).gratitude_points == 1
+
+    def test_redeemable_returns_redeemable_rules(self, a_redeemable_rule):
+        assert self.rule_service.redeemable()[0]['id'] == a_redeemable_rule.id
+
+    def test_redeemable_does_not_return_any_rule(self, a_benefit_rule, a_rule):
+        assert not self.rule_service.redeemable()

@@ -443,3 +443,12 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         assert_200(response)
 
         assert Rule.objects.get(id=a_redeemable_rule.id, redeemed_by=[a_client_user.id])
+
+    def test_list_redeemable_benefits(self, a_client, a_client_user, a_redeemable_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        response = self.get(a_client, 'api/v1/rules/redeemable')
+
+        assert_200(response)
+
+        assert json.loads(response.data)
