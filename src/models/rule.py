@@ -1,5 +1,7 @@
 from mongoengine import Document, fields, EmbeddedDocument, CASCADE
 
+from models import User
+
 
 class RuleCondition(EmbeddedDocument):
     USER_REPUTATION = 'UR'
@@ -90,6 +92,7 @@ class Rule(Document):
     original = fields.BooleanField(default=True)
     benefit = fields.BooleanField(default=False)
     redeemable = fields.BooleanField(default=False)
+    redeemed_by = fields.ListField(fields.ReferenceField(User))
 
 
 class RuleHistory(Document):

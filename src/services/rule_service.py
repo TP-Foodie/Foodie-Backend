@@ -1,5 +1,7 @@
 from copy import deepcopy
 
+from mongoengine import Q
+
 from models.rule import RuleCondition, RuleConsequence
 from repositories.rule_history_repository import RuleHistoryRepository
 from repositories.rule_repository import RuleRepository
@@ -69,7 +71,10 @@ class RuleService:
         order = order_repository.get_order(order_id)
         total = 0
         rules_to_apply = self.rule_repository.active_sorted_by_value()\
-            .filter(benefit=user_service.is_premium(order.owner), redeemable=False)
+            .filter(
+                (Q(benefit=user_service.is_premium(order.owner)) & Q(redeemable=False)) |
+                (Q(redeemable=True) & Q(redeemed_by__in=[order.owner]))
+            )
 
         for rule in rules_to_apply:
             result = self.condition_service.apply(order, *rule.conditions)

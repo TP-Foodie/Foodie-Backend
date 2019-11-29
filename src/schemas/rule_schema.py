@@ -30,6 +30,7 @@ class CreateRuleSchema(Schema):
     name = fields.String(required=True)
     active = fields.Boolean(required=False)
     benefit = fields.Boolean(required=False)
+    redeemable = fields.Boolean(required=False)
 
 
 class RuleVersionSchema(Schema):

@@ -644,3 +644,24 @@ class TestBenefitsRules:
         ).save()
 
         assert not self.rule_service.quote_price(an_order.id)
+
+    def test_redeemable_benefits_apply_to_users_with_the_benefit(self, a_customer_user, an_order):
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True,
+            redeemed_by=[a_customer_user.id]
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 10
