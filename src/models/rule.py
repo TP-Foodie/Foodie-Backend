@@ -93,6 +93,7 @@ class Rule(Document):
     benefit = fields.BooleanField(default=False)
     redeemable = fields.BooleanField(default=False)
     redeemed_by = fields.ListField(fields.ReferenceField(User))
+    cost = fields.IntField(default=0)
 
 
 class RuleHistory(Document):

@@ -685,3 +685,20 @@ class TestBenefitsRules:
         ).save()
 
         assert not self.rule_service.quote_price(an_order.id)
+
+    def test_create_benefit_redeemable_rule_without_cost_sets_it_to_zero(self):
+        rule = Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True,
+        ).save()
+
+        assert rule.cost == 0
