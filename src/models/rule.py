@@ -89,6 +89,7 @@ class Rule(Document):
     active = fields.BooleanField(default=True)
     original = fields.BooleanField(default=True)
     benefit = fields.BooleanField(default=False)
+    redeemable = fields.BooleanField(default=False)
 
 
 class RuleHistory(Document):

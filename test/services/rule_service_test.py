@@ -5,6 +5,7 @@ import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
+from models import User
 from models.rule import Rule, RuleConsequence, RuleHistory
 from models.rule import RuleCondition
 from services.rule_service import RuleService
@@ -621,3 +622,25 @@ class TestBenefitsRules:
         # pylint: disable=unused-argument
         assert len(self.rule_service.list()) == 1
         assert self.rule_service.list()[0]['id'] == another_rule.id
+
+    def test_redeemable_benefit_does_not_apply_to_premium_users(self, a_customer_user, an_order):
+        a_customer_user.subscription = User.PREMIUM_SUBSCRIPTION
+        a_customer_user.save()
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True
+        ).save()
+
+        assert not self.rule_service.quote_price(an_order.id)
