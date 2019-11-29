@@ -85,7 +85,8 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
                 'variable': None
             },
             'active': a_rule.active,
-            'redeemable': a_rule.redeemable
+            'redeemable': a_rule.redeemable,
+            'cost': a_rule.cost
         }
 
     def test_create_fails_for_unauthenticated(self, a_client):
@@ -365,7 +366,8 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
                 'variable': None,
             },
             'active': edited_rule.active,
-            'redeemable': a_rule.redeemable
+            'redeemable': a_rule.redeemable,
+            'cost': a_rule.cost
         }
 
     def test_get_rules_should_not_return_history(self, a_client, a_client_user, a_rule):
