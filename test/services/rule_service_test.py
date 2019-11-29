@@ -8,6 +8,7 @@ from mongoengine.errors import ValidationError as MongoEngineValidationError
 from models import User
 from models.rule import Rule, RuleConsequence, RuleHistory
 from models.rule import RuleCondition
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.rule_service import RuleService
 
 
@@ -718,3 +719,30 @@ class TestBenefitsRules:
                 benefit=False,
                 redeemable=True,
             )
+
+    def test_redeem_benefit_should_include_user_in_redeem_by_list(self, a_redeemable_rule, a_customer_user):
+        self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
+
+        assert Rule.objects.get(id=a_redeemable_rule.id, redeemed_by__in=[a_customer_user.id])
+
+    def test_redeem_benefit_without_enough_gratitude_points_should_raise_error(self, a_redeemable_rule,
+                                                                               a_customer_user):
+        a_redeemable_rule.cost = 5
+        a_redeemable_rule.save()
+
+        a_customer_user.gratitude_points = 4
+        a_customer_user.save()
+
+        with pytest.raises(NotEnoughGratitudePointsException):
+            self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
+
+    def test_redeem_should_decrease_user_gratitude_points(self, a_redeemable_rule, a_customer_user):
+        a_redeemable_rule.cost = 5
+        a_redeemable_rule.save()
+
+        a_customer_user.gratitude_points = 6
+        a_customer_user.save()
+
+        self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
+
+        assert User.objects.get(id=a_customer_user.id).gratitude_points == 1

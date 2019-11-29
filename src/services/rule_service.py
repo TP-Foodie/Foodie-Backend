@@ -8,6 +8,7 @@ from repositories.rule_repository import RuleRepository
 from repositories import order_repository
 from schemas.rule_schema import CreateRuleSchema
 from services import user_service
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.rule_engine.condition_service import RuleConditionService
 from services.rule_engine.consequence_service import RuleConsequenceService
 
@@ -84,3 +85,15 @@ class RuleService:
 
     def benefits(self):
         return self.rule_repository.all().filter(benefit=True)
+
+    def redeem(self, rule_id, user_id):
+        rule = self.rule_repository.get_raw(rule_id)
+        user = user_service.get_user(user_id)
+
+        if user.gratitude_points < rule.cost:
+            raise NotEnoughGratitudePointsException()
+
+        user.gratitude_points -= rule.cost
+        rule.redeemed_by.append(user_id)
+        rule.save()
+        user.save()

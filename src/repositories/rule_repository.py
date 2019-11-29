@@ -18,6 +18,9 @@ class RuleRepository:
     def get(self, rule_id):
         return self.rule_schema.dump(Rule.objects.get(id=rule_id))
 
+    def get_raw(self, rule_id):
+        return Rule.objects.get(id=rule_id)
+
     def conditions(self, rule_id):
         return Rule.objects.get(id=rule_id).conditions
 
