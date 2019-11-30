@@ -47,7 +47,8 @@ def user_factory(cfaker, a_location):
             profile_image=cfaker.image_url(),
             phone=cfaker.phone_number(),
             type="CUSTOMER",
-            location=a_location
+            location=a_location,
+            gratitude_points=10
         ).save()
 
     return create
@@ -156,22 +157,30 @@ def a_client():
 
 
 @pytest.fixture
-def a_client_user(cfaker):
-    password = 'password123123'
+def a_client_user(a_client_user_factory):
+    return a_client_user_factory()
 
-    user = user_service.create_user({
-        'name': cfaker.name(),
-        'last_name': cfaker.last_name(),
-        'email': cfaker.email(),
-        'password': password,
-        'profile_image': cfaker.image_url(),
-        'phone': cfaker.phone_number(),
-        'type': "CUSTOMER"
-    })
 
-    user.password = password
+@pytest.fixture
+def a_client_user_factory(cfaker):
+    def create(gratitude_points=5):
+        password = 'password123123'
 
-    return user
+        user = user_service.create_user({
+            'name': cfaker.name(),
+            'last_name': cfaker.last_name(),
+            'email': cfaker.email(),
+            'password': password,
+            'profile_image': cfaker.image_url(),
+            'phone': cfaker.phone_number(),
+            'type': "CUSTOMER",
+            'gratitude_points': gratitude_points
+        })
+
+        user.password = password
+
+        return user
+    return create
 
 
 @pytest.fixture

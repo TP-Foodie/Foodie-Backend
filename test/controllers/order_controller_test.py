@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from test.support.utils import assert_200, assert_201, assert_400, assert_404, TestMixin, assert_401
+from models import User
 from models.rule import RuleCondition, RuleConsequence, Rule
 from models.order import Order
 from repositories import order_repository
@@ -415,3 +416,96 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         )
 
         assert Order.objects.get(id=an_order.id).delivery.balance == 0.85 * 20
+
+
+class TestFavorOrderCycle(TestMixin):
+    def test_create_favor_order_cycle(self, a_client, a_client_user_factory,
+                                      a_delivery_user, an_ordered_product):
+        a_client_user = a_client_user_factory(5)
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.post(a_client, 'api/v1/orders/', {
+            'name': 'new order',
+            'order_type': Order.FAVOR_TYPE,
+            'ordered_products': [{
+                'quantity': an_ordered_product.quantity,
+                'product': str(an_ordered_product.product.id)
+            }],
+            'payment_method': 'GPPM',
+            'gratitude_points': 5
+        })
+
+        assert_201(response)
+
+        order = json.loads(response.data)
+
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(order['id'])), {'delivery': a_delivery_user.id}
+        )
+
+        assert_200(response)
+
+        assert User.objects.get(id=a_client_user.id).gratitude_points == 0
+
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(order['id'])), {'status': Order.DELIVERED_STATUS}
+        )
+
+        assert_200(response)
+
+        assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
+
+    def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client,
+                                                                  a_client_user_factory,
+                                                                  an_ordered_product):
+        a_client_user = a_client_user_factory(3)
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.post(a_client, 'api/v1/orders/', {
+            'name': 'new order',
+            'order_type': Order.FAVOR_TYPE,
+            'ordered_products': [{
+                'quantity': an_ordered_product.quantity,
+                'product': str(an_ordered_product.product.id)
+            }],
+            'payment_method': 'GPPM',
+            'gratitude_points': 5
+        })
+
+        assert_400(response)
+
+    def test_cancel_favor_order_replenish_user_gratitude_points(self, a_client,
+                                                                a_client_user_factory,
+                                                                a_delivery_user,
+                                                                an_ordered_product):
+        a_client_user = a_client_user_factory(5)
+
+        self.login(a_client, a_client_user.email, a_client_user.password)
+        response = self.post(a_client, 'api/v1/orders/', {
+            'name': 'new order',
+            'order_type': Order.FAVOR_TYPE,
+            'ordered_products': [{
+                'quantity': an_ordered_product.quantity,
+                'product': str(an_ordered_product.product.id)
+            }],
+            'payment_method': 'GPPM',
+            'gratitude_points': 5
+        })
+
+        order = json.loads(response.data)
+
+        self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(order['id'])), {'delivery': a_delivery_user.id}
+        )
+
+        response = self.patch(
+            a_client,
+            'api/v1/orders/{}'.format(str(order['id'])), {'status': Order.CANCELLED_STATUS}
+        )
+
+        assert_200(response)
+
+        assert User.objects.get(id=a_client_user.id).gratitude_points == 5

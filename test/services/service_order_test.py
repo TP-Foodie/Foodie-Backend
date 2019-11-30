@@ -3,10 +3,12 @@ from unittest.mock import patch
 
 import pytest
 
+from models import User
 from models.order import Order
-from models.rule import RuleConsequence, Rule
+from models.rule import RuleCondition, RuleConsequence, Rule
 from repositories import order_repository, user_repository
 from services import order_service
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.exceptions.user_exceptions import NonExistingDeliveryException
 
 
@@ -187,6 +189,89 @@ class TestOrderService: # pylint: disable=too-many-public-methods
         order_service.take(an_order.id, a_delivery_user.id)
 
         assert Order.objects.get(id=an_order.id).quotation == 20
+
+    def test_create_favor_order_if_user_has_not_enough_gratitude_points_raises_error(self, a_customer_user, a_product):  # pylint: disable=line-too-long
+        a_customer_user.gratitude_points = 0
+        a_customer_user.save()
+
+        with pytest.raises(NotEnoughGratitudePointsException):
+            order_service.create(
+                'some order',
+                Order.FAVOR_TYPE,
+                [{'quantity': 1, 'product': a_product.id}],
+                RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
+                a_customer_user.id,
+                5,
+            )
+
+    def test_create_favor_order_with_no_gratitude_points_should_create_one_with_zero(self, a_customer_user, a_product):  # pylint: disable=line-too-long
+        order = order_service.create(
+            'some order',
+            Order.FAVOR_TYPE,
+            [{'quantity': 1, 'product': a_product.id}],
+            RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
+            a_customer_user.id
+        )
+
+        assert order.gratitude_points == 0
+
+    def test_create_favor_order_with_gratitude_points_should_create_it(self,
+                                                                       a_customer_user,
+                                                                       a_product):
+        a_customer_user.gratitude_points = 10
+        a_customer_user.save()
+
+        order = order_service.create(
+            'some order',
+            Order.FAVOR_TYPE,
+            [{'quantity': 1, 'product': a_product.id}],
+            RuleCondition.GRATITUDE_POINTS_PAYMENT_METHOD,
+            a_customer_user.id,
+            5
+        )
+
+        assert order.gratitude_points == 5
+
+    def test_add_delivery_to_favor_order_subtracts_gratitude_points_from_user(self, a_favor_order,
+                                                                              a_customer_user,
+                                                                              a_delivery_user):
+        a_favor_order.gratitude_points = 5
+        a_favor_order.save()
+
+        a_customer_user.gratitude_points = 10
+        a_customer_user.save()
+
+        order_service.take(a_favor_order.id, a_delivery_user.id)
+
+        assert User.objects.get(id=a_customer_user.id).gratitude_points == 5
+
+    def test_deliver_favor_order_should_add_gratitude_points_to_delivery(self, a_favor_order,
+                                                                         a_customer_user,
+                                                                         a_delivery_user):
+        a_favor_order.gratitude_points = 5
+        a_favor_order.save()
+
+        a_customer_user.gratitude_points = 10
+        a_customer_user.save()
+
+        order_service.take(a_favor_order.id, a_delivery_user.id)
+        order_service.deliver(a_favor_order.id)
+
+        assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
+
+    # noinspection PyTypeChecker
+    def test_take_favor_order_should_not_calculate_quotation(self,
+                                                             a_favor_order,
+                                                             a_delivery_user):
+        Rule(
+            name='$20 base',
+            conditions=[],
+            consequence={'consequence_type': RuleConsequence.VALUE, 'value': 20}
+        ).save()
+
+        order_service.take(a_favor_order.id, a_delivery_user.id)
+
+        assert Order.objects.get(id=a_favor_order.id).quotation == 0
 
     def test_completed_by_date_returns_empty_list_if_no_orders_are_completed(self, an_order):
         # pylint: disable=unused-argument

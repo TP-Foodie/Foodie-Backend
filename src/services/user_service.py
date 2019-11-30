@@ -136,6 +136,16 @@ def is_premium(user):
     return user.subscription == User.PREMIUM_SUBSCRIPTION
 
 
+def confirm_favor_order(order):
+    order.owner.gratitude_points -= order.gratitude_points
+    order.owner.save()
+
+
+def cancel_favor_order(order):
+    order.owner.gratitude_points += order.gratitude_points
+    order.owner.save()
+
+
 def registrations_by_date(month=datetime.today().month, year=datetime.today().year):
     add_month_year_stage = {
         '$project': {
