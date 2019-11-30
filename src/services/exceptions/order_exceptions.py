@@ -4,3 +4,7 @@ class NonExistingPlaceException(Exception):
 
 class NonExistingOrderException(Exception):
     pass
+
+
+class NotEnoughGratitudePointsException(Exception):
+    pass

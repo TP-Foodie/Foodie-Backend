@@ -6,6 +6,7 @@ from mongoengine import DoesNotExist
 
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.exceptions.unauthorized_user import UnauthorizedUserException
 from services.exceptions.invalid_usage_exception import InvalidUsage
 from services.exceptions.user_exceptions import NonExistingDeliveryException
@@ -77,3 +78,9 @@ def unauthorized(error):
 def non_existing_delivery(error):
     logger.info(error)
     return "non existing delivery", HTTP_400_BAD_REQUEST
+
+
+@ERRORS_BLUEPRINT.app_errorhandler(NotEnoughGratitudePointsException)
+def not_enough_gratitude_points_error_handler(error):
+    logger.info(error)
+    return "Not enough gratitude points", HTTP_400_BAD_REQUEST
