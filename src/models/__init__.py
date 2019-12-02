@@ -37,7 +37,7 @@ class User(Document):
         default="FLAT")
     recovery_token = StringField(required=False)
     recovery_token_date = DateTimeField(required=False)
-    reputation = FloatField(default=2.5)
+    reputation = FloatField(default=1)
     fcmToken = StringField(required=False)
     messages_sent = IntField(default=0)
     created = DateField(default=datetime.now().date())
