@@ -1,0 +1,8 @@
+type: "object"
+properties:
+  token:
+    type: "string"
+    example: "xxxxx.yyyyy.zzzzz"
+  id:
+    type: "string"
+    example: "123"
