@@ -15,6 +15,7 @@ class RuleCondition(EmbeddedDocument):
     USER_BALANCE = 'DB'
     CASH_PAYMENT_METHOD = 'CPM'
     CREDIT_PAYMENT_METHOD = 'CRPM'
+    GRATITUDE_POINTS_PAYMENT_METHOD = 'GPPM'
     ORDER_DURATION = 'OD'
     ORDER_DISTANCE = 'ODI'
     ORDER_POSITION = 'OP'
@@ -64,7 +65,8 @@ class RuleCondition(EmbeddedDocument):
 
     PAYMENT_METHODS = (
         CASH_PAYMENT_METHOD,
-        CREDIT_PAYMENT_METHOD
+        CREDIT_PAYMENT_METHOD,
+        GRATITUDE_POINTS_PAYMENT_METHOD
     )
 
     variable = fields.StringField(max_length=10, choices=VARIABLES)
