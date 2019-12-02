@@ -34,7 +34,7 @@ class CreateRuleSchema(Schema):
     cost = fields.Int(required=False)
 
     @validates_schema
-    def validate_schema(self, data, **kwargs):
+    def validate_schema(self, data, **kwargs):  # pylint: disable=unused-argument
         if data.get('redeemable') and not data.get('benefit'):
             raise ValidationError('redeemable rules must be benefits')
 

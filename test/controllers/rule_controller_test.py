@@ -426,7 +426,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert_201(response)
 
-    def test_create_redeemable_and_non_benefit_rule_returns_400(self, a_client, a_client_user, a_redeemable_rule):
+    def test_create_redeemable_and_non_benefit_rule_returns_400(self, a_client, a_client_user, a_redeemable_rule):  # pylint: disable=line-too-long
         self.login(a_client, a_client_user.email, a_client_user.password)
 
         data = json.loads(a_redeemable_rule.to_json())
@@ -448,7 +448,7 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
 
         assert Rule.objects.get(id=a_redeemable_rule.id, redeemed_by=[a_client_user.id])
 
-    def test_list_redeemable_benefits(self, a_client, a_client_user, a_redeemable_rule):
+    def test_list_redeemable_benefits(self, a_client, a_client_user, a_redeemable_rule):  # pylint: disable=unused-argument
         self.login(a_client, a_client_user.email, a_client_user.password)
 
         response = self.get(a_client, 'api/v1/rules/redeemable')

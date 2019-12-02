@@ -720,12 +720,13 @@ class TestBenefitsRules:
                 redeemable=True,
             )
 
-    def test_redeem_benefit_should_include_user_in_redeem_by_list(self, a_redeemable_rule, a_customer_user):
+    def test_redeem_benefit_should_include_user_in_redeem_by_list(self, a_redeemable_rule, a_customer_user):  # pylint: disable=line-too-long
         self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
 
         assert Rule.objects.get(id=a_redeemable_rule.id, redeemed_by__in=[a_customer_user.id])
 
-    def test_redeem_benefit_without_enough_gratitude_points_should_raise_error(self, a_redeemable_rule,
+    def test_redeem_benefit_without_enough_gratitude_points_should_raise_error(self,
+                                                                               a_redeemable_rule,
                                                                                a_customer_user):
         a_redeemable_rule.cost = 5
         a_redeemable_rule.save()
@@ -736,7 +737,7 @@ class TestBenefitsRules:
         with pytest.raises(NotEnoughGratitudePointsException):
             self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
 
-    def test_redeem_should_decrease_user_gratitude_points(self, a_redeemable_rule, a_customer_user):
+    def test_redeem_should_decrease_user_gratitude_points(self, a_redeemable_rule, a_customer_user):  # pylint: disable=line-too-long
         a_redeemable_rule.cost = 5
         a_redeemable_rule.save()
 
@@ -747,8 +748,8 @@ class TestBenefitsRules:
 
         assert User.objects.get(id=a_customer_user.id).gratitude_points == 1
 
-    def test_redeemable_returns_redeemable_rules(self, a_redeemable_rule):
+    def test_redeemable_returns_redeemable_rules(self, a_redeemable_rule):  # pylint: disable=line-too-long
         assert self.rule_service.redeemable()[0]['id'] == a_redeemable_rule.id
 
-    def test_redeemable_does_not_return_any_rule(self, a_benefit_rule, a_rule):
+    def test_redeemable_does_not_return_any_rule(self, a_benefit_rule, a_rule):  # pylint: disable=unused-argument
         assert not self.rule_service.redeemable()
