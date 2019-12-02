@@ -10,11 +10,12 @@ from services.user_rating_service import UserRatingService
 class TestUserRating:
     user_rating_service = UserRatingService()
 
-    def test_create_should_create_one(self, a_customer_user):
+    def test_create_should_create_one(self, an_order):
         self.user_rating_service.create({
-            'user': a_customer_user.id,
+            'user': an_order.owner.id,
             'description': 'nice experience',
-            'rating': 1
+            'rating': 1,
+            'order': an_order.id
         })
 
         assert UserRating.objects.count() == 1
@@ -32,14 +33,15 @@ class TestUserRating:
 
         assert self.user_rating_service.average_for(a_customer_user.id) == 1.5
 
-    def test_creating_user_rating_should_update_user_reputation(self, a_customer_user):
+    def test_creating_user_rating_should_update_user_reputation(self, an_order):
         self.user_rating_service.create({
-            'user': a_customer_user.id,
+            'user': an_order.owner.id,
             'description': 'nice experience',
-            'rating': 3
+            'rating': 3,
+            'order': an_order.id
         })
 
-        assert User.objects.get(id=a_customer_user.id).reputation == 3
+        assert User.objects.get(id=an_order.owner.id).reputation == 3
 
     def test_create_rating_with_non_existing_user_raises_error(self, an_object_id):
         with pytest.raises(DoesNotExist):
