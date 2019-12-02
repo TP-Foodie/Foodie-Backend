@@ -16,6 +16,10 @@ def get_favor_orders():
     return Order.objects.filter(type=Order.FAVOR_TYPE)
 
 
+def get_pending_favors(user):
+    return Order.objects.filter(type=Order.FAVOR_TYPE,owner__ne=user)
+
+
 def count():
     return Order.objects.count()
 

@@ -18,8 +18,8 @@ def query_nearby_deliveries(query_data):
         radius)
 
 
-def handle_status_change(delivery, order_status):
-    if not user_repository.delivery_exists(delivery):
+def handle_status_change(delivery, order_status, is_favour):
+    if not user_repository.delivery_exists(delivery, is_favour):
         raise NonExistingDeliveryException()
 
     if order_status == Order.TAKEN_STATUS:

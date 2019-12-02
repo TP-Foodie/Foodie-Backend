@@ -26,5 +26,6 @@ class DetailsOrderSchema(Schema):
     class Meta:
         fields = (
             'id', 'name', 'number', 'status', 'type', 'owner', 'ordered_products',
-            'delivery', 'id_chat', 'quotation', 'delivery_rated', 'owner_rated'
+            'delivery', 'id_chat', 'quotation', 'delivery_rated', 'owner_rated',
+            'gratitude_points'
         )
