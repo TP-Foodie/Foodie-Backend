@@ -20,3 +20,6 @@ paths:
     $ref: "/static/paths/recovery_token.yml"
   /auth/password:
     $ref: "/static/paths/password.yml"
+  /available_deliveries:
+    $ref: "/static/paths/available_deliveries.yml"
+
