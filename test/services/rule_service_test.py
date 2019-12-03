@@ -5,8 +5,10 @@ import pytest
 from marshmallow import ValidationError
 from mongoengine.errors import ValidationError as MongoEngineValidationError
 
+from models import User
 from models.rule import Rule, RuleConsequence, RuleHistory
 from models.rule import RuleCondition
+from services.exceptions.order_exceptions import NotEnoughGratitudePointsException
 from services.rule_service import RuleService
 
 
@@ -621,3 +623,133 @@ class TestBenefitsRules:
         # pylint: disable=unused-argument
         assert len(self.rule_service.list()) == 1
         assert self.rule_service.list()[0]['id'] == another_rule.id
+
+    def test_redeemable_benefit_does_not_apply_to_premium_users(self, a_customer_user, an_order):
+        a_customer_user.subscription = User.PREMIUM_SUBSCRIPTION
+        a_customer_user.save()
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True
+        ).save()
+
+        assert not self.rule_service.quote_price(an_order.id)
+
+    def test_redeemable_benefits_apply_to_users_with_the_benefit(self, a_customer_user, an_order):
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True,
+            redeemed_by=[a_customer_user.id]
+        ).save()
+
+        assert self.rule_service.quote_price(an_order.id) == 10
+
+    def test_non_redeemed_benefits_do_not_apply_to_users(self, a_customer_user, an_order):
+        an_order.owner = a_customer_user
+        an_order.save()
+
+        Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True,
+        ).save()
+
+        assert not self.rule_service.quote_price(an_order.id)
+
+    def test_create_benefit_redeemable_rule_without_cost_sets_it_to_zero(self):
+        rule = Rule(
+            name='Minimum delivery cost of $10 for premium users',
+            conditions=[
+                RuleCondition(
+                    variable=RuleCondition.USER_REPUTATION,
+                    operator=RuleCondition.GREATER_THAN_EQUAL,
+                    condition_value='0'
+                ),
+            ],
+            consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+            benefit=True,
+            redeemable=True,
+        ).save()
+
+        assert rule.cost == 0
+
+    def test_redeemable_rule_should_be_benefit(self):
+        with pytest.raises(ValidationError):
+            self.rule_service.create(
+                name='Minimum delivery cost of $10 for premium users',
+                conditions=[
+                    RuleCondition(
+                        variable=RuleCondition.USER_REPUTATION,
+                        operator=RuleCondition.GREATER_THAN_EQUAL,
+                        condition_value='0'
+                    ),
+                ],
+                consequence=RuleConsequence(consequence_type=RuleConsequence.VALUE, value=10),
+                benefit=False,
+                redeemable=True,
+            )
+
+    def test_redeem_benefit_should_include_user_in_redeem_by_list(self, a_redeemable_rule, a_customer_user):  # pylint: disable=line-too-long
+        self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
+
+        assert Rule.objects.get(id=a_redeemable_rule.id, redeemed_by__in=[a_customer_user.id])
+
+    def test_redeem_benefit_without_enough_gratitude_points_should_raise_error(self,
+                                                                               a_redeemable_rule,
+                                                                               a_customer_user):
+        a_redeemable_rule.cost = 5
+        a_redeemable_rule.save()
+
+        a_customer_user.gratitude_points = 4
+        a_customer_user.save()
+
+        with pytest.raises(NotEnoughGratitudePointsException):
+            self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
+
+    def test_redeem_should_decrease_user_gratitude_points(self, a_redeemable_rule, a_customer_user):  # pylint: disable=line-too-long
+        a_redeemable_rule.cost = 5
+        a_redeemable_rule.save()
+
+        a_customer_user.gratitude_points = 6
+        a_customer_user.save()
+
+        self.rule_service.redeem(a_redeemable_rule.id, a_customer_user.id)
+
+        assert User.objects.get(id=a_customer_user.id).gratitude_points == 1
+
+    def test_redeemable_returns_redeemable_rules(self, a_redeemable_rule):  # pylint: disable=line-too-long
+        assert self.rule_service.redeemable()[0]['id'] == a_redeemable_rule.id
+
+    def test_redeemable_does_not_return_any_rule(self, a_benefit_rule, a_rule):  # pylint: disable=unused-argument
+        assert not self.rule_service.redeemable()

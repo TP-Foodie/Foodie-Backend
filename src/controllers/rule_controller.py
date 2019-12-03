@@ -76,11 +76,26 @@ def get_benefits():
     return jsonify(rules_schema.dump(rule_service.benefits()))
 
 
+@RULES_BLUEPRINT.route('/redeemable', methods=['GET'])
+@log_request_response
+@authenticate
+def get_redeemable_benefits():
+    return jsonify(rules_schema.dump(rule_service.redeemable()))
+
+
 @RULES_BLUEPRINT.route('/<rule_id>', methods=['DELETE'])
 @log_request_response
 @authenticate
 def delete_rule(rule_id):
     rule_service.delete(rule_id)
+    return NO_CONTENT, HTTP_200_OK
+
+
+@RULES_BLUEPRINT.route('/<rule_id>/redeem', methods=['POST'])
+@log_request_response
+@authenticate
+def redeem(user, rule_id):
+    rule_service.redeem(rule_id, user.id)
     return NO_CONTENT, HTTP_200_OK
 
 
