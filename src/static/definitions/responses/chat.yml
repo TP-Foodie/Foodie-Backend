@@ -1,0 +1,8 @@
+type: "object"
+properties:
+  uid_1:
+    type: "string"
+  uid_2:
+    type: "string"
+  id_order:
+    type: "string"

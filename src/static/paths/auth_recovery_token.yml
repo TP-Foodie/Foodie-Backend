@@ -6,7 +6,7 @@ post:
       description: "Token de google para ingresar válido por un dia via mail"
       required: true
       schema:
-        $ref: "/static/definitions/requests/recovery_token.yml"
+        $ref: "/static/definitions/requests/auth_recovery_token.yml"
   responses:
     200:
       description: "OK"
