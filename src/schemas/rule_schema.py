@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validates_schema, ValidationError
 
 
 class ConditionSchema(Schema):
@@ -21,7 +21,7 @@ class RuleSchema(Schema):
     consequence = fields.Nested(ConsequenceSchema)
 
     class Meta:
-        fields = ('id', 'name', 'active', 'conditions', 'consequence')
+        fields = ('id', 'name', 'active', 'conditions', 'consequence', 'redeemable', 'cost')
 
 
 class CreateRuleSchema(Schema):
@@ -30,6 +30,13 @@ class CreateRuleSchema(Schema):
     name = fields.String(required=True)
     active = fields.Boolean(required=False)
     benefit = fields.Boolean(required=False)
+    redeemable = fields.Boolean(required=False)
+    cost = fields.Int(required=False)
+
+    @validates_schema
+    def validate_schema(self, data, **kwargs):  # pylint: disable=unused-argument
+        if data.get('redeemable') and not data.get('benefit'):
+            raise ValidationError('redeemable rules must be benefits')
 
 
 class RuleVersionSchema(Schema):

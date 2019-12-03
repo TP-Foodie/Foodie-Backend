@@ -244,6 +244,13 @@ another_rule = a_rule
 
 
 @pytest.fixture
+def a_redeemable_rule(a_benefit_rule):
+    a_benefit_rule.redeemable = True
+    a_benefit_rule.save()
+    return a_benefit_rule
+
+
+@pytest.fixture
 def a_benefit_rule(a_rule):
     a_rule.benefit = True
     a_rule.save()

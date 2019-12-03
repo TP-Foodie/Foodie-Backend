@@ -57,7 +57,7 @@ class TestMixin:
             }
         )
 
-    def post(self, client, url, data):
+    def post(self, client, url, data=None):
         return client.post(
             url,
             json=data,
