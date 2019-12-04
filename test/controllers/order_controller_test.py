@@ -47,6 +47,10 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         self.login(client, user.email, user.password)
         return self.get(client, self.build_url('/orders/'))
 
+    def get_orders_list(self, client, user):
+        self.login(client, user.email, user.password)
+        return self.get(client, self.build_url('/orders/list'))
+
     def get_order(self, client, order_id, a_client_user):
         self.login(client, a_client_user.email, a_client_user.password)
         return self.get(client, self.build_url('/orders/{}'.format(str(order_id))))
@@ -108,6 +112,10 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         response = self.get_orders(a_client, a_client_user)
         assert_200(response)
 
+    def test_orders_list_endpoint_exists(self, a_client, a_client_user):
+        response = self.get_orders_list(a_client, a_client_user)
+        assert_200(response)
+
     def test_list_orders_for_unauthenticated(self, a_client):
         response = a_client.get(self.build_url('/orders/'))
         assert_401(response)
@@ -156,6 +164,67 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'location': {
                     'latitude': an_order.owner.location.latitude,
                     'longitude': an_order.owner.location.longitude
+                }
+            }
+        }
+
+    def test_list_orders_for_user(self, a_client, an_order, a_client_user):
+        an_order.owner = a_client_user
+        an_order.save()
+        response = self.get_orders(a_client, a_client_user)
+        order = json.loads(response.data)[0]
+
+        assert order["id"] == str(an_order.id)
+        assert order["owner"]["id"] == str(a_client_user.id)
+
+    def test_list_orders_for_delivery(self, a_client, an_order, a_customer_user, a_delivery_user_auth):
+        an_order.owner = a_customer_user
+        an_order.save()
+        an_order.delivery = a_delivery_user_auth
+        an_order.save()
+        response = json.loads(self.get_orders_list(a_client, a_delivery_user_auth).data)
+        order = response['orders'][0]
+
+        assert order == {
+            'id': str(an_order.id),
+            'name': an_order.name,
+            'number': an_order.number,
+            'status': an_order.status,
+            'type': an_order.type,
+            'delivery': {
+                'id': str(an_order.delivery.id),
+                'name': an_order.delivery.name,
+                'last_name': an_order.delivery.last_name,
+                'email': an_order.delivery.email,
+                'profile_image': an_order.delivery.profile_image,
+                'phone': an_order.delivery.phone,
+                'type': an_order.delivery.type
+            },
+            'id_chat': "",
+            'owner' :{
+                'id': str(a_customer_user.id),
+                'password': a_customer_user.password,
+                'name': a_customer_user.name,
+                'last_name': a_customer_user.last_name,
+                'available': a_customer_user.available,
+                'balance': a_customer_user.balance,
+                'deliveries_completed': a_customer_user.deliveries_completed,
+                'email': a_customer_user.email,
+                'fcmToken': a_customer_user.fcmToken,
+                'google_id': a_customer_user.google_id,
+                'gratitude_points': a_customer_user.gratitude_points,
+                'created': a_customer_user.created.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+                'messages_sent': a_customer_user.messages_sent,
+                'phone': a_customer_user.phone,
+                'profile_image': a_customer_user.profile_image,
+                'recovery_token': a_customer_user.recovery_token,
+                'recovery_token_date': a_customer_user.recovery_token_date,
+                'subscription': a_customer_user.subscription,
+                'reputation': a_customer_user.reputation,
+                'type': a_customer_user.type,
+                'location': {
+                    "latitude": a_customer_user.location.latitude,
+                    "longitude": a_customer_user.location.longitude,
                 }
             }
         }

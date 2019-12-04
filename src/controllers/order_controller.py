@@ -59,14 +59,6 @@ def list_favor_orders():
     return jsonify(data)
 
 
-@ORDERS_BLUEPRINT.route('/pending_favors', methods=['GET'])
-@log_request_response
-@authenticate
-def list_pending_favors(user):
-    data = ListOrderSchema(many=True).dump(order_repository.get_pending_favors(user))
-    return jsonify(data)
-
-
 @ORDERS_BLUEPRINT.route('/placed', methods=['GET'])
 @log_request_response
 @authenticate
