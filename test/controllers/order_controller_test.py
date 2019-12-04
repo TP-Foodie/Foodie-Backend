@@ -177,7 +177,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
         assert order["id"] == str(an_order.id)
         assert order["owner"]["id"] == str(a_client_user.id)
 
-    def test_list_orders_for_delivery(self, a_client, an_order, a_customer_user, a_delivery_user_auth):
+    def test_list_orders_for_delivery(self, a_client, an_order, a_customer_user,
+                                      a_delivery_user_auth):
         an_order.owner = a_customer_user
         an_order.save()
         an_order.delivery = a_delivery_user_auth
