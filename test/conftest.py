@@ -136,7 +136,9 @@ def an_order_factory(cfaker, a_customer_user, an_ordered_product, a_delivery_use
             owner=a_customer_user.id,
             type=order_type,
             ordered_products=[an_ordered_product],
-            delivery=a_delivery_user.id
+            delivery=a_delivery_user.id,
+            delivery_rated=False,
+            owner_rated=False
         ).save()
 
     return create_order
@@ -242,6 +244,13 @@ another_rule = a_rule
 
 
 @pytest.fixture
+def a_redeemable_rule(a_benefit_rule):
+    a_benefit_rule.redeemable = True
+    a_benefit_rule.save()
+    return a_benefit_rule
+
+
+@pytest.fixture
 def a_benefit_rule(a_rule):
     a_rule.benefit = True
     a_rule.save()
@@ -331,11 +340,12 @@ def a_user_rating(a_user_rating_factory):
 
 
 @pytest.fixture
-def a_user_rating_factory(cfaker, a_customer_user):
+def a_user_rating_factory(cfaker, an_order):
     def create(rating=cfaker.random_int(min=1, max=5)):
         return UserRating(
-            user=a_customer_user.id,
+            user=an_order.owner.id,
             description=cfaker.text(),
-            rating=rating
+            rating=rating,
+            order=an_order.id
         ).save()
     return create

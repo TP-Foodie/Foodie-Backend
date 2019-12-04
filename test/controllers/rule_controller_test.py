@@ -84,7 +84,9 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
                 'value': a_rule.consequence.value,
                 'variable': None
             },
-            'active': a_rule.active
+            'active': a_rule.active,
+            'redeemable': a_rule.redeemable,
+            'cost': a_rule.cost
         }
 
     def test_create_fails_for_unauthenticated(self, a_client):
@@ -363,7 +365,9 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
                 'value': edited_rule.consequence.value,
                 'variable': None,
             },
-            'active': edited_rule.active
+            'active': edited_rule.active,
+            'redeemable': a_rule.redeemable,
+            'cost': a_rule.cost
         }
 
     def test_get_rules_should_not_return_history(self, a_client, a_client_user, a_rule):
@@ -404,6 +408,51 @@ class TestRuleController(TestMixin):  # pylint: disable=too-many-public-methods
         data = json.loads(a_benefit_rule.to_json())
         del data['_id']
         del data['original']
+        del data['redeemed_by']
         response = self.post(a_client, 'api/v1/rules/', data)
 
         assert_201(response)
+
+    def test_create_redeemable_benefit(self, a_client, a_client_user, a_redeemable_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        data = json.loads(a_redeemable_rule.to_json())
+        del data['_id']
+        del data['original']
+        del data['redeemed_by']
+        data['cost'] = 5
+
+        response = self.post(a_client, 'api/v1/rules/', data)
+
+        assert_201(response)
+
+    def test_create_redeemable_and_non_benefit_rule_returns_400(self, a_client, a_client_user, a_redeemable_rule):  # pylint: disable=line-too-long
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        data = json.loads(a_redeemable_rule.to_json())
+        del data['_id']
+        del data['original']
+        del data['redeemed_by']
+        data['benefit'] = False
+
+        response = self.post(a_client, 'api/v1/rules/', data)
+
+        assert_400(response)
+
+    def test_redeem_rule(self, a_client, a_client_user, a_redeemable_rule):
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        response = self.post(a_client, 'api/v1/rules/{}/redeem'.format(str(a_redeemable_rule.id)))
+
+        assert_200(response)
+
+        assert Rule.objects.get(id=a_redeemable_rule.id, redeemed_by=[a_client_user.id])
+
+    def test_list_redeemable_benefits(self, a_client, a_client_user, a_redeemable_rule):  # pylint: disable=unused-argument
+        self.login(a_client, a_client_user.email, a_client_user.password)
+
+        response = self.get(a_client, 'api/v1/rules/redeemable')
+
+        assert_200(response)
+
+        assert json.loads(response.data)

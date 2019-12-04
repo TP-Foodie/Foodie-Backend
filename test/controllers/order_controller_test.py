@@ -98,7 +98,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'type': an_order.delivery.type
             },
             'id_chat': "",
-            'quotation': 0
+            'quotation': 0,
+            'delivery_rated': an_order.delivery_rated,
+            'owner_rated': an_order.owner_rated
         }
 
     def test_orders_endpoint_exists(self, a_client, a_client_user):
