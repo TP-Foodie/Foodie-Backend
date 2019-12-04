@@ -91,3 +91,16 @@ def update_order(order_id):
 @authenticate
 def directions(order_id):
     return jsonify(order_service.directions(order_id)), HTTP_200_OK
+
+
+@ORDERS_BLUEPRINT.route('/list', methods=['GET'])
+@log_request_response
+@authenticate
+def list_orders_by_user(user):
+    orders_data = []
+    for order in order_repository.list_by_user(user):
+        dumped = ListOrderSchema(many=True).dump(order)
+        for dump in dumped:
+            orders_data.append(dump)
+    response = {'orders': orders_data, 'user_id': user.id}
+    return jsonify(response)

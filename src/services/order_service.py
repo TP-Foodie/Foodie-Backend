@@ -51,8 +51,8 @@ def update(order_id, data):
 
 def take(order_id, delivery):
     order = order_repository.get_order(order_id)
-    is_favour = order.type==Order.FAVOR_TYPE
-    
+    is_favour = order.type == Order.FAVOR_TYPE
+
     if not user_repository.delivery_exists(delivery, is_favour):
         raise NonExistingDeliveryException()
 
@@ -74,7 +74,7 @@ def take(order_id, delivery):
 
 def deliver(order_id):
     order = order_repository.get_order(order_id)
-    is_favour = order.type==Order.FAVOR_TYPE
+    is_favour = order.type == Order.FAVOR_TYPE
 
     user_repository.increment_deliveries_completed(str(order.owner.id))
     user_repository.increment_deliveries_completed(str(order.delivery.id))
@@ -96,9 +96,9 @@ def cancel(order_id):
 
 def unassign(order_id, status=Order.WAITING_STATUS):
     order = order_repository.get_order(order_id)
-    is_favour = order.type==Order.FAVOR_TYPE
+    is_favour = order.type == Order.FAVOR_TYPE
 
-    if (order.delivery != None):
+    if order.delivery:
         delivery_service.handle_status_change(order.delivery.id, status, is_favour)
     return order_repository.update(order_id, {'status': status, 'delivery': None})
 

@@ -37,6 +37,11 @@ def a_customer_user(user_factory):
 
 
 @pytest.fixture
+def another_customer_user(user_factory):
+    return user_factory()
+
+
+@pytest.fixture
 def user_factory(cfaker, a_location):
     def create():
         return User(

@@ -2,7 +2,7 @@ from models import User
 
 
 def delivery_exists(delivery_id, is_favour):
-    if (is_favour):
+    if is_favour:
         return User.objects.filter(type=User.CUSTOMER_TYPE, id=delivery_id).count() > 0
     return User.objects.filter(type=User.DELIVERY_TYPE, id=delivery_id).count() > 0
 

@@ -100,7 +100,8 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
             'id_chat': "",
             'quotation': 0,
             'delivery_rated': an_order.delivery_rated,
-            'owner_rated': an_order.owner_rated
+            'owner_rated': an_order.owner_rated,
+            'gratitude_points': an_order.gratitude_points
         }
 
     def test_orders_endpoint_exists(self, a_client, a_client_user):
@@ -130,7 +131,33 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
                 'phone': an_order.delivery.phone,
                 'type': an_order.delivery.type
             },
-            'id_chat': ""
+            'id_chat': "",
+            'owner' :{
+                'id': str(an_order.owner.id),
+                'password': an_order.owner.password,
+                'name': an_order.owner.name,
+                'last_name': an_order.owner.last_name,
+                'available': an_order.owner.available,
+                'balance': an_order.owner.balance,
+                'deliveries_completed': an_order.owner.deliveries_completed,
+                'email': an_order.owner.email,
+                'fcmToken': an_order.owner.fcmToken,
+                'google_id': an_order.owner.google_id,
+                'gratitude_points': an_order.owner.gratitude_points,
+                'created': an_order.owner.created.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+                'messages_sent': an_order.owner.messages_sent,
+                'phone': an_order.owner.phone,
+                'profile_image': an_order.owner.profile_image,
+                'recovery_token': an_order.owner.recovery_token,
+                'recovery_token_date': an_order.owner.recovery_token_date,
+                'subscription': an_order.owner.subscription,
+                'reputation': an_order.owner.reputation,
+                'type': an_order.owner.type,
+                'location': {
+                    'latitude': an_order.owner.location.latitude,
+                    'longitude': an_order.owner.location.longitude
+                }
+            }
         }
 
     def test_get_orders_details_for_unauthenticated(self, a_client, an_order):
@@ -420,8 +447,9 @@ class TestOrderController(TestMixin):  # pylint: disable=too-many-public-methods
 
 class TestFavorOrderCycle(TestMixin):
     def test_create_favor_order_cycle(self, a_client, a_client_user_factory,
-                                      a_delivery_user, an_ordered_product):
-        a_client_user = a_client_user_factory(5)
+                                      another_customer_user, an_ordered_product):
+        order_gp = 5
+        a_client_user = a_client_user_factory(order_gp)
 
         self.login(a_client, a_client_user.email, a_client_user.password)
         response = self.post(a_client, 'api/v1/orders/', {
@@ -432,7 +460,7 @@ class TestFavorOrderCycle(TestMixin):
                 'product': str(an_ordered_product.product.id)
             }],
             'payment_method': 'GPPM',
-            'gratitude_points': 5
+            'gratitude_points': order_gp
         })
 
         assert_201(response)
@@ -441,12 +469,12 @@ class TestFavorOrderCycle(TestMixin):
 
         response = self.patch(
             a_client,
-            'api/v1/orders/{}'.format(str(order['id'])), {'delivery': a_delivery_user.id}
+            'api/v1/orders/{}'.format(str(order['id'])), {'delivery': another_customer_user.id}
         )
 
         assert_200(response)
 
-        assert User.objects.get(id=a_client_user.id).gratitude_points == 0
+        assert User.objects.get(id=a_client_user.id).gratitude_points == order_gp
 
         response = self.patch(
             a_client,
@@ -455,7 +483,8 @@ class TestFavorOrderCycle(TestMixin):
 
         assert_200(response)
 
-        assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
+        assert User.objects.get(id=a_client_user.id).gratitude_points == 0
+        assert User.objects.get(id=another_customer_user.id).gratitude_points == 10 + order_gp
 
     def test_create_favor_with_wrong_gratitude_points_returns_400(self, a_client,
                                                                   a_client_user_factory,
