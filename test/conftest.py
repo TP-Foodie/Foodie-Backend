@@ -37,18 +37,25 @@ def a_customer_user(user_factory):
 
 
 @pytest.fixture
+def another_customer_user(user_factory):
+    return user_factory()
+
+
+@pytest.fixture
 def user_factory(cfaker, a_location):
     def create():
         return User(
             name=cfaker.first_name(),
             last_name=cfaker.last_name(),
-            password=cfaker.prefix(),
+            password="password123123",
             email=cfaker.email(),
             profile_image=cfaker.image_url(),
             phone=cfaker.phone_number(),
             type="CUSTOMER",
             location=a_location,
-            gratitude_points=10
+            gratitude_points=10,
+            balance=0.0,
+            reputation=1.0
         ).save()
 
     return create
@@ -59,13 +66,41 @@ def a_delivery_user(cfaker, a_location):
     return User(
         name=cfaker.first_name(),
         last_name=cfaker.last_name(),
-        password=cfaker.prefix(),
+        password="password123123",
         email=cfaker.email(),
         profile_image=cfaker.image_url(),
         phone=cfaker.phone_number(),
         type="DELIVERY",
         location=a_location
     ).save()
+
+@pytest.fixture
+def a_delivery_user_auth(a_delivery_user_factory):
+    return a_delivery_user_factory()
+
+
+@pytest.fixture
+def a_delivery_user_factory(cfaker):
+    def create(gratitude_points=5):
+        password = 'password123123'
+
+        user = user_service.create_user({
+            'name': cfaker.name(),
+            'last_name': cfaker.last_name(),
+            'email': cfaker.email(),
+            'password': password,
+            'profile_image': cfaker.image_url(),
+            'phone': cfaker.phone_number(),
+            'type': "DELIVERY",
+            'gratitude_points': gratitude_points,
+            'reputation': 1.0,
+            'balance': 0.0
+        })
+
+        user.password = password
+
+        return user
+    return create
 
 
 @pytest.fixture
@@ -174,7 +209,9 @@ def a_client_user_factory(cfaker):
             'profile_image': cfaker.image_url(),
             'phone': cfaker.phone_number(),
             'type': "CUSTOMER",
-            'gratitude_points': gratitude_points
+            'gratitude_points': gratitude_points,
+            'reputation': 1.0,
+            'balance': 0.0
         })
 
         user.password = password

@@ -50,13 +50,13 @@ def update(order_id, data):
 
 
 def take(order_id, delivery):
-    if not user_repository.delivery_exists(delivery):
+    order = order_repository.get_order(order_id)
+    is_favour = order.type == Order.FAVOR_TYPE
+
+    if not user_repository.delivery_exists(delivery, is_favour):
         raise NonExistingDeliveryException()
 
-    delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS)
-
-    order = order_repository.get_order(order_id)
-    user_service.confirm_favor_order(order)
+    delivery_service.handle_status_change(delivery, Order.TAKEN_STATUS, is_favour)
 
     data_to_update = {
         'delivery': delivery,
@@ -74,12 +74,14 @@ def take(order_id, delivery):
 
 def deliver(order_id):
     order = order_repository.get_order(order_id)
+    is_favour = order.type == Order.FAVOR_TYPE
 
     user_repository.increment_deliveries_completed(str(order.owner.id))
     user_repository.increment_deliveries_completed(str(order.delivery.id))
 
-    delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS)
+    delivery_service.handle_status_change(order.delivery.id, Order.DELIVERED_STATUS, is_favour)
     delivery_service.complete_order(order)
+    user_service.confirm_favor_order(order)
     user_repository.update(order.delivery.id, {'balance': order.quotation * DELIVERY_PERCENTAGE})
 
     return order_repository.update(
@@ -89,13 +91,15 @@ def deliver(order_id):
 
 
 def cancel(order_id):
-    user_service.cancel_favor_order(order_repository.get_order(order_id))
     unassign(order_id, Order.CANCELLED_STATUS)
 
 
 def unassign(order_id, status=Order.WAITING_STATUS):
     order = order_repository.get_order(order_id)
-    delivery_service.handle_status_change(order.delivery.id, status)
+    is_favour = order.type == Order.FAVOR_TYPE
+
+    if order.delivery:
+        delivery_service.handle_status_change(order.delivery.id, status, is_favour)
     return order_repository.update(order_id, {'status': status, 'delivery': None})
 
 

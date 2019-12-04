@@ -2,6 +2,7 @@ import calendar
 from datetime import datetime, timedelta
 from mongoengine import Q
 from models.order import Order
+from models import User
 
 
 def list_all():
@@ -14,6 +15,10 @@ def get_order(order_id):
 
 def get_favor_orders():
     return Order.objects.filter(type=Order.FAVOR_TYPE)
+
+
+def get_pending_favors(user):
+    return Order.objects.filter(type=Order.FAVOR_TYPE, owner__ne=user)
 
 
 def count():
@@ -63,3 +68,15 @@ def month_count(orders):
 
 def count_for_user(user_id):
     return Order.objects.filter(owner=user_id).count()
+
+
+def list_by_user(user):
+    orders = []
+    if user.type == User.CUSTOMER_TYPE:
+        orders.append(Order.objects.filter(owner=user))
+        orders.append(Order.objects.filter(Q(owner__ne=user) & Q(type=Order.FAVOR_TYPE)
+                                           & Q(status__in=(Order.WAITING_STATUS,
+                                                           Order.TAKEN_STATUS))))
+    elif user.type == User.DELIVERY_TYPE:
+        orders.append(Order.objects.filter(Q(delivery=user) & Q(type=Order.NORMAL_TYPE)))
+    return orders

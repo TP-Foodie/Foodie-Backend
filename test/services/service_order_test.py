@@ -232,44 +232,32 @@ class TestOrderService: # pylint: disable=too-many-public-methods
 
         assert order.gratitude_points == 5
 
-    def test_add_delivery_to_favor_order_subtracts_gratitude_points_from_user(self, a_favor_order,
-                                                                              a_customer_user,
-                                                                              a_delivery_user):
-        a_favor_order.gratitude_points = 5
-        a_favor_order.save()
-
-        a_customer_user.gratitude_points = 10
-        a_customer_user.save()
-
-        order_service.take(a_favor_order.id, a_delivery_user.id)
-
-        assert User.objects.get(id=a_customer_user.id).gratitude_points == 5
-
     def test_deliver_favor_order_should_add_gratitude_points_to_delivery(self, a_favor_order,
                                                                          a_customer_user,
-                                                                         a_delivery_user):
+                                                                         another_customer_user):
         a_favor_order.gratitude_points = 5
         a_favor_order.save()
 
         a_customer_user.gratitude_points = 10
         a_customer_user.save()
 
-        order_service.take(a_favor_order.id, a_delivery_user.id)
+        order_service.take(a_favor_order.id, another_customer_user.id)
         order_service.deliver(a_favor_order.id)
 
-        assert User.objects.get(id=a_delivery_user.id).gratitude_points == 5
+        assert User.objects.get(id=another_customer_user.id).gratitude_points == 15
+        assert User.objects.get(id=a_customer_user.id).gratitude_points == 5
 
     # noinspection PyTypeChecker
     def test_take_favor_order_should_not_calculate_quotation(self,
                                                              a_favor_order,
-                                                             a_delivery_user):
+                                                             another_customer_user):
         Rule(
             name='$20 base',
             conditions=[],
             consequence={'consequence_type': RuleConsequence.VALUE, 'value': 20}
         ).save()
 
-        order_service.take(a_favor_order.id, a_delivery_user.id)
+        order_service.take(a_favor_order.id, another_customer_user.id)
 
         assert Order.objects.get(id=a_favor_order.id).quotation == 0
 
