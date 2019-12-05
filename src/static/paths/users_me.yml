@@ -1,0 +1,26 @@
+get:
+  summary: "Obtención del usuario de la persona loggeada"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/user.yml'
+    401:
+      description: "Unauthorized"
+
+patch:
+  summary: "Actualización de mi usuario"
+  parameters:
+    - in: "body"
+      name: "Usuario"
+      description: "Datos para actualizar"
+      required: true
+      schema:
+        $ref: '/static/definitions/requests/update_user.yml'
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/user.yml'
+    401:
+      description: "Unauthorized"

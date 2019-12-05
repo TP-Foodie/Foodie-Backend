@@ -1,0 +1,4 @@
+get:
+  summary: "Obtención de reglas"
+post:
+  summary: "Creación de reglas"

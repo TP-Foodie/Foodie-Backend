@@ -13,117 +13,64 @@ produces:
   - application/json
 paths:
   /auth:
-    post:
-      summary: "Obtener un JWT para la autenticación"
-      parameters:
-      - in: "body"
-        name: "Autenticación"
-        description: "Datos de la persona a autenticar"
-        required: true
-        schema:
-          $ref: "#/definitions/auth_request"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/auth_response"
-        401:
-          description: "Unauthorized"
-        404:
-          description: "User not found"
+    $ref: "/static/paths/auth.yml"
   /auth/google:
-    post:
-      summary: "Obtener un JWT para la autenticación"
-      parameters:
-        - in: "body"
-          name: "Autenticación"
-          description: "Token de google para ingresar"
-          required: true
-          schema:
-            $ref: "#/definitions/auth_google_request"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/auth_response"
-        401:
-          description: "Unauthorized"
-        404:
-          description: "User not found"
-  /auth/recovery_token:
-    post:
-      summary: "Obtener un token para la recuperacioń de la contraseña"
-      parameters:
-        - in: "body"
-          name: "Token de recupero de contraseña"
-          description: "Token de google para ingresar válido por un dia via mail"
-          required: true
-          schema:
-            $ref: "#/definitions/recovery_token"
-      responses:
-        200:
-          description: "OK"
-        401:
-          description: "Unauthorized"
-        404:
-          description: "User not found"
+    $ref: "/static/paths/auth_google.yml"
   /auth/password:
-    post:
-      summary: "Actualizar la contraseña cuando via un token de recuperacion"
-      parameters:
-        - in: "body"
-          name: "Actualización de la contraseña"
-          description: "Actualización de la contraseña"
-          required: true
-          schema:
-            $ref: "#/definitions/update_password"
-      responses:
-        200:
-          description: "OK"
-        401:
-          description: "Unauthorized"
-        404:
-          description: "User not found"
-definitions:
-  auth_request:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        example: "foo@email.com"
-      password:
-        type: "string"
-        example: "password"
-  auth_google_request:
-    type: "object"
-    properties:
-      token:
-        type: "string"
-        example: "xxx"
-  auth_response:
-    type: "object"
-    properties:
-      token:
-        type: "string"
-        example: "xxxxx.yyyyy.zzzzz"
-      id:
-        type: "string"
-        example: "123"
-  recovery_token:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        example: "foo@foo.foo"
-  update_password:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        example: "foo@foo.foo"
-      recovery_token:
-        type: "string"
-        example: "1234"
-      password:
-        type: "string"
-        example: "asdf"
+    $ref: "/static/paths/auth_password.yml"
+  /auth/recovery_token:
+    $ref: "/static/paths/auth_recovery_token.yml"
+  /available_deliveries:
+    $ref: "/static/paths/available_deliveries.yml"
+  /chat/{chat_id}:
+    $ref: "/static/paths/chat_chat_id.yml"
+  /chat/{chat_id}/message:
+    $ref: "/static/paths/chat_chat_id_message.yml"
+  /orders:
+    $ref: "/static/paths/orders.yml"
+  /orders/{order_id}:
+    $ref: "/static/paths/orders_order_id.yml"
+  /orders/{order_id}/quotation:
+    $ref: "/static/paths/orders_order_id_quotation.yml"
+  /orders/favors:
+    $ref: "/static/paths/orders_favors.yml"
+  /orders/placed:
+    $ref: "/static/paths/orders_placed.yml"
+  /orders/directions:
+    $ref: "/static/paths/orders_directions.yml"
+  /places:
+    $ref: "/static/paths/places.yml"
+  /products:
+    $ref: "/static/paths/products.yml"
+  /users:
+    $ref: "/static/paths/users.yml"
+  /users/me:
+    $ref: "/static/paths/users_me.yml"
+  /users/{user_id}:
+    $ref: "/static/paths/users_user_id.yml"
+  /user_ratings:
+    $ref: "/static/paths/user_ratings.yml"
+  /statistics/registrations:
+    $ref: "/static/paths/statistics_registrations.yml"
+  /statistics/completed_orders:
+    $ref: "/static/paths/statistics_completed_orders.yml"
+  /statistics/cancelled_orders:
+    $ref: "/static/paths/statistics_cancelled_orders.yml"
+  /rules:
+    $ref: "/static/paths/rules.yml"
+  /rules/rule_id:
+    $ref: "/static/paths/rules_rule_id.yml"
+  /rules/rule_id/redeem:
+    $ref: "/static/paths/rules_rule_id_redeem.yml"
+  /rules/rule_id/history:
+    $ref: "/static/paths/rules_rule_id_history.yml"
+  /rules/benefits:
+    $ref: "/static/paths/rules_benefits.yml"
+  /rules/redeemable:
+    $ref: "/static/paths/rules_redeemable.yml"
+  /rules/variables:
+    $ref: "/static/paths/rules_variables.yml"
+  /rules/operators:
+    $ref: "/static/paths/rules_operators.yml"
+  /rules/consequence_types:
+    $ref: "/static/paths/rules_consequence_types.yml"

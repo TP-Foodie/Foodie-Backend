@@ -1,0 +1,15 @@
+get:
+  summary: "Obtención de un chat"
+  parameters:
+    - name: "chat_id"
+      in: "path"
+      description: "Id del chat a devolver"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/chat.yml'
+    401:
+      description: "Unauthorized"

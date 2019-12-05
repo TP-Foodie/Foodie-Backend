@@ -1,0 +1,28 @@
+type: "object"
+properties:
+  id:
+    type: "string"
+  name:
+    type: "string"
+  number:
+    type: "integer"
+  status:
+    type: "string"
+  type:
+    type: "string"
+  owner:
+    type: "string"
+  delivery:
+    type: "string"
+  id_chat:
+    type: "string"
+  quotation:
+    type: "string"
+  delivery_rated:
+    type: "number"
+  owner_rated:
+    type: "number"
+  ordered_products:
+    type: "array"
+    items:
+      type: "string"

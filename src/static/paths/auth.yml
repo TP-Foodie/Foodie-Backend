@@ -1,0 +1,18 @@
+post:
+  summary: "Obtener un JWT para la autenticación"
+  parameters:
+    - in: "body"
+      name: "Autenticación"
+      description: "Datos de la persona a autenticar"
+      required: true
+      schema:
+        $ref: "/static/definitions/requests/auth.yml"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: "/static/definitions/responses/auth.yml"
+    401:
+      description: "Unauthorized"
+    404:
+      description: "User not found"

@@ -1,0 +1,10 @@
+type: "array"
+items:
+  type: "object"
+  properties:
+    name:
+      type: "string"
+    image:
+      type: "string"
+    coordinates:
+      $ref: '/static/definitions/responses/coordinates.yml'

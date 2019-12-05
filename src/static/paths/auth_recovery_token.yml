@@ -1,0 +1,16 @@
+post:
+  summary: "Obtener un token para la recuperacioń de la contraseña"
+  parameters:
+    - in: "body"
+      name: "Token de recupero de contraseña"
+      description: "Token de google para ingresar válido por un dia via mail"
+      required: true
+      schema:
+        $ref: "/static/definitions/requests/auth_recovery_token.yml"
+  responses:
+    200:
+      description: "OK"
+    401:
+      description: "Unauthorized"
+    404:
+      description: "User not found"

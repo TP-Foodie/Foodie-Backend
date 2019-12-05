@@ -1,0 +1,37 @@
+get:
+  summary: "Obtención del usuario especificado"
+  parameters:
+    - name: "user_id"
+      in: "path"
+      description: "Id del usuario a devolver"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/user.yml'
+    401:
+      description: "Unauthorized"
+
+patch:
+  summary: "Actualización de un usuario"
+  parameters:
+    - name: "user_id"
+      in: "path"
+      description: "Id del usuario a devolver"
+      required: true
+      type: "integer"
+    - in: "body"
+      name: "Usuario"
+      description: "Datos para actualizar el usuario"
+      required: true
+      schema:
+        $ref: '/static/definitions/requests/update_user.yml'
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/user.yml'
+    401:
+      description: "Unauthorized"

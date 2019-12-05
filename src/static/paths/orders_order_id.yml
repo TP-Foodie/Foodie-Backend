@@ -1,0 +1,33 @@
+get:
+  summary: "Obtención de la orden"
+  parameters:
+    - name: "order_id"
+      in: "path"
+      description: "Id de la órden a devolver"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/order.yml'
+    401:
+      description: "Unauthorized"
+
+patch:
+  summary: "Actualizacion de la órden"
+  parameters:
+    - in: "body"
+      name: "Autenticación"
+      description: "Datos para actualizar la orden"
+      required: true
+      schema:
+        $ref: '/static/definitions/requests/chat_patch.yml'
+  responses:
+    200:
+      description: "Actualización exitosa"
+    schema:
+      $ref: '/static/definitions/responses/order.yml'
+    401:
+      description: "Unauthorized"
+

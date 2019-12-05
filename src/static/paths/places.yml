@@ -1,0 +1,9 @@
+get:
+  summary: "Obtención de lugares"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/list_places.yml'
+    401:
+      description: "Unauthorized"

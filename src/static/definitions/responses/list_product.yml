@@ -1,0 +1,16 @@
+type: "array"
+items:
+  type: "object"
+  properties:
+    id:
+      type: "string"
+    name:
+      type: "string"
+    description:
+      type: "string"
+    price:
+      type: "number"
+    place:
+      $ref: "/static/definitions/responses/place.yml"
+    image:
+      type: "string"

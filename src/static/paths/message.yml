@@ -1,0 +1,12 @@
+get:
+  summary: "Message"
+  parameters:
+  responses:
+    200:
+      description: "OK"
+post:
+  summary: "Message"
+  parameters:
+  responses:
+    200:
+      description: "OK"

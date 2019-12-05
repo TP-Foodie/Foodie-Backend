@@ -1,0 +1,30 @@
+get:
+  summary: "Obtención de usuarios"
+  parameters:
+    - name: "page"
+      in: "path"
+      description: "Número de la página a devolver"
+      required: true
+      type: "integer"
+    - name: "limit"
+      in: "path"
+      description: "Límite de resultados"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/list_user.yml'
+    401:
+      description: "Unauthorized"
+
+post:
+  summary: "Creación de un usuario"
+  parameters:
+    - in: "body"
+      name: "Usuario"
+      description: "Datos para crear el usuario"
+      required: true
+      schema:
+        $ref: '/static/definitions/requests/user.yml'

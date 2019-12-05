@@ -1,0 +1,36 @@
+get:
+  summary: "Obtención del mensaje del chat"
+  parameters:
+    - name: "chat_id"
+      in: "path"
+      description: "ID del chat a devolver"
+      required: true
+      type: "integer"
+    - name: "page"
+      in: "path"
+      description: "La página a devolver"
+      required: false
+      type: "integer"
+    - name: "limit"
+      in: "path"
+      description: "El número de mensajes a devolver"
+      required: false
+      type: "integer"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/chat_response_page.yml'
+    401:
+      description: "Unauthorized"
+post:
+  summary: "Creación de un mensaje de chat"
+  parameters:
+  responses:
+    200:
+      description: "Creación exitosa del chat"
+    schema:
+      $ref: '/static/definitions/responses/chat_message.yml'
+    401:
+      description: "Unauthorized"
+

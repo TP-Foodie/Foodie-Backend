@@ -1,0 +1,15 @@
+get:
+  summary: "Obtención productos de un lugar"
+  parameters:
+    - name: "id_place"
+      in: "path"
+      description: "Id de la órden a devolver"
+      required: true
+      type: "string"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/list_product.yml'
+    401:
+      description: "Unauthorized"

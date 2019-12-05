@@ -1,0 +1,26 @@
+type: "object"
+properties:
+  id:
+    type: "integer"
+  name:
+    type: "string"
+  last_name:
+    type: "string"
+  email:
+    type: "string"
+  profile_image:
+    type: "string"
+  type:
+    type: "string"
+  subscription:
+    type: "string"
+  reputation:
+    type: "number"
+  messages_sent:
+    type: "string"
+  phone:
+    type: "string"
+  location:
+    type: "string"
+  deliveries_completed:
+    type: "integer"

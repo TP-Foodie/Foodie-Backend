@@ -1,0 +1,15 @@
+get:
+  summary: "Obtencion de las direcciones para un delivery"
+  parameters:
+    - name: "order_id"
+      in: "path"
+      description: "Id de la orden"
+      required: true
+      type: "string"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/directions.yml'
+    401:
+      description: "Unauthorized"

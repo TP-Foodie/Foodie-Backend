@@ -1,0 +1,20 @@
+get:
+  summary: "Obtención de los deliveries disponibles para el cliente"
+  parameters:
+    - name: "radius"
+      in: "query"
+      required: true
+      type: integer
+      description: "valores entre 0 y 15"
+    - name: "coordinates"
+      in: "query"
+      required: true
+      type: array
+      items:
+        type: number
+      description: "Array de tamaño dos, el primero es la longitud(0 a 180), el segundo es la latitud(-90 a 90)"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/delivery_profile.yml'

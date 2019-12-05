@@ -1,0 +1,14 @@
+type: "object"
+properties:
+  name:
+    type: "string"
+  order_type:
+    type: "string"
+  ordered_products:
+    type: "array"
+    items:
+      type: "string"
+  payment_method:
+    type: "string"
+  gratitude_points:
+    type: "integer"

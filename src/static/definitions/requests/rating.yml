@@ -1,0 +1,8 @@
+type: "object"
+properties:
+  user:
+    type: "string"
+  rating:
+    type: "number"
+  description:
+    type: "string"

@@ -1,0 +1,21 @@
+type: "array"
+items:
+  type: "object"
+  properties:
+    id:
+      type: "string"
+    name:
+      type: "string"
+    number:
+      type: "integer"
+    status:
+      type: "string"
+    type:
+      type: "string"
+    owner:
+      type: "string"
+    delivery:
+      type:
+      $ref: "/static/definitions/responses/user.yml"
+    id_chat:
+      type: "string"
