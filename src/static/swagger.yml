@@ -40,3 +40,5 @@ paths:
     $ref: "/static/paths/orders_directions.yml"
   /places:
     $ref: "/static/paths/places.yml"
+  /products:
+    $ref: "/static/paths/products.yml"
