@@ -38,6 +38,5 @@ paths:
     $ref: "/static/paths/orders_placed.yml"
   /orders/directions:
     $ref: "/static/paths/orders_directions.yml"
-
-
-
+  /places:
+    $ref: "/static/paths/places.yml"
