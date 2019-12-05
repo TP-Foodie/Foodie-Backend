@@ -1,0 +1,9 @@
+get:
+  summary: "Obtención de órdenes por favores"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: '/static/definitions/responses/list_order.yml'
+    401:
+      description: "Unauthorized"

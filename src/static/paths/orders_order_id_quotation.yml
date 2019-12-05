@@ -1,15 +1,15 @@
 get:
-  summary: "Obtención de un chat"
+  summary: "Cotizacion de la órden"
   parameters:
-    - name: "chat_id"
+    - name: "order_id"
       in: "path"
-      description: "Id del chat a devolver"
+      description: "Id de la órden a devolver"
       required: true
       type: "integer"
   responses:
     200:
       description: "OK"
       schema:
-        $ref: '/static/definitions/responses/chat.yml'
+        $ref: '/static/definitions/responses/order_quotation.yml'
     401:
       description: "Unauthorized"

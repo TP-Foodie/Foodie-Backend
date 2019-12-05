@@ -30,4 +30,14 @@ paths:
     $ref: "/static/paths/orders.yml"
   /orders/{order_id}:
     $ref: "/static/paths/orders_order_id.yml"
+  /orders/{order_id}/quotation:
+    $ref: "/static/paths/orders_order_id_quotation.yml"
+  /orders/favors:
+    $ref: "/static/paths/orders_favors.yml"
+  /orders/placed:
+    $ref: "/static/paths/orders_placed.yml"
+  /orders/directions:
+    $ref: "/static/paths/orders_directions.yml"
+
+
 

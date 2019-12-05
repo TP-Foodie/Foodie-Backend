@@ -1,5 +1,5 @@
 get:
-  summary: "Chat"
+  summary: "Obtención de la orden"
   parameters:
     - name: "order_id"
       in: "path"
@@ -15,7 +15,7 @@ get:
       description: "Unauthorized"
 
 patch:
-  summary: "Chat"
+  summary: "Actualizacion de la órden"
   parameters:
     - in: "body"
       name: "Autenticación"

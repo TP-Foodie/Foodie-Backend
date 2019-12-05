@@ -1,5 +1,5 @@
 get:
-  summary: "Chat"
+  summary: "Obtención del mensaje del chat"
   parameters:
     - name: "chat_id"
       in: "path"
@@ -24,7 +24,7 @@ get:
     401:
       description: "Unauthorized"
 post:
-  summary: "Chat"
+  summary: "Creación de un mensaje de chat"
   parameters:
   responses:
     200:

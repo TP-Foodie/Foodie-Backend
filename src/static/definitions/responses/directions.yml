@@ -1,0 +1,17 @@
+type: "object"
+properties:
+  route:
+    type: "object"
+    properties:
+      locations:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            latLng:
+              type: "object"
+              properties:
+                lng:
+                  type: "number"
+                lat:
+                  type: "number"
