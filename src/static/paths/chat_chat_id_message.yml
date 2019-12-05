@@ -6,14 +6,23 @@ get:
       description: "ID of chat to return"
       required: true
       type: "integer"
+    - name: "page"
+      in: "path"
+      description: "The page to return"
+      required: false
+      type: "integer"
+    - name: "limit"
+      in: "path"
+      description: "The number of chats to return"
+      required: false
+      type: "integer"
   responses:
     200:
       description: "OK"
       schema:
-        $ref: '/static/definitions/responses/chat.yml'
+        $ref: '/static/definitions/responses/chat_response_page.yml'
     401:
       description: "Unauthorized"
-
 post:
   summary: "Chat"
   parameters:
@@ -21,7 +30,7 @@ post:
     200:
       description: "Creation of chat successful"
     schema:
-      $ref: '/static/definitions/responses/chat.yml'
+      $ref: '/static/definitions/responses/chat_message.yml'
     401:
       description: "Unauthorized"
 

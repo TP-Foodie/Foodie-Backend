@@ -25,5 +25,5 @@ paths:
   /chat/{chat_id}:
     $ref: "/static/paths/chat_chat_id.yml"
   /chat/{chat_id}/message:
-    $ref: "/static/paths/chat_chat_id.yml"
+    $ref: "/static/paths/chat_chat_id_message.yml"
 
