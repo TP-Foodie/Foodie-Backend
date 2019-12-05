@@ -1,0 +1,16 @@
+post:
+  summary: "Calificación de la órden"
+  parameters:
+    - name: "Calificacion"
+      in: "body"
+      description: "Calificacion de la orden"
+      required: true
+      schema:
+        $ref: "/static/definitions/requests/rating.yml"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: "/static/definitions/responses/rating.yml"
+    401:
+      description: "Unauthorized"

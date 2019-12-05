@@ -1,0 +1,10 @@
+type: "object"
+properties:
+  id:
+    type: "integer"
+  user:
+    $ref: "/static/definitions/responses/user.yml"
+  description:
+    type: "string"
+  rating:
+    type: "number"

@@ -48,3 +48,5 @@ paths:
     $ref: "/static/paths/users_me.yml"
   /users/{user_id}:
     $ref: "/static/paths/users_user_id.yml"
+  /user_ratings:
+    $ref: "/static/paths/user_ratings.yml"
