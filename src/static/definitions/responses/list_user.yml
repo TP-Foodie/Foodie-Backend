@@ -1,0 +1,12 @@
+type: "array"
+items:
+  type: "object"
+  properties:
+    page:
+      type: "integer"
+    limit:
+      type: "integer"
+    users:
+      type: "array"
+      items:
+        $ref: '/static/definitions/responses/user.yml'

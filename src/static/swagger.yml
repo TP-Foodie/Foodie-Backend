@@ -42,3 +42,9 @@ paths:
     $ref: "/static/paths/places.yml"
   /products:
     $ref: "/static/paths/products.yml"
+  /users:
+    $ref: "/static/paths/users.yml"
+  /users/me:
+    $ref: "/static/paths/users_me.yml"
+  /users/{user_id}:
+    $ref: "/static/paths/users_user_id.yml"
