@@ -50,3 +50,27 @@ paths:
     $ref: "/static/paths/users_user_id.yml"
   /user_ratings:
     $ref: "/static/paths/user_ratings.yml"
+  /statistics/registrations:
+    $ref: "/static/paths/statistics_registrations.yml"
+  /statistics/completed_orders:
+    $ref: "/static/paths/statistics_completed_orders.yml"
+  /statistics/cancelled_orders:
+    $ref: "/static/paths/statistics_cancelled_orders.yml"
+  /rules:
+    $ref: "/static/paths/rules.yml"
+  /rules/rule_id:
+    $ref: "/static/paths/rules_rule_id.yml"
+  /rules/rule_id/redeem:
+    $ref: "/static/paths/rules_rule_id_redeem.yml"
+  /rules/rule_id/history:
+    $ref: "/static/paths/rules_rule_id_history.yml"
+  /rules/benefits:
+    $ref: "/static/paths/rules_benefits.yml"
+  /rules/redeemable:
+    $ref: "/static/paths/rules_redeemable.yml"
+  /rules/variables:
+    $ref: "/static/paths/rules_variables.yml"
+  /rules/operators:
+    $ref: "/static/paths/rules_operators.yml"
+  /rules/consequence_types:
+    $ref: "/static/paths/rules_consequence_types.yml"

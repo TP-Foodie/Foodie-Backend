@@ -1,0 +1,6 @@
+get:
+  summary: "Obtención de una regla"
+patch:
+  summary: "Actualización de una regla"
+delete:
+  summary: "Eliminación de una regla"
