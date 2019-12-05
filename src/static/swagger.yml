@@ -28,4 +28,6 @@ paths:
     $ref: "/static/paths/chat_chat_id_message.yml"
   /orders:
     $ref: "/static/paths/orders.yml"
+  /orders/{order_id}:
+    $ref: "/static/paths/orders_order_id.yml"
 
