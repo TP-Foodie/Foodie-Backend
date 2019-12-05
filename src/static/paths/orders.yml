@@ -1,0 +1,17 @@
+post:
+  summary: "Generar ordenes"
+  parameters:
+    - in: "body"
+      description: "Datos para la creación de una orden"
+      required: true
+      schema:
+        $ref: "/static/definitions/requests/order.yml"
+  responses:
+    200:
+      description: "OK"
+      schema:
+        $ref: "/static/definitions/responses/order.yml"
+    401:
+      description: "Unauthorized"
+    404:
+      description: "User not found"
